@@ -1,0 +1,13 @@
+4x4 exhaustive: 1245184 board/shape checks, 507442 fit, 737742 blocked
+ ✓ tests/domain/legal-moves.test.ts > game-over rule > one blocked slot plus one legal slot keeps the game active 3ms
+ ✓ tests/domain/legal-moves.test.ts > game-over rule > a fully blocked tray ends the run 1ms
+ ✓ tests/domain/legal-moves.test.ts > game-over rule > consumed slots do not participate 1ms
+ ✓ tests/domain/legal-moves.test.ts > game-over rule > enough empty area does not imply a fit 1ms
+ ✓ tests/domain/legal-moves.test.ts > game-over rule > every catalog shape fits the empty board, starting at (0,0) 1ms
+ ✓ tests/domain/legal-moves.test.ts > game-over rule > finds a fit in the last possible anchor 0ms
+ ✓ tests/domain/legal-moves.test.ts > exhaustive comparison with the independent enumerator > every 4x4 board (65,536) agrees for all 19 shapes 4483ms
+5x5 sparse: 245506 boards, 77516 terminal for [corner_2_1, bar_3_v, bar_2_h]
+ ✓ tests/domain/legal-moves.test.ts > exhaustive comparison with the independent enumerator > every 5x5 board with at most 6 empty cells agrees for three-shape trays 4740ms
+ Test Files  1 passed (1)
+      Tests  8 passed (8)
+   Duration  9.50s (tests 99%, transform 1%)

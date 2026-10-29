@@ -191,7 +191,7 @@
       "depends_on": [
         "T05"
       ],
-      "status": "not_started",
+      "status": "done",
       "allowed_scope": [
         "domain/legal_moves",
         "tests/domain/legal_moves"
@@ -203,7 +203,8 @@
         "Small-board exhaustive fixtures agree with an independent enumerator."
       ],
       "evidence": "Known playable and blocked boards, exhaustive comparison counts.",
-      "boundary": "Do not test only the selected piece or assume empty area implies a fit."
+      "boundary": "Do not test only the selected piece or assume empty area implies a fit.",
+      "handoff": "docs/handoffs/T09.md"
     },
     {
       "id": "T10",
