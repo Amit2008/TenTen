@@ -1,0 +1,9 @@
+ ✓ tests/domain/scoring.test.ts > GDD 5.2 score examples with the classic rules (P + 10 x L) > a four-cell shape without a clear scores 4 2ms
+ ✓ tests/domain/scoring.test.ts > GDD 5.2 score examples with the classic rules (P + 10 x L) > a single cell finishing one row scores 11 0ms
+ ✓ tests/domain/scoring.test.ts > GDD 5.2 score examples with the classic rules (P + 10 x L) > a single cell finishing one row and one column scores 21 and removes 19 cells 0ms
+ ✓ tests/domain/scoring.test.ts > GDD 5.2 score examples with the classic rules (P + 10 x L) > a 2x2 square finishing two rows and two columns scores 44 and removes 36 cells 0ms
+ ✓ tests/domain/scoring.test.ts > policy > uses the configured values, with no multi-line multiplier 0ms
+ ✓ tests/domain/scoring.test.ts > policy > awards nothing for a preview: the placement query returns only a boolean 0ms
+ ✓ tests/domain/scoring.test.ts > policy > detects overflow instead of rounding 0ms
+ Test Files  1 passed (1)
+      Tests  7 passed (7)
