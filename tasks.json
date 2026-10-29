@@ -261,7 +261,7 @@
       "depends_on": [
         "T11"
       ],
-      "status": "not_started",
+      "status": "done",
       "allowed_scope": [
         "docs/review",
         "direct rule fixes"
@@ -273,7 +273,8 @@
         "No unresolved correctness defect remains in the transaction."
       ],
       "evidence": "Rule review checklist and sample trace.",
-      "boundary": "A rule change needs a decision record and updated affected fixtures."
+      "boundary": "A rule change needs a decision record and updated affected fixtures.",
+      "handoff": "docs/handoffs/T12.md"
     },
     {
       "id": "T13",

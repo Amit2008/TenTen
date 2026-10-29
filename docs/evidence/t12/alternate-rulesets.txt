@@ -1,0 +1,13 @@
+5x5 tray 1: 1311 moves, 541 lines
+ ✓ tests/property/alternate-rulesets.test.ts > alternate rulesets keep every invariant > 5x5, tray 1 (refill every move): 200 seeds 171ms
+stdout | tests/property/alternate-rulesets.test.ts > alternate rulesets keep every invariant > 16x16, tray 5: 200 seeds
+16x16 tray 5: 9367 moves, 146 lines
+ ✓ tests/property/alternate-rulesets.test.ts > alternate rulesets keep every invariant > 16x16, tray 5: 200 seeds 22309ms
+stdout | tests/property/alternate-rulesets.test.ts > alternate rulesets keep every invariant > 7x12 rectangle, tray 2: 200 seeds
+7x12 tray 2: 4395 moves, 979 lines
+ ✓ tests/property/alternate-rulesets.test.ts > alternate rulesets keep every invariant > 7x12 rectangle, tray 2: 200 seeds 1155ms
+stdout | tests/property/alternate-rulesets.test.ts > alternate rulesets keep every invariant > 12x5 rectangle, tray 3: 200 seeds
+12x5 tray 3: 4294 moves, 1993 lines
+ ✓ tests/property/alternate-rulesets.test.ts > alternate rulesets keep every invariant > 12x5 rectangle, tray 3: 200 seeds 984ms
+ ✓ tests/property/alternate-rulesets.test.ts > alternate rulesets keep every invariant > the classic catalog fits the smallest 5x5 board; 4 rows is outside the supported range 11ms
+      Tests  5 passed (5)
