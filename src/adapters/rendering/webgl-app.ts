@@ -1,24 +1,22 @@
 import { Application, RendererType, type WebGLRenderer } from 'pixi.js';
+import type { RuntimeConfig } from '../content/presentation-config';
 
-// shortcut: constants mirror runtime.example.json until T04 loads runtime.json; switch to injected config then.
-export const LOGICAL_WIDTH = 720;
-export const LOGICAL_HEIGHT = 960;
-export const RESOLUTION_CAP = 2;
+type Viewport = Pick<RuntimeConfig, 'logicalSize' | 'resolutionCap'>;
 
 export class RendererUnavailableError extends Error {
   override name = 'RendererUnavailableError';
 }
 
 /** Creates a Pixi app on an actual WebGL2 context, or throws. No WebGPU, Canvas2D or WebGL1 fallback. */
-export async function createWebGL2App(): Promise<Application> {
+export async function createWebGL2App({ logicalSize: [width, height], resolutionCap }: Viewport): Promise<Application> {
   const app = new Application();
   try {
     await app.init({
       preference: ['webgl'],
       preferWebGLVersion: 2,
-      width: LOGICAL_WIDTH,
-      height: LOGICAL_HEIGHT,
-      resolution: Math.min(devicePixelRatio, RESOLUTION_CAP),
+      width,
+      height,
+      resolution: Math.min(devicePixelRatio, resolutionCap),
       autoDensity: true,
       antialias: true,
     });
@@ -35,15 +33,11 @@ export async function createWebGL2App(): Promise<Application> {
 }
 
 /** Contain-fit the logical area inside `host`: square scaling, letterboxed, DPR-capped backing buffer. */
-export function fitToHost(app: Application, host: HTMLElement): () => void {
+export function fitToHost(app: Application, host: HTMLElement, { logicalSize: [width, height], resolutionCap }: Viewport): () => void {
   const fit = (): void => {
-    const scale = Math.min(host.clientWidth / LOGICAL_WIDTH, host.clientHeight / LOGICAL_HEIGHT);
+    const scale = Math.min(host.clientWidth / width, host.clientHeight / height);
     if (!(scale > 0)) return;
-    app.renderer.resize(
-      Math.floor(LOGICAL_WIDTH * scale),
-      Math.floor(LOGICAL_HEIGHT * scale),
-      Math.min(devicePixelRatio, RESOLUTION_CAP),
-    );
+    app.renderer.resize(Math.floor(width * scale), Math.floor(height * scale), Math.min(devicePixelRatio, resolutionCap));
     app.stage.scale.set(scale);
   };
   const observer = new ResizeObserver(fit);

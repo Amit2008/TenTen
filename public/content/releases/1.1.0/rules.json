@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "ruleset_id": "classic_proposed_v1",
+  "board": {
+    "columns": 10,
+    "rows": 10
+  },
+  "tray_size": 3,
+  "rotation_allowed": false,
+  "refill_policy": "when_all_used",
+  "clear_policy": "simultaneous_full_rows_and_columns",
+  "score": {
+    "points_per_placed_cell": 1,
+    "points_per_completed_line": 10,
+    "multiline_bonus": 0
+  },
+  "generator": {
+    "policy": "weighted_independent_with_replacement",
+    "catalog": "pieces.json",
+    "algorithm": "xorshift32_v1",
+    "version": 1
+  },
+  "undo_enabled": false
+}

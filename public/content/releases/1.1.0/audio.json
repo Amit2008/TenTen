@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "master_volume": 0.7,
+  "music_volume": 0.3,
+  "sfx_volume": 0.7,
+  "music_tracks": [],
+  "shuffle": true,
+  "repeat_playlist": true,
+  "effects": {
+    "pick": null,
+    "place": null,
+    "clear": null,
+    "invalid": null,
+    "game_over": null
+  },
+  "missing_asset_policy": "silent_with_log"
+}

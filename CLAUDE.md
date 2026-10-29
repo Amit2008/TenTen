@@ -8,7 +8,7 @@ A browser block-placement puzzle inspired by 1010! classic endless mode: a 10x10
 - `tasks.json` is the task ledger (T01–T30). Handoffs are in `docs/handoffs/`, decisions in `docs/decisions/` (ADR-001 pins the toolchain), and evidence in `docs/evidence/`.
 - `For Claude/01_GDD.md` defines behavior. If the code conflicts with it, report the conflict before implementing.
 - `For Claude/02_Agent_Roadmap.md` holds per-task scope and acceptance criteria.
-- `For Claude/*.example.json` contain the baseline content. It becomes `public/content/releases/1.1.0/` (see `For Claude/CONFIGURATION.md`).
+- Content lives in `public/content/index.json` and `public/content/releases/<version>/` (rules, pieces, theme, runtime, audio). It is validated by `src/domain/models/gameplay-config.ts` and `src/adapters/content/`. Any rule edit changes the gameplay hash pinned in `tests/config/gameplay-config.test.ts`.
 - The source layers are `src/domain`, `src/application`, `src/presentation`, `src/adapters` and `src/bootstrap`. Tests are in `tests/unit` (Vitest, Node) and `tests/browser` (Playwright, run against the production build).
 
 ## Commands

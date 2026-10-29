@@ -1,0 +1,71 @@
+ ✓ tests/unit/architecture.test.ts > domain purity > flags forbidden dependencies 2ms
+ ✓ tests/unit/architecture.test.ts > domain purity > src/domain imports no DOM, Pixi, storage, audio or clock APIs 1ms
+ ✓ tests/unit/app-url.test.ts > appUrl > resolves against the root base 1ms
+ ✓ tests/unit/app-url.test.ts > appUrl > stays inside a nested base, even for leading-slash paths 0ms
+classic_proposed_v1 gameplay hash: sha256:c8781bbed8b3eb1cf81e0bc4bf9f92b639b9f796f84369e6d48f70d59a523f03
+ ✓ tests/config/gameplay-config.test.ts > shipped classic content > has 19 unique, connected, normalized pieces that all fit the empty 10x10 board 4ms
+ ✓ tests/config/gameplay-config.test.ts > shipped classic content > is deeply frozen 1ms
+ ✓ tests/config/gameplay-config.test.ts > shipped classic content > has a pinned canonical hash (change detector: update only with a deliberate rule change) 4ms
+ ✓ tests/config/gameplay-config.test.ts > invalid gameplay content is rejected > unknown rules key 1ms
+ ✓ tests/config/gameplay-config.test.ts > invalid gameplay content is rejected > unknown nested key 0ms
+ ✓ tests/config/gameplay-config.test.ts > invalid gameplay content is rejected > missing key 0ms
+ ✓ tests/config/gameplay-config.test.ts > invalid gameplay content is rejected > board too small 0ms
+ ✓ tests/config/gameplay-config.test.ts > invalid gameplay content is rejected > board too large 0ms
+ ✓ tests/config/gameplay-config.test.ts > invalid gameplay content is rejected > tray of zero 0ms
+ ✓ tests/config/gameplay-config.test.ts > invalid gameplay content is rejected > tray of six 0ms
+ ✓ tests/config/gameplay-config.test.ts > invalid gameplay content is rejected > non-integer rule value 0ms
+ ✓ tests/config/gameplay-config.test.ts > invalid gameplay content is rejected > negative score 0ms
+ ✓ tests/config/gameplay-config.test.ts > invalid gameplay content is rejected > unsafe score integer 0ms
+ ✓ tests/config/gameplay-config.test.ts > invalid gameplay content is rejected > non-finite score 0ms
+ ✓ tests/config/gameplay-config.test.ts > invalid gameplay content is rejected > rotation enabled 0ms
+ ✓ tests/config/gameplay-config.test.ts > invalid gameplay content is rejected > undo enabled 0ms
+ ✓ tests/config/gameplay-config.test.ts > invalid gameplay content is rejected > multiline bonus 0ms
+ ✓ tests/config/gameplay-config.test.ts > invalid gameplay content is rejected > unsupported refill policy 0ms
+ ✓ tests/config/gameplay-config.test.ts > invalid gameplay content is rejected > unsupported clear policy 0ms
+ ✓ tests/config/gameplay-config.test.ts > invalid gameplay content is rejected > unsupported generator 0ms
+ ✓ tests/config/gameplay-config.test.ts > invalid gameplay content is rejected > unsupported generator version 0ms
+ ✓ tests/config/gameplay-config.test.ts > invalid gameplay content is rejected > unsupported schema 0ms
+ ✓ tests/config/gameplay-config.test.ts > invalid gameplay content is rejected > duplicate shape id 0ms
+ ✓ tests/config/gameplay-config.test.ts > invalid gameplay content is rejected > repeated cell 0ms
+ ✓ tests/config/gameplay-config.test.ts > invalid gameplay content is rejected > empty shape 0ms
+ ✓ tests/config/gameplay-config.test.ts > invalid gameplay content is rejected > disconnected cells 0ms
+ ✓ tests/config/gameplay-config.test.ts > invalid gameplay content is rejected > diagonal-only cells 0ms
+ ✓ tests/config/gameplay-config.test.ts > invalid gameplay content is rejected > negative coordinate 0ms
+ ✓ tests/config/gameplay-config.test.ts > invalid gameplay content is rejected > fractional coordinate 0ms
+ ✓ tests/config/gameplay-config.test.ts > invalid gameplay content is rejected > unnormalized shape 0ms
+ ✓ tests/config/gameplay-config.test.ts > invalid gameplay content is rejected > malformed cell 0ms
+ ✓ tests/config/gameplay-config.test.ts > invalid gameplay content is rejected > zero weight 0ms
+ ✓ tests/config/gameplay-config.test.ts > invalid gameplay content is rejected > fractional weight 0ms
+ ✓ tests/config/gameplay-config.test.ts > invalid gameplay content is rejected > total weight overflow 1ms
+ ✓ tests/config/gameplay-config.test.ts > invalid gameplay content is rejected > missing color key 0ms
+ ✓ tests/config/gameplay-config.test.ts > invalid gameplay content is rejected > shape too large for board 1ms
+ ✓ tests/config/gameplay-config.test.ts > invalid gameplay content is rejected > empty catalog 0ms
+ ✓ tests/config/gameplay-config.test.ts > invalid gameplay content is rejected > catalog path escapes release 0ms
+ ✓ tests/config/gameplay-config.test.ts > gameplay hash identity > ignores cosmetic and label edits, key order and cell order 2ms
+ ✓ tests/config/gameplay-config.test.ts > gameplay hash identity > changes when the score per line changes 1ms
+ ✓ tests/config/gameplay-config.test.ts > gameplay hash identity > changes when the score per cell changes 1ms
+ ✓ tests/config/gameplay-config.test.ts > gameplay hash identity > changes when the board size changes 1ms
+ ✓ tests/config/gameplay-config.test.ts > gameplay hash identity > changes when the tray size changes 2ms
+ ✓ tests/config/gameplay-config.test.ts > gameplay hash identity > changes when the weight changes 1ms
+ ✓ tests/config/gameplay-config.test.ts > gameplay hash identity > changes when the catalog order changes 2ms
+ ✓ tests/config/gameplay-config.test.ts > gameplay hash identity > changes when the removed shape changes 1ms
+ ✓ tests/config/gameplay-config.test.ts > gameplay hash identity > changes when the shape geometry changes 2ms
+ ✓ tests/config/gameplay-config.test.ts > gameplay hash identity > changes when the shape id changes 1ms
+ ✓ tests/config/gameplay-config.test.ts > gameplay hash identity > canonical JSON sorts keys and excludes presentation 0ms
+ ✓ tests/config/load-content.test.ts > loadContent > loads, validates and freezes the shipped 1.1.0 release from a nested base 21ms
+ ✓ tests/config/load-content.test.ts > loadContent > rejects network failure with a ContentError 1ms
+ ✓ tests/config/load-content.test.ts > loadContent > rejects missing manifest with a ContentError 1ms
+ ✓ tests/config/load-content.test.ts > loadContent > rejects HTML served for JSON with a ContentError 2ms
+ ✓ tests/config/load-content.test.ts > loadContent > rejects truncated JSON with a ContentError 2ms
+ ✓ tests/config/load-content.test.ts > loadContent > rejects stale manifest version with a ContentError 1ms
+ ✓ tests/config/load-content.test.ts > loadContent > rejects unknown runtime contract with a ContentError 2ms
+ ✓ tests/config/load-content.test.ts > loadContent > rejects catalog not the manifest pieces file with a ContentError 2ms
+ ✓ tests/config/load-content.test.ts > loadContent > rejects missing theme color with a ContentError 4ms
+ ✓ tests/config/load-content.test.ts > loadContent > rejects invalid theme color with a ContentError 4ms
+ ✓ tests/config/load-content.test.ts > loadContent > rejects non-WebGL2 renderer with a ContentError 3ms
+ ✓ tests/config/load-content.test.ts > loadContent > rejects board rect outside canvas with a ContentError 2ms
+ ✓ tests/config/load-content.test.ts > loadContent > rejects volume out of range with a ContentError 2ms
+ ✓ tests/config/load-content.test.ts > loadContent > rejects cross-origin track with a ContentError 2ms
+ ✓ tests/config/load-content.test.ts > loadContent > propagates cancellation instead of reporting a content error 0ms
+ Test Files  4 passed (4)
+      Tests  68 passed (68)
