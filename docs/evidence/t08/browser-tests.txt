@@ -1,0 +1,29 @@
+[chromium] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.8078.4 Safari/537.36
+  ok  6 [root] › tests\browser\replay.spec.ts:9:1 › golden vectors and bounded draws match Node in this engine (400ms)
+  ok  2 [root] › tests\browser\content.spec.ts:3:1 › loads the pinned content version at startup (501ms)
+[nested] http://localhost:4174/TenTen/ {"isWebGL2":true,"gpu":"ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)","css":[510,680],"backing":[510,680],"dpr":1}
+  ok  1 [root] › tests\browser\unsupported.spec.ts:6:1 › shows the HTML error and a working Retry when WebGL2 is unavailable (619ms)
+  ok  5 [nested] › tests\browser\content.spec.ts:3:1 › loads the pinned content version at startup (550ms)
+[chromium] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.8078.4 Safari/537.36
+  ok  7 [nested] › tests\browser\unsupported.spec.ts:6:1 › shows the HTML error and a working Retry when WebGL2 is unavailable (574ms)
+  ok  4 [nested] › tests\browser\shell.spec.ts:18:1 › starts an actual WebGL2 renderer and loads base-relative assets (581ms)
+  ok  8 [nested] › tests\browser\replay.spec.ts:9:1 › golden vectors and bounded draws match Node in this engine (291ms)
+[root] http://localhost:4173/ {"isWebGL2":true,"gpu":"ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)","css":[510,680],"backing":[510,680],"dpr":1}
+  ok  3 [root] › tests\browser\shell.spec.ts:18:1 › starts an actual WebGL2 renderer and loads base-relative assets (800ms)
+  ok  9 [root] › tests\browser\content.spec.ts:8:1 › a content failure shows an HTML error, not a spinner, and Retry recovers (469ms)
+  ok 11 [nested] › tests\browser\shell.spec.ts:35:3 › CSS size and framebuffer stay distinct at DPR 1 (cap 2) (338ms)
+  ok 10 [nested] › tests\browser\content.spec.ts:8:1 › a content failure shows an HTML error, not a spinner, and Retry recovers (385ms)
+  ok 12 [root] › tests\browser\shell.spec.ts:35:3 › CSS size and framebuffer stay distinct at DPR 1 (cap 2) (335ms)
+  ok 13 [root] › tests\browser\content.spec.ts:26:1 › malformed hosted rules are rejected before play (253ms)
+  ok 15 [nested] › tests\browser\content.spec.ts:26:1 › malformed hosted rules are rejected before play (192ms)
+  ok 14 [nested] › tests\browser\shell.spec.ts:35:3 › CSS size and framebuffer stay distinct at DPR 2 (cap 2) (576ms)
+  ok 16 [root] › tests\browser\shell.spec.ts:35:3 › CSS size and framebuffer stay distinct at DPR 2 (cap 2) (580ms)
+[webkit] Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/27.2 Safari/605.1.15
+  ok 18 [webkit] › tests\browser\replay.spec.ts:9:1 › golden vectors and bounded draws match Node in this engine (362ms)
+  ok 19 [nested] › tests\browser\shell.spec.ts:35:3 › CSS size and framebuffer stay distinct at DPR 3 (cap 2) (600ms)
+  ok 20 [root] › tests\browser\shell.spec.ts:35:3 › CSS size and framebuffer stay distinct at DPR 3 (cap 2) (601ms)
+  ok 21 [nested] › tests\browser\shell.spec.ts:48:1 › refits the canvas when the container resizes, letterboxed without cropping (328ms)
+  ok 22 [root] › tests\browser\shell.spec.ts:48:1 › refits the canvas when the container resizes, letterboxed without cropping (329ms)
+[firefox] Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:157.0) Gecko/20100101 Firefox/157.0
+  ok 17 [firefox] › tests\browser\replay.spec.ts:9:1 › golden vectors and bounded draws match Node in this engine (1.1s)
+  22 passed (13.5s)

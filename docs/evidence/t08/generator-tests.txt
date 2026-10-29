@@ -1,0 +1,18 @@
+ ✓ tests/unit/architecture.test.ts > layer purity > flags forbidden dependencies 2ms
+ ✓ tests/unit/architecture.test.ts > layer purity > src/domain imports no DOM, Pixi, storage, audio, clock or outer-layer code 2ms
+ ✓ tests/unit/architecture.test.ts > layer purity > src/application imports no DOM, Pixi, storage, audio, clock or outer-layer code 1ms
+ ✓ tests/config/gameplay-config.test.ts > invalid gameplay content is rejected > unsupported generator 1ms
+ ✓ tests/config/gameplay-config.test.ts > invalid gameplay content is rejected > unsupported generator version 2ms
+ ✓ tests/generator/piece-source.test.ts > xorshift32_v1 > state 1 produces the specified golden vectors 1ms
+ ✓ tests/generator/piece-source.test.ts > xorshift32_v1 > stays an unsigned 32-bit nonzero state across many steps 246ms
+ ✓ tests/generator/piece-source.test.ts > xorshift32_v1 > seed 12345 gives the recorded bounded draw sequence 1ms
+ ✓ tests/generator/piece-source.test.ts > unbiased bounded draws > rejects only outputs at or above the largest multiple of the bound 0ms
+ ✓ tests/generator/piece-source.test.ts > unbiased bounded draws > maps values to cumulative-weight intervals in catalog order 14ms
+ ✓ tests/generator/piece-source.test.ts > unbiased bounded draws > classic catalog: every shape appears, and duplicates within a three-piece tray happen 15ms
+ ✓ tests/generator/piece-source.test.ts > determinism, restore and purity > a restored generator deals exactly what the uninterrupted one does 1ms
+ ✓ tests/generator/piece-source.test.ts > determinism, restore and purity > draw never mutates its input, so discarding a draw leaves the generator untouched 0ms
+ ✓ tests/generator/piece-source.test.ts > determinism, restore and purity > normalizes seeds to nonzero unsigned 32-bit values 4ms
+ ✓ tests/generator/piece-source.test.ts > determinism, restore and purity > rejects corrupt saved generator state 1ms
+ ✓ tests/generator/piece-source.test.ts > determinism, restore and purity > scripted source deals its list in order, purely 1ms
+ Test Files  8 passed (8)
+      Tests  139 passed (139)
