@@ -1,0 +1,16 @@
+dist/index.html                                     1.82 kB │ gzip:  0.78 kB
+dist/assets/index-JzMlSF3y.css                      0.89 kB │ gzip:  0.48 kB
+dist/assets/webworkerAll-tcZCV8rB.js                0.05 kB │ gzip:  0.06 kB
+dist/assets/getTextureBatchBindGroup-CIH9f4hr.js    0.34 kB │ gzip:  0.26 kB
+dist/assets/Cache-fNcOcM1E.js                       1.10 kB │ gzip:  0.55 kB
+dist/assets/canvasUtils-B0HNDru7.js                 6.01 kB │ gzip:  2.04 kB
+dist/assets/getTexelRangeRects-D6VCpUGy.js         11.35 kB │ gzip:  2.99 kB
+dist/assets/init-BLi19g3L.js                       15.20 kB │ gzip:  4.73 kB
+dist/assets/GCManagedHash-BNMlzcZi.js              19.31 kB │ gzip:  6.27 kB
+dist/assets/Filter-B-T9omio.js                     41.94 kB │ gzip: 12.01 kB
+dist/assets/browserAll-CIJRjWuJ.js                 43.50 kB │ gzip: 11.24 kB
+dist/assets/RenderTargetSystem-CG2OdleQ.js         58.80 kB │ gzip: 16.46 kB
+dist/assets/GraphicsContext-_4bDhvjE.js            61.68 kB │ gzip: 20.62 kB
+dist/assets/CanvasPool-BKClwQdf.js                 71.19 kB │ gzip: 23.29 kB
+dist/assets/index-DLJm3Nfs.js                     246.23 kB │ gzip: 71.95 kB
+✓ built in 255ms
