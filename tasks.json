@@ -78,7 +78,7 @@
       "depends_on": [
         "T02"
       ],
-      "status": "not_started",
+      "status": "done",
       "allowed_scope": [
         "src/domain/models",
         "src/adapters/content",
@@ -92,7 +92,8 @@
         "Cosmetic edits retain the gameplay hash; rule edits change it."
       ],
       "evidence": "Schema fixtures, content-load failure results and canonical hash examples.",
-      "boundary": "No runtime plugin loader. Unsupported features must fail rather than pretend to work."
+      "boundary": "No runtime plugin loader. Unsupported features must fail rather than pretend to work.",
+      "handoff": "docs/handoffs/T04.md"
     },
     {
       "id": "T05",

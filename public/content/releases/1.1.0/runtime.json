@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "logical_size": [
+    720,
+    960
+  ],
+  "renderer": "webgl2",
+  "resolution_cap": 2,
+  "render_fps_cap": 60,
+  "animation_dt_cap_seconds": 0.1,
+  "board_rect": [
+    60,
+    190,
+    600,
+    600
+  ],
+  "tray_rect": [
+    60,
+    810,
+    600,
+    120
+  ],
+  "minimum_viewport_css": [
+    360,
+    640
+  ],
+  "drag_threshold_css_px": 6,
+  "touch_lift_css_px": 36,
+  "minimum_control_css_px": 44,
+  "pause_on_hidden": true
+}

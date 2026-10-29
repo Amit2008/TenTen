@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "theme_id": "paper_teal_v1",
+  "background": "#F6F3EC",
+  "empty_cell": "#DDDCD4",
+  "text": "#203538",
+  "accent": "#247D80",
+  "invalid": "#B54139",
+  "ghost_alpha": 120,
+  "tile_corner_radius": 5,
+  "colors": {
+    "single": "#247D80",
+    "bar_2_h": "#CC8A36",
+    "bar_2_v": "#7D65A8",
+    "bar_3_h": "#CD6958",
+    "bar_3_v": "#598B51",
+    "bar_4_h": "#247D80",
+    "bar_4_v": "#CC8A36",
+    "bar_5_h": "#7D65A8",
+    "bar_5_v": "#CD6958",
+    "square_2": "#598B51",
+    "square_3": "#247D80",
+    "corner_2_0": "#CC8A36",
+    "corner_2_1": "#7D65A8",
+    "corner_2_2": "#CD6958",
+    "corner_2_3": "#598B51",
+    "corner_3_0": "#247D80",
+    "corner_3_1": "#CC8A36",
+    "corner_3_2": "#7D65A8",
+    "corner_3_3": "#CD6958"
+  },
+  "feedback_ms": {
+    "place": 90,
+    "clear": 180,
+    "invalid_return": 120
+  },
+  "reduced_motion": false
+}
