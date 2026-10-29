@@ -8,7 +8,7 @@
       "title": "Record the browser baseline and toolchain",
       "phase": "A",
       "depends_on": [],
-      "status": "not_started",
+      "status": "done",
       "allowed_scope": [
         "docs/reference",
         "docs/decisions"
@@ -20,7 +20,8 @@
         "ADR-001 records tool versions, target browsers, devices and rule baseline."
       ],
       "evidence": "Version output, renderer/context evidence and ADR-001.",
-      "boundary": "Do not use moving dev-branch APIs or assert universal browser support."
+      "boundary": "Do not use moving dev-branch APIs or assert universal browser support.",
+      "handoff": "docs/handoffs/T01.md"
     },
     {
       "id": "T02",
@@ -597,7 +598,7 @@
       ],
       "work": "Provide a concrete browser release candidate and review placement accuracy, touch comfort, readability, difficulty and retry pace with Amit. Record feedback and apply authorized tuning.",
       "acceptance_checks": [
-        "Amit\u2019s actual feedback and decision are recorded.",
+        "Amit’s actual feedback and decision are recorded.",
         "Any rule changes update hashes, documentation and regression fixtures.",
         "The final review is accepted or explicitly remains pending."
       ],
