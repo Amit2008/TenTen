@@ -1,0 +1,26 @@
+seed 12345 greedy run: 26 moves, score 147, final 4dfd89d8568889e9
+1 square_3@0,0 +9 = 9 9e6671bda62fe33e
+2 corner_2_2@3,0 +3 = 12 a6d22127e5079443
+3 corner_2_0@5,0 +3 = 15 1c064e10b50b0e35
+4 bar_3_h@7,0 +3 = 18 686c9e2f8e57c965
+5 bar_5_v@6,1 +5 = 23 b139571f56eb48e1
+ ✓ tests/application/session.test.ts > startSession > starts with an empty board, a full tray with unique instance ids, revision 0 and score 0 2ms
+ ✓ tests/application/session.test.ts > placePiece transaction > commits one move: places, scores, consumes only the selected slot, bumps the revision once 1ms
+ ✓ tests/application/session.test.ts > placePiece transaction > refills exactly once, only after all slots are consumed, with fresh instance ids 0ms
+ ✓ tests/application/session.test.ts > placePiece transaction > clears rows and columns, scores lines, and leaves no full line 0ms
+ ✓ tests/application/session.test.ts > placePiece transaction > detects a completely blocked fresh tray immediately and then rejects further moves 1ms
+ ✓ tests/application/session.test.ts > placePiece transaction > one blocked slot does not end the run while another slot fits 0ms
+ ✓ tests/application/session.test.ts > rejections have no effects > stale_session 1ms
+ ✓ tests/application/session.test.ts > rejections have no effects > stale_revision 1ms
+ ✓ tests/application/session.test.ts > rejections have no effects > unknown_slot (consumed) 0ms
+ ✓ tests/application/session.test.ts > rejections have no effects > unknown_slot (never dealt) 0ms
+ ✓ tests/application/session.test.ts > rejections have no effects > illegal_placement (overlap) 0ms
+ ✓ tests/application/session.test.ts > rejections have no effects > illegal_placement (outside) 0ms
+ ✓ tests/application/session.test.ts > rejections have no effects > illegal_placement (negative) 0ms
+ ✓ tests/application/session.test.ts > rejections have no effects > illegal_placement (fractional) 0ms
+ ✓ tests/application/session.test.ts > rejections have no effects > a duplicate command cannot double-score, double-deal or double-consume 0ms
+ ✓ tests/application/session.test.ts > rejections have no effects > a delayed command from a previous session cannot consume the new session's slot with the same id 0ms
+ ✓ tests/application/session.test.ts > rejections have no effects > rejected commands leave the generator exactly where it was 0ms
+ ✓ tests/application/session.test.ts > determinism with the production generator > identical seed and commands give identical state hashes 7ms
+ Test Files  1 passed (1)
+      Tests  18 passed (18)

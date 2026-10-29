@@ -216,7 +216,7 @@
         "T08",
         "T09"
       ],
-      "status": "not_started",
+      "status": "done",
       "allowed_scope": [
         "application/session",
         "tests/application/session"
@@ -228,7 +228,8 @@
         "Duplicate commands cannot double-score, double-deal or consume a new session slot."
       ],
       "evidence": "State-hash traces and lifecycle transaction tests.",
-      "boundary": "Publish only complete states; animation must not own the rules."
+      "boundary": "Publish only complete states; animation must not own the rules.",
+      "handoff": "docs/handoffs/T10.md"
     },
     {
       "id": "T11",
