@@ -124,7 +124,7 @@
       "depends_on": [
         "T05"
       ],
-      "status": "not_started",
+      "status": "done",
       "allowed_scope": [
         "domain/clearing",
         "tests/domain/clearing"
@@ -136,7 +136,8 @@
         "No gravity, partial clear, color match or second scan cascade occurs."
       ],
       "evidence": "Before and after grid fixtures with occupancy counts.",
-      "boundary": "Do not clear rows sequentially before detecting columns."
+      "boundary": "Do not clear rows sequentially before detecting columns.",
+      "handoff": "docs/handoffs/T06.md"
     },
     {
       "id": "T07",
