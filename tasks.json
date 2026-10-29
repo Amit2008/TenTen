@@ -53,7 +53,7 @@
       "depends_on": [
         "T02"
       ],
-      "status": "not_started",
+      "status": "done",
       "allowed_scope": [
         "src/bootstrap",
         "src/adapters/rendering",
@@ -68,7 +68,8 @@
         "CSS and framebuffer dimensions remain distinct at DPR 1 and 2."
       ],
       "evidence": "Build output, browser console/context details and two-base screenshots.",
-      "boundary": "Do not treat a Canvas2D or WebGPU fallback as meeting WebGL acceptance. No live publication is implied."
+      "boundary": "Do not treat a Canvas2D or WebGPU fallback as meeting WebGL acceptance. No live publication is implied.",
+      "handoff": "docs/handoffs/T03.md"
     },
     {
       "id": "T04",

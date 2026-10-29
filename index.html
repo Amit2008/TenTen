@@ -3,12 +3,23 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <link rel="icon" type="image/svg+xml" href="/icon.svg" />
     <title>Line Garden</title>
   </head>
   <body>
     <main id="app">
-      <h1>Line Garden</h1>
+      <h1 class="visually-hidden">Line Garden</h1>
       <p id="status" role="status">Loading…</p>
+      <section id="error" role="alert" hidden>
+        <h2>Line Garden can't start</h2>
+        <p id="error-message"></p>
+        <p>
+          This game needs WebGL2. Make sure hardware acceleration is turned on in your browser settings, update
+          your browser, or try another one. <a href="https://get.webgl.org/webgl2/" rel="noopener">Check WebGL2 support</a>.
+        </p>
+        <button id="retry" type="button">Retry</button>
+      </section>
+      <div id="game"></div>
     </main>
     <script type="module" src="/src/bootstrap/main.ts"></script>
   </body>
