@@ -146,7 +146,7 @@
       "depends_on": [
         "T06"
       ],
-      "status": "not_started",
+      "status": "done",
       "allowed_scope": [
         "domain/scoring",
         "tests/domain/scoring"
@@ -158,7 +158,8 @@
         "No implicit combo, streak or time bonus exists."
       ],
       "evidence": "Exact score fixture outputs.",
-      "boundary": "This is the proposed formula; do not label it verified original scoring."
+      "boundary": "This is the proposed formula; do not label it verified original scoring.",
+      "handoff": "docs/handoffs/T07.md"
     },
     {
       "id": "T08",

@@ -13,3 +13,10 @@ export function placementCells(shape: ShapeDefinition, [ax, ay]: Cell): Cell[] {
 export function canPlace(board: BoardState, shape: ShapeDefinition, anchor: Cell): boolean {
   return placementCells(shape, anchor).every((cell) => isInside(board, cell) && tileAt(board, cell) === null);
 }
+
+/** New board with the shape's cells filled by its tile key. Callers must check canPlace first. */
+export function applyPlacement(board: BoardState, shape: ShapeDefinition, anchor: Cell): BoardState {
+  const cells = board.cells.slice();
+  for (const [x, y] of placementCells(shape, anchor)) cells[y * board.columns + x] = shape.id;
+  return { columns: board.columns, rows: board.rows, cells };
+}
