@@ -1,0 +1,46 @@
+ ✓ tests/domain/placement.test.ts > canPlace on every catalog shape at the borders > single 3ms
+ ✓ tests/domain/placement.test.ts > canPlace on every catalog shape at the borders > bar_2_h 0ms
+ ✓ tests/domain/placement.test.ts > canPlace on every catalog shape at the borders > bar_2_v 0ms
+ ✓ tests/domain/placement.test.ts > canPlace on every catalog shape at the borders > bar_3_h 0ms
+ ✓ tests/domain/placement.test.ts > canPlace on every catalog shape at the borders > bar_3_v 0ms
+ ✓ tests/domain/placement.test.ts > canPlace on every catalog shape at the borders > bar_4_h 0ms
+ ✓ tests/domain/placement.test.ts > canPlace on every catalog shape at the borders > bar_4_v 0ms
+ ✓ tests/domain/placement.test.ts > canPlace on every catalog shape at the borders > bar_5_h 0ms
+ ✓ tests/domain/placement.test.ts > canPlace on every catalog shape at the borders > bar_5_v 0ms
+ ✓ tests/domain/placement.test.ts > canPlace on every catalog shape at the borders > square_2 0ms
+ ✓ tests/domain/placement.test.ts > canPlace on every catalog shape at the borders > square_3 0ms
+ ✓ tests/domain/placement.test.ts > canPlace on every catalog shape at the borders > corner_2_0 0ms
+ ✓ tests/domain/placement.test.ts > canPlace on every catalog shape at the borders > corner_2_1 0ms
+ ✓ tests/domain/placement.test.ts > canPlace on every catalog shape at the borders > corner_2_2 0ms
+ ✓ tests/domain/placement.test.ts > canPlace on every catalog shape at the borders > corner_2_3 0ms
+ ✓ tests/domain/placement.test.ts > canPlace on every catalog shape at the borders > corner_3_0 0ms
+ ✓ tests/domain/placement.test.ts > canPlace on every catalog shape at the borders > corner_3_1 0ms
+ ✓ tests/domain/placement.test.ts > canPlace on every catalog shape at the borders > corner_3_2 0ms
+ ✓ tests/domain/placement.test.ts > canPlace on every catalog shape at the borders > corner_3_3 0ms
+ ✓ tests/domain/placement.test.ts > canPlace on every catalog shape at the borders > agrees with an independent count of legal anchors on the empty board 6ms
+ ✓ tests/domain/placement.test.ts > overlap > single: any single occupied target cell rejects the whole placement 0ms
+ ✓ tests/domain/placement.test.ts > overlap > bar_2_h: any single occupied target cell rejects the whole placement 0ms
+ ✓ tests/domain/placement.test.ts > overlap > bar_2_v: any single occupied target cell rejects the whole placement 0ms
+ ✓ tests/domain/placement.test.ts > overlap > bar_3_h: any single occupied target cell rejects the whole placement 0ms
+ ✓ tests/domain/placement.test.ts > overlap > bar_3_v: any single occupied target cell rejects the whole placement 0ms
+ ✓ tests/domain/placement.test.ts > overlap > bar_4_h: any single occupied target cell rejects the whole placement 0ms
+ ✓ tests/domain/placement.test.ts > overlap > bar_4_v: any single occupied target cell rejects the whole placement 0ms
+ ✓ tests/domain/placement.test.ts > overlap > bar_5_h: any single occupied target cell rejects the whole placement 0ms
+ ✓ tests/domain/placement.test.ts > overlap > bar_5_v: any single occupied target cell rejects the whole placement 0ms
+ ✓ tests/domain/placement.test.ts > overlap > square_2: any single occupied target cell rejects the whole placement 0ms
+ ✓ tests/domain/placement.test.ts > overlap > square_3: any single occupied target cell rejects the whole placement 0ms
+ ✓ tests/domain/placement.test.ts > overlap > corner_2_0: any single occupied target cell rejects the whole placement 0ms
+ ✓ tests/domain/placement.test.ts > overlap > corner_2_1: any single occupied target cell rejects the whole placement 0ms
+ ✓ tests/domain/placement.test.ts > overlap > corner_2_2: any single occupied target cell rejects the whole placement 0ms
+ ✓ tests/domain/placement.test.ts > overlap > corner_2_3: any single occupied target cell rejects the whole placement 0ms
+ ✓ tests/domain/placement.test.ts > overlap > corner_3_0: any single occupied target cell rejects the whole placement 0ms
+ ✓ tests/domain/placement.test.ts > overlap > corner_3_1: any single occupied target cell rejects the whole placement 1ms
+ ✓ tests/domain/placement.test.ts > overlap > corner_3_2: any single occupied target cell rejects the whole placement 0ms
+ ✓ tests/domain/placement.test.ts > overlap > corner_3_3: any single occupied target cell rejects the whole placement 0ms
+ ✓ tests/domain/placement.test.ts > overlap > cells next to the shape do not block it 0ms
+ ✓ tests/domain/placement.test.ts > empty local origin > uses the bounding-box origin as the anchor 1ms
+ ✓ tests/domain/placement.test.ts > empty local origin > may sit with its empty origin over an occupied cell 0ms
+ ✓ tests/domain/placement.test.ts > empty local origin > still rejects negative anchors even though only an empty corner would be outside 0ms
+ ✓ tests/domain/placement.test.ts > purity > leaves the frozen board and shape untouched and rejects non-integer anchors 0ms
+ Test Files  1 passed (1)
+      Tests  44 passed (44)

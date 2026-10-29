@@ -102,7 +102,7 @@
       "depends_on": [
         "T04"
       ],
-      "status": "not_started",
+      "status": "done",
       "allowed_scope": [
         "domain/placement",
         "tests/domain/placement"
@@ -114,7 +114,8 @@
         "Input board and shape remain unchanged."
       ],
       "evidence": "Border and overlap fixture results.",
-      "boundary": "Do not add screen-coordinate conversion to domain rules."
+      "boundary": "Do not add screen-coordinate conversion to domain rules.",
+      "handoff": "docs/handoffs/T05.md"
     },
     {
       "id": "T06",
