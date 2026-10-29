@@ -168,7 +168,7 @@
       "depends_on": [
         "T04"
       ],
-      "status": "not_started",
+      "status": "done",
       "allowed_scope": [
         "application/piece_source",
         "adapters/random",
@@ -181,7 +181,8 @@
         "Weighted bounds, duplicate deals and rejected-command RNG preservation are tested."
       ],
       "evidence": "Golden-vector outputs, bounded-draw fixtures and cross-engine replay results.",
-      "boundary": "No Math.random for deals, hidden rerolls or browser-dependent generators."
+      "boundary": "No Math.random for deals, hidden rerolls or browser-dependent generators.",
+      "handoff": "docs/handoffs/T08.md"
     },
     {
       "id": "T09",
