@@ -30,7 +30,7 @@
       "depends_on": [
         "T01"
       ],
-      "status": "not_started",
+      "status": "done",
       "allowed_scope": [
         "project root",
         "docs",
@@ -43,7 +43,8 @@
         "Tasks not implemented remain not_started."
       ],
       "evidence": "Initial commit, clean install and build/test logs.",
-      "boundary": "Only a shell is expected; do not mark gameplay as implemented."
+      "boundary": "Only a shell is expected; do not mark gameplay as implemented.",
+      "handoff": "docs/handoffs/T02.md"
     },
     {
       "id": "T03",
