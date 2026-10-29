@@ -1,0 +1,21 @@
+{
+  "policy": "clearing",
+  "seeds": "1..1000",
+  "maxMovesPerRun": 300,
+  "runs": 1000,
+  "totalMoves": 24656,
+  "movesMinMedianMax": [
+    8,
+    23,
+    71
+  ],
+  "gameOver": 1000,
+  "hitMoveCap": 0,
+  "endedOnBlockedRefill": 23,
+  "refills": 7624,
+  "rejectionsChecked": 6186,
+  "linesCleared": 3566,
+  "multiLineMoves": 82,
+  "bestScore": 423,
+  "failures": []
+}

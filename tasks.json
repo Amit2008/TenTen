@@ -238,7 +238,7 @@
       "depends_on": [
         "T10"
       ],
-      "status": "not_started",
+      "status": "done",
       "allowed_scope": [
         "tests/property",
         "tools/replay",
@@ -251,7 +251,8 @@
         "Immediate no-move deals terminate normally."
       ],
       "evidence": "Actual seed range, commands, outputs and any minimized failures.",
-      "boundary": "Do not claim arbitrary random runs prove all possible board states."
+      "boundary": "Do not claim arbitrary random runs prove all possible board states.",
+      "handoff": "docs/handoffs/T11.md"
     },
     {
       "id": "T12",

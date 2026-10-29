@@ -1,0 +1,5 @@
+[chromium] recorded seed 2026: 20 moves, trace sha256 55f9ad8b515e571c7fb761ebef69511f6835e45d370ea12293d6c29edacd2968
+[chromium] recorded seed 2026: 20 moves, trace sha256 55f9ad8b515e571c7fb761ebef69511f6835e45d370ea12293d6c29edacd2968
+[webkit] recorded seed 2026: 20 moves, trace sha256 55f9ad8b515e571c7fb761ebef69511f6835e45d370ea12293d6c29edacd2968
+[firefox] recorded seed 2026: 20 moves, trace sha256 55f9ad8b515e571c7fb761ebef69511f6835e45d370ea12293d6c29edacd2968
+  26 passed (13.9s)
