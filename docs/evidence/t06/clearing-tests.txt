@@ -1,0 +1,10 @@
+ ✓ tests/domain/clearing.test.ts > simultaneous clears on the 10x10 board > one row crossing one column removes 19 unique cells and counts 2 lines 6ms
+ ✓ tests/domain/clearing.test.ts > simultaneous clears on the 10x10 board > two rows crossing two columns removes 36 unique cells and counts 4 lines 1ms
+ ✓ tests/domain/clearing.test.ts > simultaneous clears on the 10x10 board > a full board clears all 20 lines and all 100 cells 1ms
+ ✓ tests/domain/clearing.test.ts > what does not happen > no partial clear: a row with one gap stays, and same-colored tiles do not match 0ms
+ ✓ tests/domain/clearing.test.ts > what does not happen > no gravity: cells above and below a cleared row keep their exact positions 0ms
+ ✓ tests/domain/clearing.test.ts > what does not happen > no cascade: one call detects lines once, and the result has no full line left 0ms
+ ✓ tests/domain/clearing.test.ts > what does not happen > no lines: returns the same board and nothing cleared 0ms
+ ✓ tests/domain/clearing.test.ts > rectangular boards and purity > handles different row and column lengths and leaves the frozen input untouched 1ms
+ Test Files  1 passed (1)
+      Tests  8 passed (8)
