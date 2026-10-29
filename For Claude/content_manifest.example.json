@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "content_version": "1.1.0",
+  "runtime_contract": "webgl_puzzle_v1",
+  "files": {
+    "rules": "rules.json",
+    "pieces": "pieces.json",
+    "theme": "theme.json",
+    "runtime": "runtime.json",
+    "audio": "audio.json"
+  }
+}

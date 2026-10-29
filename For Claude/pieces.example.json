@@ -1,0 +1,436 @@
+{
+  "schema_version": 1,
+  "catalog_id": "classic_proposed_19_v1",
+  "provenance": "Proposed implementation catalog, not a verified exhaustive list from the original game.",
+  "shapes": [
+    {
+      "id": "single",
+      "cells": [
+        [
+          0,
+          0
+        ]
+      ],
+      "weight": 1,
+      "color_key": "single"
+    },
+    {
+      "id": "bar_2_h",
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "weight": 1,
+      "color_key": "bar_2_h"
+    },
+    {
+      "id": "bar_2_v",
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "weight": 1,
+      "color_key": "bar_2_v"
+    },
+    {
+      "id": "bar_3_h",
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "weight": 1,
+      "color_key": "bar_3_h"
+    },
+    {
+      "id": "bar_3_v",
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ]
+      ],
+      "weight": 1,
+      "color_key": "bar_3_v"
+    },
+    {
+      "id": "bar_4_h",
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          3,
+          0
+        ]
+      ],
+      "weight": 1,
+      "color_key": "bar_4_h"
+    },
+    {
+      "id": "bar_4_v",
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          3
+        ]
+      ],
+      "weight": 1,
+      "color_key": "bar_4_v"
+    },
+    {
+      "id": "bar_5_h",
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          4,
+          0
+        ]
+      ],
+      "weight": 1,
+      "color_key": "bar_5_h"
+    },
+    {
+      "id": "bar_5_v",
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          0,
+          4
+        ]
+      ],
+      "weight": 1,
+      "color_key": "bar_5_v"
+    },
+    {
+      "id": "square_2",
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "weight": 1,
+      "color_key": "square_2"
+    },
+    {
+      "id": "square_3",
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          2
+        ]
+      ],
+      "weight": 1,
+      "color_key": "square_3"
+    },
+    {
+      "id": "corner_2_0",
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "weight": 1,
+      "color_key": "corner_2_0"
+    },
+    {
+      "id": "corner_2_1",
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "weight": 1,
+      "color_key": "corner_2_1"
+    },
+    {
+      "id": "corner_2_2",
+      "cells": [
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "weight": 1,
+      "color_key": "corner_2_2"
+    },
+    {
+      "id": "corner_2_3",
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "weight": 1,
+      "color_key": "corner_2_3"
+    },
+    {
+      "id": "corner_3_0",
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ]
+      ],
+      "weight": 1,
+      "color_key": "corner_3_0"
+    },
+    {
+      "id": "corner_3_1",
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          2
+        ]
+      ],
+      "weight": 1,
+      "color_key": "corner_3_1"
+    },
+    {
+      "id": "corner_3_2",
+      "cells": [
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          2
+        ]
+      ],
+      "weight": 1,
+      "color_key": "corner_3_2"
+    },
+    {
+      "id": "corner_3_3",
+      "cells": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          2
+        ]
+      ],
+      "weight": 1,
+      "color_key": "corner_3_3"
+    }
+  ]
+}
