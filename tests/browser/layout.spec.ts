@@ -71,6 +71,7 @@ function expectColor(actual: number[], expected: string, what: string) {
 
 for (const dpr of [1, 2, 3]) {
   test(`all ${config.catalog.length} pieces render at DPR ${dpr} where the logical mapping puts them`, async ({ browser, baseURL }, info) => {
+    test.setTimeout(120_000); // 12 page loads and screenshots; about 30s at DPR 3 on SwiftShader
     const context = await browser.newContext({ deviceScaleFactor: dpr, viewport: { width: 800, height: 1000 }, baseURL: baseURL! });
     const page = await context.newPage();
     const rendered = new Set<string>();
@@ -124,6 +125,7 @@ const VIEWPORTS = [
   { name: 'desktop-1280x720', width: 1280, height: 720, dpr: 1 },
   { name: 'desktop-1920x1080', width: 1920, height: 1080, dpr: 1 },
   { name: 'tablet-1024x768', width: 1024, height: 768, dpr: 2 },
+  { name: 'narrow-window-420x1000', width: 420, height: 1000, dpr: 1 },
 ];
 
 for (const vp of VIEWPORTS) {
@@ -152,11 +154,14 @@ for (const vp of VIEWPORTS) {
     };
     [boxes.canvas, boxes.score, ...boxes.buttons].forEach(inside);
     expect(boxes.score.bottom).toBeLessThanOrEqual(boxes.canvas.top + 0.5);
+    // Score, canvas and buttons stay together; the letterbox goes around the group, not inside it.
+    expect(boxes.canvas.top - boxes.score.bottom).toBeLessThanOrEqual(1);
     expect(boxes.buttons).toHaveLength(config.traySize);
     for (const b of boxes.buttons) {
       expect(b.width).toBeGreaterThanOrEqual(44);
       expect(b.height).toBeGreaterThanOrEqual(44);
       expect(b.top).toBeGreaterThanOrEqual(boxes.canvas.bottom - 0.5);
+      expect(b.top - boxes.canvas.bottom).toBeLessThanOrEqual(10);
     }
     // Square cells: the canvas keeps the viewport aspect ratio.
     expect(Math.abs(boxes.canvas.width / boxes.canvas.height - VIEWPORT[2] / VIEWPORT[3])).toBeLessThan(0.01);

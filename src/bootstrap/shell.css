@@ -83,18 +83,29 @@ a:focus-visible {
   outline-offset: 2px;
 }
 
-/* The canvas is contain-fitted inside this box by fitToHost; the remaining space is the letterbox. */
+/*
+ * Score, canvas and slot buttons stay together as one centered group; the letterbox is the space around the group.
+ * fitToHost sizes the canvas from what the score and buttons leave.
+ */
 #game {
-  /* Grows into the free height but never below 240px; the canvas never feeds back into this size. */
-  flex: 1 0 240px;
+  /* Grows into the free height but never below 360px; the canvas never feeds back into this size. */
+  flex: 1 0 360px;
   min-height: 0;
-  display: grid;
-  place-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   overflow: hidden;
+}
+
+#game > * {
+  flex: none;
+  align-self: stretch;
 }
 
 #game canvas {
   display: block;
+  align-self: center;
   touch-action: none;
 }
 
