@@ -284,7 +284,7 @@
         "T03",
         "T10"
       ],
-      "status": "not_started",
+      "status": "done",
       "allowed_scope": [
         "src/presentation/views",
         "src/adapters/pixi",
@@ -299,7 +299,8 @@
         "Slot buttons remain at least 44 CSS pixels; no controls are cropped."
       ],
       "evidence": "Real-device and desktop screenshots with coordinate tests.",
-      "boundary": "Only the visual canvas uses WebGL; menus remain semantic DOM. No publisher assets."
+      "boundary": "Only the visual canvas uses WebGL; menus remain semantic DOM. No publisher assets.",
+      "handoff": "docs/handoffs/T13.md"
     },
     {
       "id": "T14",

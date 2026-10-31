@@ -1,0 +1,73 @@
+
+Running 42 tests using 8 workers
+
+[chromium] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.8078.4 Safari/537.36
+  ok  8 [nested] › tests\browser\replay.spec.ts:10:1 › golden vectors and bounded draws match Node in this engine (325ms)
+[chromium] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.8078.4 Safari/537.36
+  ok  7 [root] › tests\browser\replay.spec.ts:10:1 › golden vectors and bounded draws match Node in this engine (283ms)
+[chromium] recorded seed 2026: 20 moves, trace sha256 55f9ad8b515e571c7fb761ebef69511f6835e45d370ea12293d6c29edacd2968
+  ok  9 [nested] › tests\browser\replay.spec.ts:49:3 › recorded session replay (T11) › the recorded sequence gives identical states in this engine and in Node (168ms)
+[chromium] recorded seed 2026: 20 moves, trace sha256 55f9ad8b515e571c7fb761ebef69511f6835e45d370ea12293d6c29edacd2968
+  ok 10 [root] › tests\browser\replay.spec.ts:49:3 › recorded session replay (T11) › the recorded sequence gives identical states in this engine and in Node (169ms)
+  ok  1 [root] › tests\browser\content.spec.ts:3:1 › loads the pinned content version at startup (3.4s)
+  ok  6 [nested] › tests\browser\content.spec.ts:3:1 › loads the pinned content version at startup (3.4s)
+  ok  2 [root] › tests\browser\unsupported.spec.ts:6:1 › shows the HTML error and a working Retry when WebGL2 is unavailable (4.3s)
+[root] http://localhost:4173/ {"isWebGL2":true,"gpu":"ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)","css":[492,568],"backing":[492,568],"dpr":1}
+  ok  4 [root] › tests\browser\shell.spec.ts:18:1 › starts an actual WebGL2 renderer and loads base-relative assets (5.4s)
+[nested] http://localhost:4174/TenTen/ {"isWebGL2":true,"gpu":"ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)","css":[492,568],"backing":[492,568],"dpr":1}
+  ok 11 [nested] › tests\browser\shell.spec.ts:18:1 › starts an actual WebGL2 renderer and loads base-relative assets (5.5s)
+  ok 12 [root] › tests\browser\content.spec.ts:8:1 › a content failure shows an HTML error, not a spinner, and Retry recovers (4.0s)
+  ok 13 [nested] › tests\browser\content.spec.ts:8:1 › a content failure shows an HTML error, not a spinner, and Retry recovers (3.0s)
+  ok 14 [root] › tests\browser\shell.spec.ts:35:3 › CSS size and framebuffer stay distinct at DPR 1 (cap 2) (2.2s)
+  ok 15 [nested] › tests\browser\shell.spec.ts:35:3 › CSS size and framebuffer stay distinct at DPR 1 (cap 2) (1.5s)
+  ok 16 [root] › tests\browser\content.spec.ts:26:1 › malformed hosted rules are rejected before play (878ms)
+  ok 17 [nested] › tests\browser\content.spec.ts:26:1 › malformed hosted rules are rejected before play (1.2s)
+  ok 18 [root] › tests\browser\shell.spec.ts:35:3 › CSS size and framebuffer stay distinct at DPR 2 (cap 2) (1.6s)
+  ok 19 [nested] › tests\browser\shell.spec.ts:35:3 › CSS size and framebuffer stay distinct at DPR 2 (cap 2) (1.7s)
+  ok 20 [root] › tests\browser\shell.spec.ts:35:3 › CSS size and framebuffer stay distinct at DPR 3 (cap 2) (1.5s)
+  ok 21 [nested] › tests\browser\shell.spec.ts:35:3 › CSS size and framebuffer stay distinct at DPR 3 (cap 2) (1.6s)
+  ok 23 [root] › tests\browser\shell.spec.ts:48:1 › refits the canvas when the container resizes, letterboxed without cropping (1.2s)
+  ok 24 [nested] › tests\browser\shell.spec.ts:48:1 › refits the canvas when the container resizes, letterboxed without cropping (1.9s)
+  ok 22 [nested] › tests\browser\unsupported.spec.ts:6:1 › shows the HTML error and a working Retry when WebGL2 is unavailable (2.3s)
+[nested] DPR 1: seeds 1,2,3,4,6,7,8,11,12,13,27,31 rendered all 19 shapes
+  ok  5 [nested] › tests\browser\layout.spec.ts:73:3 › all 19 pieces render at DPR 1 where the logical mapping puts them (19.3s)
+[webkit] Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/27.2 Safari/605.1.15
+  ok 26 [webkit] › tests\browser\replay.spec.ts:10:1 › golden vectors and bounded draws match Node in this engine (2.2s)
+[root] DPR 1: seeds 1,2,3,4,6,7,8,11,12,13,27,31 rendered all 19 shapes
+  ok  3 [root] › tests\browser\layout.spec.ts:73:3 › all 19 pieces render at DPR 1 where the logical mapping puts them (20.1s)
+[webkit] recorded seed 2026: 20 moves, trace sha256 55f9ad8b515e571c7fb761ebef69511f6835e45d370ea12293d6c29edacd2968
+  ok 28 [webkit] › tests\browser\replay.spec.ts:49:3 › recorded session replay (T11) › the recorded sequence gives identical states in this engine and in Node (737ms)
+[firefox] Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:157.0) Gecko/20100101 Firefox/157.0
+  ok 25 [firefox] › tests\browser\replay.spec.ts:10:1 › golden vectors and bounded draws match Node in this engine (4.0s)
+[firefox] recorded seed 2026: 20 moves, trace sha256 55f9ad8b515e571c7fb761ebef69511f6835e45d370ea12293d6c29edacd2968
+  ok 30 [firefox] › tests\browser\replay.spec.ts:49:3 › recorded session replay (T11) › the recorded sequence gives identical states in this engine and in Node (3.0s)
+[nested] DPR 2: seeds 1,2,3,4,6,7,8,11,12,13,27,31 rendered all 19 shapes
+  ok 27 [nested] › tests\browser\layout.spec.ts:73:3 › all 19 pieces render at DPR 2 where the logical mapping puts them (28.1s)
+[root] DPR 2: seeds 1,2,3,4,6,7,8,11,12,13,27,31 rendered all 19 shapes
+  ok 29 [root] › tests\browser\layout.spec.ts:73:3 › all 19 pieces render at DPR 2 where the logical mapping puts them (28.2s)
+[nested] DPR 3: seeds 1,2,3,4,6,7,8,11,12,13,27,31 rendered all 19 shapes
+  ok 31 [nested] › tests\browser\layout.spec.ts:73:3 › all 19 pieces render at DPR 3 where the logical mapping puts them (25.9s)
+[nested] phone-360x640: canvas 360x415 CSS px, board cell 30.0 CSS px, page height 640
+[root] DPR 3: seeds 1,2,3,4,6,7,8,11,12,13,27,31 rendered all 19 shapes
+  ok 32 [root] › tests\browser\layout.spec.ts:73:3 › all 19 pieces render at DPR 3 where the logical mapping puts them (25.5s)
+  ok 33 [nested] › tests\browser\layout.spec.ts:130:3 › layout fits phone-360x640 with no cropped controls (518ms)
+[nested] phone-landscape-844x390: canvas 208x240 CSS px, board cell 17.3 CSS px, page height 392
+[root] phone-360x640: canvas 360x415 CSS px, board cell 30.0 CSS px, page height 640
+  ok 35 [nested] › tests\browser\layout.spec.ts:130:3 › layout fits phone-landscape-844x390 with no cropped controls (407ms)
+  ok 34 [root] › tests\browser\layout.spec.ts:130:3 › layout fits phone-360x640 with no cropped controls (467ms)
+[root] phone-landscape-844x390: canvas 208x240 CSS px, board cell 17.3 CSS px, page height 392
+[nested] desktop-1280x720: canvas 492x568 CSS px, board cell 41.0 CSS px, page height 720
+  ok 36 [nested] › tests\browser\layout.spec.ts:130:3 › layout fits desktop-1280x720 with no cropped controls (354ms)
+  ok 37 [root] › tests\browser\layout.spec.ts:130:3 › layout fits phone-landscape-844x390 with no cropped controls (369ms)
+[root] desktop-1280x720: canvas 492x568 CSS px, board cell 41.0 CSS px, page height 720
+  ok 39 [root] › tests\browser\layout.spec.ts:130:3 › layout fits desktop-1280x720 with no cropped controls (331ms)
+[nested] desktop-1920x1080: canvas 805x928 CSS px, board cell 67.1 CSS px, page height 1080
+  ok 38 [nested] › tests\browser\layout.spec.ts:130:3 › layout fits desktop-1920x1080 with no cropped controls (457ms)
+[root] desktop-1920x1080: canvas 805x928 CSS px, board cell 67.1 CSS px, page height 1080
+  ok 40 [root] › tests\browser\layout.spec.ts:130:3 › layout fits desktop-1920x1080 with no cropped controls (508ms)
+[nested] tablet-1024x768: canvas 534x616 CSS px, board cell 44.5 CSS px, page height 768
+  ok 41 [nested] › tests\browser\layout.spec.ts:130:3 › layout fits tablet-1024x768 with no cropped controls (748ms)
+[root] tablet-1024x768: canvas 534x616 CSS px, board cell 44.5 CSS px, page height 768
+  ok 42 [root] › tests\browser\layout.spec.ts:130:3 › layout fits tablet-1024x768 with no cropped controls (725ms)
+
+  42 passed (1.5m)

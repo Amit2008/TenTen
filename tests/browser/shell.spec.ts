@@ -18,12 +18,12 @@ async function canvasInfo(page: Page) {
 test('starts an actual WebGL2 renderer and loads base-relative assets', async ({ page, baseURL }, info) => {
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(e.message));
-  const icon = page.waitForResponse((r) => r.url().endsWith('/icon.svg') && r.request().resourceType() !== 'other');
+  const index = page.waitForResponse((r) => r.url().includes('/content/index.json'));
   await page.goto('./');
   await expect(page.getByRole('status')).toHaveText(/Renderer ready \(WebGL2\)/);
-  const iconResponse = await icon;
-  expect(iconResponse.url()).toBe(`${baseURL}icon.svg`);
-  expect(iconResponse.status()).toBe(200);
+  const indexResponse = await index;
+  expect(indexResponse.url()).toBe(`${baseURL}content/index.json`);
+  expect(indexResponse.status()).toBe(200);
   const result = await canvasInfo(page);
   expect(result.isWebGL2).toBe(true);
   console.log(`[${info.project.name}] ${baseURL} ${JSON.stringify(result)}`);
@@ -40,7 +40,7 @@ for (const dpr of [1, 2, 3]) {
     const { css, backing } = await canvasInfo(page);
     const resolution = Math.min(dpr, 2);
     expect(backing).toEqual([css[0]! * resolution, css[1]! * resolution]);
-    expect(Math.abs(css[0]! / css[1]! - 720 / 960)).toBeLessThan(0.01); // square cells: aspect preserved
+    expect(Math.abs(css[0]! / css[1]! - 720 / 830)).toBeLessThan(0.01); // square cells: viewport aspect preserved
     await context.close();
   });
 }
