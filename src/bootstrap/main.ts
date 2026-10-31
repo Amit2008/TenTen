@@ -3,9 +3,12 @@ import { loadContent } from '../adapters/content/load-content';
 import { Hud } from '../adapters/dom/hud';
 import { GameView } from '../adapters/pixi/game-view';
 import { cryptoSeed } from '../adapters/random/crypto-seed';
+import { attachPointer } from '../adapters/pointer/pointer-adapter';
 import { createWebGL2App, fitToHost } from '../adapters/rendering/webgl-app';
 import { createGenerator, weightedPieceSource } from '../application/piece-source/piece-source';
-import { startSession, type SessionRules } from '../application/session/session';
+import { GameSession, startSession, type SessionRules } from '../application/session/session';
+import type { SessionState } from '../domain/models/types';
+import { DragController } from '../presentation/drag/drag';
 import { boardLayout, trayLayout, viewportRect } from '../presentation/views/layout';
 import { appUrl } from './app-url';
 import './shell.css';
@@ -23,6 +26,7 @@ const slotGroup = document.getElementById('slots')!;
 let app: Application | undefined;
 let hud: Hud | undefined;
 let disposeFit: (() => void) | undefined;
+let disposePointer: (() => void) | undefined;
 let loadGeneration = 0;
 let loadAbort: AbortController | undefined;
 
@@ -34,11 +38,12 @@ function initialSeed(): number {
 }
 
 function teardown(): void {
+  disposePointer?.();
   disposeFit?.();
   app?.destroy(true);
   hud?.destroy();
   hudPanel.hidden = true;
-  app = hud = disposeFit = undefined;
+  app = hud = disposeFit = disposePointer = undefined;
 }
 
 async function start(): Promise<void> {
@@ -57,25 +62,37 @@ async function start(): Promise<void> {
     const { gameplay, runtime, theme } = content;
     // shortcut: session id and seed are created per page load; T17/T18 add saves, Continue and restart.
     const rules: SessionRules = { config: gameplay, gameplayHash: content.gameplayHash, source: weightedPieceSource };
-    const state = startSession(rules, crypto.randomUUID(), createGenerator(initialSeed()));
+    const session = new GameSession(rules, startSession(rules, crypto.randomUUID(), createGenerator(initialSeed())));
+    const board = boardLayout(runtime.boardRect, gameplay.columns, gameplay.rows);
+    const tray = trayLayout(runtime.trayRect, gameplay.traySize, gameplay.catalog);
+    const viewport = viewportRect(runtime.logicalSize, runtime.boardRect);
 
     app.renderer.background.color = theme.background;
-    const view = new GameView(
-      gameplay,
-      theme,
-      content.colorKeys,
-      boardLayout(runtime.boardRect, gameplay.columns, gameplay.rows),
-      trayLayout(runtime.trayRect, gameplay.traySize, gameplay.catalog),
-    );
+    const view = new GameView(gameplay, theme, content.colorKeys, board, tray);
     app.stage.addChild(view.container);
-    view.update(state);
-    hud = new Hud(gameplay, scoreOutput, slotGroup);
-    hud.update(state);
+    const shownHud = (hud = new Hud(gameplay, scoreOutput, slotGroup));
+    const show = (state: SessionState): void => {
+      view.update(state);
+      shownHud.update(state);
+      // shortcut: plain status text until the results screen (T18).
+      if (state.status === 'game_over') status.textContent = `No moves left. Final score ${state.score}.`;
+    };
+    show(session.state);
     hudPanel.hidden = false;
 
+    const drag = new DragController(
+      { config: gameplay, viewport, board, tray, dragThresholdCssPx: runtime.dragThresholdCssPx, touchLiftCssPx: runtime.touchLiftCssPx },
+      () => session.state,
+      (preview) => view.showDrag(preview),
+      (command) => {
+        const result = session.place(command);
+        if (result.accepted) show(result.state);
+      },
+    );
     slotGroup.before(app.canvas);
-    disposeFit = fitToHost(app, host, viewportRect(runtime.logicalSize, runtime.boardRect), runtime.resolutionCap);
-    status.textContent = `Renderer ready (WebGL2). Content ${content.contentVersion} loaded.`;
+    disposeFit = fitToHost(app, host, viewport, runtime.resolutionCap);
+    disposePointer = attachPointer(app.canvas, drag);
+    if (session.state.status === 'active') status.textContent = `Renderer ready (WebGL2). Content ${content.contentVersion} loaded.`;
   } catch (error) {
     if (generation !== loadGeneration) return;
     teardown();
