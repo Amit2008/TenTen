@@ -33,10 +33,15 @@ export async function createWebGL2App({ logicalSize: [width, height], resolution
   return app;
 }
 
-/** Contain-fit the logical `viewport` rect inside `host`: square scaling, letterboxed, DPR-capped backing buffer. */
+/**
+ * Contain-fit the logical `viewport` rect inside `host`: square scaling, letterboxed, DPR-capped backing buffer.
+ * Other children of `host` (score, slot buttons) keep their height; the canvas gets the rest.
+ */
 export function fitToHost(app: Application, host: HTMLElement, [x, y, width, height]: Rect, resolutionCap: number): () => void {
   const fit = (): void => {
-    const scale = Math.min(host.clientWidth / width, host.clientHeight / height);
+    let reserved = 0;
+    for (const child of host.children) if (child !== app.canvas) reserved += (child as HTMLElement).offsetHeight;
+    const scale = Math.min(host.clientWidth / width, (host.clientHeight - reserved) / height);
     if (!(scale > 0)) return;
     const cssWidth = Math.floor(width * scale);
     const cssHeight = Math.floor(height * scale);

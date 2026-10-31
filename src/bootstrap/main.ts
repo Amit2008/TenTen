@@ -73,7 +73,7 @@ async function start(): Promise<void> {
     hud.update(state);
     hudPanel.hidden = false;
 
-    host.appendChild(app.canvas);
+    slotGroup.before(app.canvas);
     disposeFit = fitToHost(app, host, viewportRect(runtime.logicalSize, runtime.boardRect), runtime.resolutionCap);
     status.textContent = `Renderer ready (WebGL2). Content ${content.contentVersion} loaded.`;
   } catch (error) {
