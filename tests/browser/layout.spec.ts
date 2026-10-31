@@ -1,33 +1,7 @@
-import { expect, test, type Page } from '@playwright/test';
-import { readFileSync } from 'node:fs';
-import { createGenerator, weightedPieceSource } from '../../src/application/piece-source/piece-source';
-import { startSession } from '../../src/application/session/session';
-import { parseGameplay } from '../../src/domain/models/gameplay-config';
+import { expect, test } from '@playwright/test';
 import type { ShapeDefinition } from '../../src/domain/models/types';
-import {
-  boardLayout,
-  cellAt,
-  cellOrigin,
-  clientToLogical,
-  logicalToClient,
-  slotGrid,
-  trayLayout,
-  viewportRect,
-  type ClientBox,
-  type Point,
-  type Rect,
-} from '../../src/presentation/views/layout';
-
-const release = (file: string) => JSON.parse(readFileSync(`public/content/releases/1.1.0/${file}`, 'utf8'));
-const { config, colorKeys } = parseGameplay(release('rules.json'), release('pieces.json'));
-const runtime = release('runtime.json');
-const theme = release('theme.json');
-const VIEWPORT = viewportRect(runtime.logical_size, runtime.board_rect);
-const BOARD = boardLayout(runtime.board_rect as Rect, config.columns, config.rows);
-const TRAY = trayLayout(runtime.tray_rect as Rect, config.traySize, config.catalog);
-const rules = { config, gameplayHash: 'layout-test', source: weightedPieceSource };
-const trayFor = (seed: number) =>
-  startSession(rules, 'layout', createGenerator(seed)).tray.map((s) => config.catalog.find((c) => c.id === s!.shapeId)!);
+import { cellAt, cellOrigin, clientToLogical, logicalToClient, slotGrid, type Point } from '../../src/presentation/views/layout';
+import { BOARD, colorKeys, config, expectColor, ready, sample, theme, TRAY, trayFor, VIEWPORT } from './helpers';
 
 // The smallest seeds whose first deals together show all 19 shapes, found with the same session code the page runs.
 const SEEDS: number[] = [];
@@ -37,36 +11,6 @@ for (const seen = new Set<string>(); seen.size < config.catalog.length; ) {
   while (trayFor(s).every((shape) => seen.has(shape.id))) s++;
   trayFor(s).forEach((shape) => seen.add(shape.id));
   SEEDS.push(s);
-}
-
-const hex = (color: string) => [1, 3, 5].map((i) => parseInt(color.slice(i, i + 2), 16));
-
-async function ready(page: Page, path: string): Promise<ClientBox> {
-  await page.goto(path);
-  await expect(page.getByRole('status')).toHaveText(/Renderer ready/);
-  // Two frames: the fit and the first render after it.
-  await page.evaluate(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))));
-  return page.locator('#game canvas').evaluate((c) => c.getBoundingClientRect().toJSON());
-}
-
-/** RGB of the page screenshot at CSS client points: what is actually on screen, at device-pixel resolution. */
-async function sample(page: Page, points: readonly Point[]): Promise<number[][]> {
-  const png = (await page.screenshot()).toString('base64');
-  return page.evaluate(
-    async ({ png, points }) => {
-      const bitmap = await createImageBitmap(await (await fetch(`data:image/png;base64,${png}`)).blob());
-      const ctx = new OffscreenCanvas(bitmap.width, bitmap.height).getContext('2d')!;
-      ctx.drawImage(bitmap, 0, 0);
-      return points.map(([x, y]) => Array.from(ctx.getImageData(Math.floor(x * devicePixelRatio), Math.floor(y * devicePixelRatio), 1, 1).data.slice(0, 3)));
-    },
-    { png, points },
-  );
-}
-
-function expectColor(actual: number[], expected: string, what: string) {
-  const want = hex(expected);
-  const off = Math.max(...want.map((v, i) => Math.abs(v - actual[i]!)));
-  expect(off, `${what}: got rgb(${actual}) want ${expected}`).toBeLessThanOrEqual(6);
 }
 
 for (const dpr of [1, 2, 3]) {

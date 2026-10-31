@@ -12,6 +12,8 @@ const outerLayers = (layers: string) => new RegExp(`from\\s+['"][^'"]*\\/(${laye
 const RULES = {
   'src/domain': [...BROWSER_AND_CLOCK, outerLayers('application|presentation|adapters|bootstrap')],
   'src/application': [...BROWSER_AND_CLOCK, outerLayers('presentation|adapters|bootstrap')],
+  // Presentation logic (layout, drag) is fed plain samples by adapters, so it is testable in Node too.
+  'src/presentation': [...BROWSER_AND_CLOCK, outerLayers('adapters|bootstrap')],
 };
 
 function violations(source: string, rules: RegExp[]): RegExp[] {

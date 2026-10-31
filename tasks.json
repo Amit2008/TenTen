@@ -310,7 +310,7 @@
         "T13",
         "T05"
       ],
-      "status": "not_started",
+      "status": "done",
       "allowed_scope": [
         "src/presentation/drag",
         "src/adapters/pointer",
@@ -323,7 +323,8 @@
         "A second finger and compatibility click cannot double-submit."
       ],
       "evidence": "Pointer fixtures and recordings from real touch hardware.",
-      "boundary": "Set touch-action only on the game canvas; do not disable page navigation globally."
+      "boundary": "Set touch-action only on the game canvas; do not disable page navigation globally.",
+      "handoff": "docs/handoffs/T14.md"
     },
     {
       "id": "T15",
