@@ -19,7 +19,11 @@
         </p>
         <button id="retry" type="button">Retry</button>
       </section>
-      <div id="game"></div>
+      <section id="hud" aria-label="Game" hidden>
+        <p id="score-line">Score <span id="score">0</span></p>
+        <div id="game"></div>
+        <div id="slots" role="group" aria-label="Tray slots"></div>
+      </section>
     </main>
     <script type="module" src="/src/bootstrap/main.ts"></script>
   </body>

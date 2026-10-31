@@ -1,4 +1,5 @@
 import { Application, RendererType, type WebGLRenderer } from 'pixi.js';
+import type { Rect } from '../../presentation/views/layout';
 import type { RuntimeConfig } from '../content/presentation-config';
 
 type Viewport = Pick<RuntimeConfig, 'logicalSize' | 'resolutionCap'>;
@@ -32,13 +33,17 @@ export async function createWebGL2App({ logicalSize: [width, height], resolution
   return app;
 }
 
-/** Contain-fit the logical area inside `host`: square scaling, letterboxed, DPR-capped backing buffer. */
-export function fitToHost(app: Application, host: HTMLElement, { logicalSize: [width, height], resolutionCap }: Viewport): () => void {
+/** Contain-fit the logical `viewport` rect inside `host`: square scaling, letterboxed, DPR-capped backing buffer. */
+export function fitToHost(app: Application, host: HTMLElement, [x, y, width, height]: Rect, resolutionCap: number): () => void {
   const fit = (): void => {
     const scale = Math.min(host.clientWidth / width, host.clientHeight / height);
     if (!(scale > 0)) return;
-    app.renderer.resize(Math.floor(width * scale), Math.floor(height * scale), Math.min(devicePixelRatio, resolutionCap));
-    app.stage.scale.set(scale);
+    const cssWidth = Math.floor(width * scale);
+    const cssHeight = Math.floor(height * scale);
+    app.renderer.resize(cssWidth, cssHeight, Math.min(devicePixelRatio, resolutionCap));
+    // Scale from the floored CSS box so drawing matches clientToLogical exactly (the aspect error is under 1 px).
+    app.stage.scale.set(cssWidth / width, cssHeight / height);
+    app.stage.position.set((-x * cssWidth) / width, (-y * cssHeight) / height);
   };
   const observer = new ResizeObserver(fit);
   observer.observe(host);
