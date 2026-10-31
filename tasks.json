@@ -333,7 +333,7 @@
       "depends_on": [
         "T14"
       ],
-      "status": "not_started",
+      "status": "done",
       "allowed_scope": [
         "presentation/input_modes",
         "tests/input_modes"
@@ -345,7 +345,8 @@
         "Tab focus, browser shortcuts and page scrolling outside the game remain usable."
       ],
       "evidence": "Control matrix and real keyboard/touch walkthrough.",
-      "boundary": "Do not add rotation or automatic placement assistance."
+      "boundary": "Do not add rotation or automatic placement assistance.",
+      "handoff": "docs/handoffs/T15.md"
     },
     {
       "id": "T16",

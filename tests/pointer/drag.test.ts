@@ -6,6 +6,7 @@ import { placementCells } from '../../src/domain/placement/placement';
 import { DragController, type DragPreview, type PointerSample } from '../../src/presentation/drag/drag';
 import {
   boardLayout,
+  cellAt,
   cellOrigin,
   logicalToClient,
   slotGrid,
@@ -57,12 +58,30 @@ const occupied = (state: SessionState): Cell[] =>
   state.board.cells.flatMap((t, i) => (t === null ? [] : [[i % 10, Math.floor(i / 10)] as Cell]));
 
 describe('picking', () => {
-  it('starts only on an occupied cell of a live tray piece', () => {
-    const { drag, sample, trayCell, boardCell } = setup();
-    expect(drag.down(sample(trayCell(0, [0, 0])))).toBe(false); // corner_3_2's empty origin
-    expect(drag.down(sample(trayCell(0, [1, 1])))).toBe(false); // empty middle of the L
-    expect(drag.down(sample(boardCell([4, 4])))).toBe(false);
+  it('drags only from an occupied cell of a live tray piece; other presses are taps at most', () => {
+    const { drag, sample, trayCell, boardCell, previews, commits } = setup();
+    // corner_3_2's empty origin, the empty middle of the L, and the board: claimed, but moving never drags.
+    for (const start of [trayCell(0, [0, 0]), trayCell(0, [1, 1]), boardCell([4, 4])]) {
+      expect(drag.down(sample(start))).toBe(true);
+      drag.move(sample(boardCell([5, 5])));
+      expect(drag.up(sample(boardCell([5, 5])))).toBe(false);
+    }
+    expect(previews).toEqual([]);
+    expect(commits).toEqual([]);
     expect(drag.down(sample(trayCell(0, [2, 0])))).toBe(true);
+    drag.move(sample(boardCell([5, 5])));
+    expect(previews).toHaveLength(1);
+  });
+
+  it('reports a press that stays under the threshold as a tap at the release point', () => {
+    const taps: Point[] = [];
+    const { session, sample, boardCell } = setup();
+    const drag = new DragController(SETTINGS, () => session.state, () => {}, () => {}, (p) => taps.push(p));
+    const [x, y] = boardCell([3, 4]);
+    drag.down(sample([x, y]));
+    drag.up(sample([x + 2, y + 2]));
+    expect(taps).toHaveLength(1);
+    expect(cellAt(BOARD, taps[0]!)).toEqual([3, 4]);
   });
 
   it('ignores a second pointer while one is active', () => {
