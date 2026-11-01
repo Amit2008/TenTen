@@ -1,0 +1,22 @@
+
+> line-garden@0.1.0 build
+> vite build
+
+vite v8.3.5 building client environment for production...
+transforming...
+✓ 742 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                                     1.73 kB │ gzip:  0.78 kB
+dist/assets/index-DcnohxgY.css                      1.57 kB │ gzip:  0.69 kB
+dist/assets/webworkerAll-BkqteioD.js                0.05 kB │ gzip:  0.06 kB
+dist/assets/getTextureBatchBindGroup-Bovnqqoa.js    0.34 kB │ gzip:  0.27 kB
+dist/assets/canvasUtils-DQ7kH_ro.js                 6.01 kB │ gzip:  2.05 kB
+dist/assets/getTexelRangeRects-BE1Lm1Q5.js         11.31 kB │ gzip:  2.97 kB
+dist/assets/init-BRqp1iwG.js                       15.18 kB │ gzip:  4.76 kB
+dist/assets/browserAll-X7jIS3nn.js                 43.48 kB │ gzip: 11.27 kB
+dist/assets/RenderTargetSystem-BCojzyLM.js         78.07 kB │ gzip: 22.11 kB
+dist/assets/CanvasPool-BTOKPhVB.js                112.97 kB │ gzip: 34.44 kB
+dist/assets/index-DPYknJwu.js                     275.73 kB │ gzip: 82.58 kB
+
+✓ built in 297ms

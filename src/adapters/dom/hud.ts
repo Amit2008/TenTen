@@ -2,7 +2,7 @@ import type { GameplayConfig, SessionState } from '../../domain/models/types';
 
 /**
  * Score and semantic tray slot buttons (GDD 6.1). The buttons are the 44 CSS pixel alternative to picking small tray
- * cells; selecting a slot is wired in T15.
+ * cells: each selects its slot by index and never starts a drag.
  */
 export class Hud {
   readonly #buttons: HTMLButtonElement[];
@@ -11,11 +11,14 @@ export class Hud {
     private readonly config: GameplayConfig,
     private readonly score: HTMLElement,
     private readonly slots: HTMLElement,
+    onSelect: (slot: number) => void,
   ) {
     this.#buttons = Array.from({ length: config.traySize }, (_, i) => {
       const button = document.createElement('button');
       button.type = 'button';
       button.textContent = String(i + 1);
+      button.setAttribute('aria-pressed', 'false');
+      button.addEventListener('click', () => onSelect(i));
       return button;
     });
     slots.replaceChildren(...this.#buttons);
@@ -32,6 +35,10 @@ export class Hud {
         shape ? `Slot ${i + 1}: ${shape.cells.length} cells, ${shape.width} wide by ${shape.height} tall` : `Slot ${i + 1}: used`,
       );
     });
+  }
+
+  setSelected(slot: number | null): void {
+    this.#buttons.forEach((b, i) => b.setAttribute('aria-pressed', String(i === slot)));
   }
 
   destroy(): void {

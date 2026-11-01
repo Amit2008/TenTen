@@ -1,6 +1,7 @@
 import { Container, Graphics, type FillInput } from 'pixi.js';
 import type { BoardState, Cell, GameplayConfig, SessionState, SlotInstance, TileKey } from '../../domain/models/types';
 import type { DragPreview } from '../../presentation/drag/drag';
+import type { PlacementPreview } from '../../presentation/views/preview';
 import { cellOrigin, slotGrid, type GridLayout, type TrayLayout } from '../../presentation/views/layout';
 import type { ThemeConfig } from '../content/presentation-config';
 
@@ -56,10 +57,27 @@ export class GameView {
       this.#floating.tint = this.#color(shape.id);
     }
     this.#floating.position.set(...preview.floating);
+    // Pointer moves are frequent; the board cannot change during a drag, so redraw only when the anchor moves.
     const key = `${shape.id}@${preview.anchor.join(',')}`;
     if (key === this.#ghostKey) return;
     this.#ghostKey = key;
     this.#drawGhost(preview);
+  }
+
+  /** Tap/keyboard selection: highlighted tray slot, anchor marker and ghost; the piece stays in the tray. */
+  showSelection(preview: PlacementPreview | null): void {
+    this.#slots.forEach((s) => (s.graphics.visible = true));
+    this.#floating.visible = false;
+    this.#ghostKey = '';
+    if (!preview) return void this.#ghost.clear();
+    this.#drawGhost(preview);
+    const g = this.#ghost;
+    const width = this.board.pitch * 0.06;
+    const [x, y, w, h] = this.tray.slots[preview.slot]!;
+    g.roundRect(x + width, y + width, w - 2 * width, h - 2 * width, 8).stroke({ width, color: this.theme.accent });
+    // A ring on the anchor cell: the bounding-box origin, visible even when that cell of the shape is empty.
+    const [ax, ay] = cellOrigin(this.board, preview.anchor);
+    g.circle(ax + this.board.pitch / 2, ay + this.board.pitch / 2, this.board.pitch * 0.22).stroke({ width, color: this.theme.text });
   }
 
   update(state: SessionState): void {
@@ -84,7 +102,7 @@ export class GameView {
     view.graphics.tint = this.#color(shape.id);
   }
 
-  #drawGhost({ shape, cells, valid, completedRows, completedColumns }: DragPreview): void {
+  #drawGhost({ shape, cells, valid, completedRows, completedColumns }: PlacementPreview): void {
     const g = this.#ghost.clear();
     const { pitch } = this.board;
     if (!valid) {
