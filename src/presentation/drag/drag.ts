@@ -57,6 +57,10 @@ export class DragController {
     private readonly onTap: (point: Point) => void = () => {},
   ) {}
 
+  get dragging(): boolean {
+    return this.#active?.dragging ?? false;
+  }
+
   /** Claims the pointer while the run is active and no other pointer is. */
   down(sample: PointerSample): boolean {
     const state = this.getState();

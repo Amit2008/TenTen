@@ -26,6 +26,10 @@ export class SelectionController {
     private readonly onCommit: (command: PlacePiece) => void,
   ) {}
 
+  get selected(): boolean {
+    return this.#instanceId !== null;
+  }
+
   /** Selects a live slot; selecting the selected slot again clears the selection. */
   selectSlot(slot: number): void {
     const instance = this.getState().tray[slot];

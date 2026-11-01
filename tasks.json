@@ -355,7 +355,7 @@
       "depends_on": [
         "T15"
       ],
-      "status": "not_started",
+      "status": "done",
       "allowed_scope": [
         "presentation/states",
         "presentation/feedback",
@@ -368,7 +368,8 @@
         "Restart and teardown invalidate callbacks and remove listeners."
       ],
       "evidence": "Visibility tests, event listener checks and visual recordings.",
-      "boundary": "No domain timers; feedback cannot change gameplay results."
+      "boundary": "No domain timers; feedback cannot change gameplay results.",
+      "handoff": "docs/handoffs/T16.md"
     },
     {
       "id": "T17",
