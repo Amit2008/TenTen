@@ -28,6 +28,7 @@ export class SaveQueue {
   #writing = false;
   #status: SaveStatus;
   #stopped = false;
+  #idle: (() => void)[] = [];
 
   constructor(
     store: SaveStore | null,
@@ -64,6 +65,17 @@ export class SaveQueue {
     void this.#flush();
   }
 
+  /** Resolves once nothing is in flight: after the last write completes, fails or conflicts (or at once). */
+  whenIdle(): Promise<void> {
+    if (!this.#writing) return Promise.resolve();
+    return new Promise((resolve) => this.#idle.push(resolve));
+  }
+
+  /** The tab just read this revision from storage (Continue); later writes build on it. */
+  adopt(storageRevision: number): void {
+    if (!this.#writing && this.#status !== 'conflict') this.#expected = storageRevision;
+  }
+
   /** Teardown: late completions are ignored and nothing more is written. */
   stop(): void {
     this.#stopped = true;
@@ -79,7 +91,7 @@ export class SaveQueue {
       try {
         await this.#store!.write(this.#expected, next);
       } catch (error) {
-        this.#writing = false;
+        this.#settle();
         if (this.#stopped) return;
         if (error instanceof SaveConflictError) {
           this.#pending = null;
@@ -88,11 +100,16 @@ export class SaveQueue {
         this.#pending ??= next; // a newer snapshot, if any, replaces the failed one
         return this.#set('session_only', error);
       }
-      if (this.#stopped) return;
+      if (this.#stopped) return this.#settle();
       this.#expected = next.storageRevision;
     }
-    this.#writing = false;
+    this.#settle();
     if (!this.#stopped && !this.#pending) this.#set('saved');
+  }
+
+  #settle(): void {
+    this.#writing = false;
+    for (const resolve of this.#idle.splice(0)) resolve();
   }
 
   #set(status: SaveStatus, error?: unknown): void {

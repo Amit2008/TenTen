@@ -51,6 +51,13 @@ export class PresentationStates {
     this.#paused = true;
   }
 
+  /** A different run starts: drop any feedback and pause without reporting a completion. */
+  reset(): void {
+    this.#paused = false;
+    this.#feedback = null;
+    this.#resetClock = true;
+  }
+
   /** Continues the same visual event; nothing is replayed. */
   resume(): void {
     this.#paused = false;

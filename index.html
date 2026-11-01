@@ -32,9 +32,30 @@
             <button id="save-retry" type="button" hidden>Retry saving</button>
           </p>
           <div id="slots" role="group" aria-label="Tray slots"></div>
-          <section id="paused" role="dialog" aria-labelledby="paused-title" hidden>
+          <section id="paused" class="overlay" role="dialog" aria-labelledby="paused-title" hidden>
             <h2 id="paused-title">Paused</h2>
             <button id="resume" type="button">Resume</button>
+            <button id="pause-restart" type="button">Restart</button>
+            <button id="pause-menu" type="button">Main menu</button>
+          </section>
+          <section id="menu" class="overlay" role="dialog" aria-labelledby="menu-title" hidden>
+            <h2 id="menu-title">Line Garden</h2>
+            <button id="menu-continue" type="button" hidden>Continue</button>
+            <button id="menu-new" type="button">New game</button>
+            <p class="overlay-note">To quit, close this tab. Your game is saved after every move.</p>
+          </section>
+          <section id="confirm-new" class="overlay" role="alertdialog" aria-labelledby="confirm-title" aria-describedby="confirm-text" hidden>
+            <h2 id="confirm-title">Start a new game?</h2>
+            <p id="confirm-text">Your current game will be replaced.</p>
+            <button id="confirm-yes" type="button">Start new game</button>
+            <button id="confirm-no" type="button">Cancel</button>
+          </section>
+          <section id="results" class="overlay" role="dialog" aria-labelledby="results-title" hidden>
+            <h2 id="results-title">No moves left</h2>
+            <p>Score <strong id="results-score">0</strong></p>
+            <p>Best <strong id="results-best">0</strong></p>
+            <button id="results-again" type="button">Play again</button>
+            <button id="results-menu" type="button">Main menu</button>
           </section>
         </div>
       </section>

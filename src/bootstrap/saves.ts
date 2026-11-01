@@ -21,8 +21,7 @@ export interface SaveContext {
   readonly contentVersion: string;
   readonly gameplayHash: string;
   readonly checkRun: (run: SessionState) => ReturnType<typeof checkRun>;
-  readonly newRun: () => SessionState;
-  /** `?seed=` start: always a new run, never a resume. */
+  /** `?seed=` test start: a damaged record is set aside without asking. */
   readonly forceNew: boolean;
   /** False once a newer load has started; late results are then dropped. */
   readonly isCurrent: () => boolean;
@@ -32,8 +31,16 @@ export interface SaveContext {
 }
 
 export interface Saves {
-  readonly run: SessionState;
-  /** Call after every accepted move (and, from T19, every settings change). */
+  /**
+   * What Continue restores: the compatible active run of the last completed save, re-read from storage after this
+   * tab's own writes finish. While saving is off, the unsaved in-memory run instead (never shown as saved).
+   */
+  continuable(): Promise<SessionState | null>;
+  /** Best score for this ruleset, including the run last saved or queued. */
+  best(): number;
+  /** The player set a damaged save aside and asked for a new game. */
+  readonly startNew: boolean;
+  /** Call for every new run and after every accepted move (and, from T19, every settings change). */
   save(state: SessionState): void;
   close(): void;
 }
@@ -110,13 +117,9 @@ export async function prepareSaves(ctx: SaveContext): Promise<Saves> {
   }
   hideNotice();
 
-  let run: SessionState;
   let expected = 0;
-  /** False when the stored current record already is this run. */
-  let needsWrite = true;
-  if (!store) {
-    run = ctx.newRun();
-  } else {
+  let startNew = false;
+  if (store) {
     const records = await store.read();
     expected = revisionOf(records.current);
     let envelope: SaveEnvelope | null = null;
@@ -132,35 +135,24 @@ export async function prepareSaves(ctx: SaveContext): Promise<Saves> {
     if (check && !check.ok)
       problem = check.reason === 'incompatible' ? 'The saved game was played with different rules.' : `The saved game is damaged (${check.detail}).`;
     previous = envelope;
-
-    if (check?.ok && check.run.status === 'active' && !ctx.forceNew) {
-      run = check.run; // resume exactly what was saved, including future deals
-      needsWrite = false;
-    } else if (problem) {
+    if (problem) {
       // A damaged or incompatible record is moved aside to "preserved", never deleted or put into backup.
-      run = ctx.forceNew ? ctx.newRun() : await chooseRecovery(records.backup, problem);
+      const replacement = ctx.forceNew ? setAside() : await chooseRecovery(records.backup, problem);
       if (!ctx.isCurrent()) throw new Error('superseded');
-      previous = snapshot(previous, ctx.contentVersion, run);
+      startNew = replacement.active === null;
+      previous = replacement;
       try {
-        await store.replace(expected, { ...previous, storageRevision: expected + 1 }, false);
+        await store.replace(expected, { ...replacement, storageRevision: expected + 1 }, false);
         expected += 1;
-        needsWrite = false;
       } catch (error) {
-        console.warn('could not replace the damaged save', error); // the queue retries or reports a conflict
+        console.warn('could not set the damaged save aside', error); // the next save retries or reports a conflict
       }
-    } else {
-      run = ctx.newRun();
     }
   }
 
   queue = new SaveQueue(store, expected, setStatus);
-  const save = (state: SessionState): void => {
-    previous = snapshot(previous, ctx.contentVersion, state);
-    queue!.enqueue(previous);
-  };
   if (!store) setStatus('session_only');
-  if (needsWrite) save(run);
-  else setStatus('saved');
+  else if (expected > 0) setStatus('saved');
 
   retryButton.addEventListener(
     'click',
@@ -177,8 +169,31 @@ export async function prepareSaves(ctx: SaveContext): Promise<Saves> {
   );
 
   return {
-    run,
-    save,
+    startNew,
+    best: () => previous?.best[ctx.gameplayHash] ?? 0,
+    save(state) {
+      previous = snapshot(previous, ctx.contentVersion, state);
+      queue!.enqueue(previous);
+    },
+    async continuable() {
+      const inMemory = previous?.active?.status === 'active' ? previous.active : null;
+      if (!store || queue!.status === 'session_only') return inMemory;
+      await queue!.whenIdle();
+      // The status can change while waiting.
+      if (!store || (queue!.status as SaveStatus) === 'session_only') return inMemory;
+      try {
+        const current = (await store.read()).current;
+        if (current === undefined) return null;
+        const envelope = parseEnvelope(current);
+        const check = envelope.active ? ctx.checkRun(envelope.active) : null;
+        queue!.adopt(envelope.storageRevision); // Continue builds on what is stored now, even if another tab wrote it
+        previous = envelope;
+        return check?.ok && check.run.status === 'active' ? check.run : null;
+      } catch (error) {
+        console.warn('could not read the save for Continue', error);
+        return null;
+      }
+    },
     close() {
       listeners.abort();
       queue?.stop();
@@ -189,8 +204,12 @@ export async function prepareSaves(ctx: SaveContext): Promise<Saves> {
     },
   };
 
-  /** Restore backup (when it is readable and compatible) or start a new game. */
-  async function chooseRecovery(rawBackup: unknown, problem: string): Promise<SessionState> {
+  function setAside(): SaveSnapshot {
+    return { schemaVersion: 1, contentVersion: ctx.contentVersion, active: null, best: previous?.best ?? {}, settings: previous?.settings ?? {} };
+  }
+
+  /** Restore backup (when it is readable and compatible) or set the record aside for a new game. */
+  async function chooseRecovery(rawBackup: unknown, problem: string): Promise<SaveSnapshot> {
     let backup: SaveEnvelope | null = null;
     try {
       backup = rawBackup === undefined ? null : parseEnvelope(rawBackup);
@@ -203,7 +222,7 @@ export async function prepareSaves(ctx: SaveContext): Promise<Saves> {
       ...(restorable ? [['Restore backup', () => 'backup' as const] as const] : []),
       ['Start a new game', () => 'new' as const],
     ]);
-    if (choice === 'backup') previous = backup; // its best scores and settings come back too
-    return choice === 'backup' && backupRun?.ok && backupRun.run.status === 'active' ? backupRun.run : ctx.newRun();
+    // The backup's best scores and settings come back with it.
+    return choice === 'backup' && backup ? { ...backup, contentVersion: ctx.contentVersion } : setAside();
   }
 }

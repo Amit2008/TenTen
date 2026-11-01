@@ -403,7 +403,7 @@
         "T16",
         "T17"
       ],
-      "status": "not_started",
+      "status": "done",
       "allowed_scope": [
         "presentation/screens",
         "application/lifecycle",
@@ -416,7 +416,8 @@
         "Blocked fresh trays reach results once; refresh cannot double-score."
       ],
       "evidence": "Browser lifecycle walkthrough and refresh/restore trace.",
-      "boundary": "A page reload may lose an unfinished save; never show it as already saved."
+      "boundary": "A page reload may lose an unfinished save; never show it as already saved.",
+      "handoff": "docs/handoffs/T18.md"
     },
     {
       "id": "T19",
