@@ -1,6 +1,7 @@
 import { Container, Graphics, type FillInput } from 'pixi.js';
 import type { BoardState, Cell, GameplayConfig, SessionState, SlotInstance, TileKey } from '../../domain/models/types';
 import type { DragPreview } from '../../presentation/drag/drag';
+import type { FeedbackFrame } from '../../presentation/feedback/feedback';
 import type { PlacementPreview } from '../../presentation/views/preview';
 import { cellOrigin, slotGrid, type GridLayout, type TrayLayout } from '../../presentation/views/layout';
 import type { ThemeConfig } from '../content/presentation-config';
@@ -15,6 +16,10 @@ export class GameView {
   readonly #slots: { instanceId: number | null; graphics: Graphics }[];
   readonly #ghost = new Graphics();
   readonly #floating = new Graphics();
+  /** Cleared tiles fading out over the committed (already cleared) board. */
+  readonly #fading = new Graphics();
+  #fadingMove = -1;
+  #pulsed: Graphics[] = [];
   #floatingShape: string | null = null;
   #ghostKey = '';
 
@@ -26,12 +31,17 @@ export class GameView {
     private readonly board: GridLayout,
     private readonly tray: TrayLayout,
   ) {
+    // Each cell is drawn around its own center so the placement pulse scales in place.
+    const unit = { x: -board.pitch / 2, y: -board.pitch / 2, pitch: board.pitch, columns: 1, rows: 1 };
     for (let y = 0; y < board.rows; y++)
       for (let x = 0; x < board.columns; x++) {
-        const cell = this.#tile(new Graphics(), board, x, y);
+        const cell = this.#tile(new Graphics(), unit, 0, 0);
+        const [left, top] = cellOrigin(board, [x, y]);
+        cell.position.set(left + board.pitch / 2, top + board.pitch / 2);
         this.#cells.push(cell);
         this.container.addChild(cell);
       }
+    this.container.addChild(this.#fading);
     this.#slots = tray.slots.map(() => ({ instanceId: null, graphics: this.container.addChild(new Graphics()) }));
     // Ghost above the floating piece: the same-color ghost leaves the piece unchanged, and the invalid cross and
     // line outlines stay visible even when the piece sits right over them.
@@ -78,6 +88,31 @@ export class GameView {
     // A ring on the anchor cell: the bounding-box origin, visible even when that cell of the shape is empty.
     const [ax, ay] = cellOrigin(this.board, preview.anchor);
     g.circle(ax + this.board.pitch / 2, ay + this.board.pitch / 2, this.board.pitch * 0.22).stroke({ width, color: this.theme.text });
+  }
+
+  /** Draws one feedback frame over the committed board; null restores every cell. Cosmetic only. */
+  showFeedback(frame: FeedbackFrame | null): void {
+    for (const cell of this.#pulsed) {
+      cell.scale.set(1);
+      cell.alpha = 1;
+    }
+    if (!frame) {
+      this.#pulsed = [];
+      this.#fading.clear();
+      this.#fadingMove = -1;
+      return;
+    }
+    this.#pulsed = frame.placed.map(([x, y]) => this.#cells[y * this.board.columns + x]!);
+    for (const cell of this.#pulsed) {
+      cell.scale.set(frame.placedScale);
+      cell.alpha = frame.placedAlpha;
+    }
+    if (this.#fadingMove !== frame.moveId) {
+      this.#fadingMove = frame.moveId;
+      this.#fading.clear();
+      for (const [[x, y], key] of frame.cleared) this.#tile(this.#fading, this.board, x, y, this.#color(key));
+    }
+    this.#fading.alpha = frame.clearedAlpha;
   }
 
   update(state: SessionState): void {

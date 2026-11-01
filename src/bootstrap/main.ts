@@ -5,12 +5,14 @@ import { attachKeyboard } from '../adapters/dom/keyboard';
 import { GameView } from '../adapters/pixi/game-view';
 import { cryptoSeed } from '../adapters/random/crypto-seed';
 import { attachPointer } from '../adapters/pointer/pointer-adapter';
-import { createWebGL2App, fitToHost } from '../adapters/rendering/webgl-app';
+import { createWebGL2App, fitToHost, setRendering } from '../adapters/rendering/webgl-app';
 import { createGenerator, weightedPieceSource } from '../application/piece-source/piece-source';
 import { GameSession, startSession, type SessionRules } from '../application/session/session';
 import type { PlacePiece, SessionState } from '../domain/models/types';
 import { DragController } from '../presentation/drag/drag';
+import { MoveFeedback } from '../presentation/feedback/feedback';
 import { SelectionController } from '../presentation/input_modes/selection';
+import { PresentationStates } from '../presentation/states/states';
 import { boardLayout, trayLayout, viewportRect } from '../presentation/views/layout';
 import { appUrl } from './app-url';
 import './shell.css';
@@ -24,11 +26,15 @@ const retry = document.getElementById('retry') as HTMLButtonElement;
 const hudPanel = document.getElementById('hud')!;
 const scoreOutput = document.getElementById('score')!;
 const slotGroup = document.getElementById('slots')!;
+const pausePanel = document.getElementById('paused')!;
+const resumeButton = document.getElementById('resume') as HTMLButtonElement;
 
 let app: Application | undefined;
 let hud: Hud | undefined;
 let disposeFit: (() => void) | undefined;
 let disposeInput: (() => void) | undefined;
+/** Aborted on teardown: removes every listener the running session added to window, document and the shell. */
+let sessionListeners: AbortController | undefined;
 let loadGeneration = 0;
 let loadAbort: AbortController | undefined;
 
@@ -40,12 +46,16 @@ function initialSeed(): number {
 }
 
 function teardown(): void {
+  sessionListeners?.abort();
   disposeInput?.();
   disposeFit?.();
   app?.destroy(true);
   hud?.destroy();
   hudPanel.hidden = true;
-  app = hud = disposeFit = disposeInput = undefined;
+  pausePanel.hidden = true;
+  slotGroup.inert = false;
+  delete host.dataset.state;
+  app = hud = disposeFit = disposeInput = sessionListeners = undefined;
 }
 
 async function start(): Promise<void> {
@@ -86,11 +96,25 @@ async function start(): Promise<void> {
     show(session.state);
     hudPanel.hidden = false;
 
-    // Every input mode submits the same PlacePiece command through here.
+    const reducedMotion = theme.reducedMotion || matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const states = new PresentationStates(runtime.animationDtCapSeconds, (frame) => {
+      view.showFeedback(frame);
+      if (!frame) sync();
+    });
+    const sync = (): void => void (host.dataset.state = states.label(drag.dragging, selection.selected));
+
+    // Every input mode submits the same PlacePiece command through here. The move is committed and shown first;
+    // feedback only decorates it, and no command is accepted while it resolves or while paused.
     const commit = (command: PlacePiece): void => {
+      if (!states.acceptsCommands) return;
+      const before = session.state;
       const result = session.place(command);
-      if (result.accepted) show(result.state);
+      if (result.accepted) {
+        show(result.state);
+        states.play(new MoveFeedback(before, result, theme.feedbackMs, reducedMotion));
+      }
       selection.refresh();
+      sync();
     };
     const selection = new SelectionController(
       { config: gameplay, board, tray },
@@ -98,6 +122,7 @@ async function start(): Promise<void> {
       (preview) => {
         view.showSelection(preview);
         shownHud.setSelected(preview?.slot ?? null);
+        sync();
       },
       commit,
     );
@@ -107,15 +132,48 @@ async function start(): Promise<void> {
       (preview) => {
         if (preview) selection.clear(); // a direct drag replaces any tap/keyboard selection
         view.showDrag(preview);
+        sync();
       },
       commit,
       (point) => selection.tap(point),
     );
+    const shownApp = app;
+    shownApp.ticker.maxFPS = runtime.renderFpsCap;
+    shownApp.ticker.add((t) => states.tick(t.deltaMS / 1000));
+
+    // Pause stops the render loop entirely; only Resume starts it again (GDD 6.3).
+    const pause = (): void => {
+      if (states.paused) return;
+      drag.cancel();
+      states.pause();
+      setRendering(shownApp, false);
+      canvas.inert = slotGroup.inert = true;
+      pausePanel.hidden = false;
+      resumeButton.focus();
+      sync();
+    };
+    const resume = (): void => {
+      if (!states.paused) return;
+      pausePanel.hidden = true;
+      canvas.inert = slotGroup.inert = false;
+      states.resume();
+      setRendering(shownApp, true);
+      canvas.focus();
+      sync();
+    };
+    const { signal } = (sessionListeners = new AbortController());
+    resumeButton.addEventListener('click', resume, { signal });
+    if (runtime.pauseOnHidden) {
+      window.addEventListener('blur', pause, { signal });
+      document.addEventListener('visibilitychange', () => document.hidden && pause(), { signal });
+    }
+
     slotGroup.before(canvas);
     disposeFit = fitToHost(app, host, viewport, runtime.resolutionCap);
     const disposePointer = attachPointer(canvas, drag);
-    const disposeKeyboard = attachKeyboard(canvas, selection, gameplay.traySize);
+    const disposeKeyboard = attachKeyboard(canvas, selection, gameplay.traySize, pause);
     disposeInput = () => (disposePointer(), disposeKeyboard());
+    sync();
     if (session.state.status === 'active') status.textContent = `Renderer ready (WebGL2). Content ${content.contentVersion} loaded.`;
   } catch (error) {
     if (generation !== loadGeneration) return;

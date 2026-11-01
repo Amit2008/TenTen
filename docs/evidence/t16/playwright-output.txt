@@ -1,0 +1,131 @@
+
+Running 96 tests using 8 workers
+
+  ok  3 [root] › tests\browser\input-modes.spec.ts:46:1 › the seed deals an empty-origin shape first (5ms)
+[chromium] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.8078.4 Safari/537.36
+  ok  7 [root] › tests\browser\replay.spec.ts:10:1 › golden vectors and bounded draws match Node in this engine (189ms)
+[chromium] recorded seed 2026: 20 moves, trace sha256 55f9ad8b515e571c7fb761ebef69511f6835e45d370ea12293d6c29edacd2968
+  ok 10 [root] › tests\browser\replay.spec.ts:49:3 › recorded session replay (T11) › the recorded sequence gives identical states in this engine and in Node (119ms)
+  ok  2 [root] › tests\browser\content.spec.ts:3:1 › loads the pinned content version at startup (1.1s)
+[root] http://localhost:4173/ {"isWebGL2":true,"gpu":"ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)","css":[492,568],"backing":[492,568],"dpr":1}
+  ok  4 [root] › tests\browser\unsupported.spec.ts:6:1 › shows the HTML error and a working Retry when WebGL2 is unavailable (1.8s)
+  ok  1 [root] › tests\browser\shell.spec.ts:18:1 › starts an actual WebGL2 renderer and loads base-relative assets (2.8s)
+  ok 11 [root] › tests\browser\content.spec.ts:8:1 › a content failure shows an HTML error, not a spinner, and Retry recovers (2.8s)
+  ok 12 [root] › tests\browser\shell.spec.ts:35:3 › CSS size and framebuffer stay distinct at DPR 1 (cap 2) (1.7s)
+  ok 13 [root] › tests\browser\content.spec.ts:26:1 › malformed hosted rules are rejected before play (1.5s)
+  ok 15 [root] › tests\browser\shell.spec.ts:35:3 › CSS size and framebuffer stay distinct at DPR 2 (cap 2) (1.7s)
+  ok 16 [root] › tests\browser\shell.spec.ts:35:3 › CSS size and framebuffer stay distinct at DPR 3 (cap 2) (1.2s)
+  ok 14 [nested] › tests\browser\content.spec.ts:3:1 › loads the pinned content version at startup (1.2s)
+  ok 17 [root] › tests\browser\shell.spec.ts:48:1 › refits the canvas when the container resizes, letterboxed without cropping (1.1s)
+  ok  9 [root] › tests\browser\input-modes.spec.ts:51:3 › mouse, touch and keyboard place corner_3_2 in identical cells at anchor 0,0 (8.8s)
+  ok 18 [nested] › tests\browser\content.spec.ts:8:1 › a content failure shows an HTML error, not a spinner, and Retry recovers (1.2s)
+  ok 21 [nested] › tests\browser\input-modes.spec.ts:46:1 › the seed deals an empty-origin shape first (45ms)
+  ok 20 [nested] › tests\browser\content.spec.ts:26:1 › malformed hosted rules are rejected before play (821ms)
+  ok  6 [root] › tests\browser\pointer.spec.ts:108:3 › mouse at DPR 1: ghost and committed cells coincide at all four board corners (10.1s)
+[chromium] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.8078.4 Safari/537.36
+  ok 23 [nested] › tests\browser\replay.spec.ts:10:1 › golden vectors and bounded draws match Node in this engine (183ms)
+  ok  8 [root] › tests\browser\states.spec.ts:89:1 › the move commits before its clear animation, locks input, pauses when hidden and never replays on Resume (14.0s)
+[root] DPR 1: seeds 1,2,3,4,6,7,8,11,12,13,27,31 rendered all 19 shapes
+  ok  5 [root] › tests\browser\layout.spec.ts:17:3 › all 19 pieces render at DPR 1 where the logical mapping puts them (14.8s)
+[chromium] recorded seed 2026: 20 moves, trace sha256 55f9ad8b515e571c7fb761ebef69511f6835e45d370ea12293d6c29edacd2968
+  ok 25 [nested] › tests\browser\replay.spec.ts:49:3 › recorded session replay (T11) › the recorded sequence gives identical states in this engine and in Node (2.5s)
+  ok 27 [root] › tests\browser\states.spec.ts:135:1 › blur pauses; Escape with nothing selected pauses; Resume returns focus to the board (2.2s)
+[nested] http://localhost:4174/TenTen/ {"isWebGL2":true,"gpu":"ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)","css":[492,568],"backing":[492,568],"dpr":1}
+  ok 19 [root] › tests\browser\input-modes.spec.ts:51:3 › mouse, touch and keyboard place corner_3_2 in identical cells at anchor 7,7 (9.4s)
+  ok 29 [nested] › tests\browser\shell.spec.ts:18:1 › starts an actual WebGL2 renderer and loads base-relative assets (3.4s)
+  ok 33 [nested] › tests\browser\shell.spec.ts:35:3 › CSS size and framebuffer stay distinct at DPR 1 (cap 2) (3.1s)
+  ok 22 [nested] › tests\browser\input-modes.spec.ts:51:3 › mouse, touch and keyboard place corner_3_2 in identical cells at anchor 0,0 (14.5s)
+  ok 34 [nested] › tests\browser\shell.spec.ts:35:3 › CSS size and framebuffer stay distinct at DPR 2 (cap 2) (3.1s)
+  ok 30 [root] › tests\browser\states.spec.ts:152:1 › reduced motion: the placement keeps cells unscaled while it resolves (11.9s)
+  ok 36 [nested] › tests\browser\shell.spec.ts:35:3 › CSS size and framebuffer stay distinct at DPR 3 (cap 2) (5.4s)
+  ok 38 [nested] › tests\browser\shell.spec.ts:48:1 › refits the canvas when the container resizes, letterboxed without cropping (4.4s)
+  ok 32 [root] › tests\browser\input-modes.spec.ts:51:3 › mouse, touch and keyboard place corner_3_2 in identical cells at anchor 4,2 (20.0s)
+[root] live listeners: baseline 34, after each restart 34, 34, 34, 34, 34
+  ok 37 [root] › tests\browser\states.spec.ts:170:1 › Retry tears the session down: no listener growth and no late callbacks (12.4s)
+  ok 35 [nested] › tests\browser\input-modes.spec.ts:51:3 › mouse, touch and keyboard place corner_3_2 in identical cells at anchor 7,7 (19.5s)
+  ok 31 [nested] › tests\browser\pointer.spec.ts:108:3 › mouse at DPR 1: ghost and committed cells coincide at all four board corners (26.9s)
+[nested] DPR 1: seeds 1,2,3,4,6,7,8,11,12,13,27,31 rendered all 19 shapes
+  ok 26 [nested] › tests\browser\layout.spec.ts:17:3 › all 19 pieces render at DPR 1 where the logical mapping puts them (33.2s)
+  ok 40 [root] › tests\browser\input-modes.spec.ts:94:1 › a held Enter commits once (7.9s)
+  ok 24 [root] › tests\browser\pointer.spec.ts:108:3 › mouse at DPR 2: ghost and committed cells coincide at all four board corners (38.9s)
+  ok 44 [root] › tests\browser\input-modes.spec.ts:115:1 › only handled puzzle keys are prevented; Tab, shortcuts and scrolling stay with the browser (3.3s)
+  ok 46 [root] › tests\browser\input-modes.spec.ts:145:1 › a slot button moves focus to the board; a drag replaces the selection (4.6s)
+  ok 39 [nested] › tests\browser\states.spec.ts:89:1 › the move commits before its clear animation, locks input, pauses when hidden and never replays on Resume (21.1s)
+  ok 47 [nested] › tests\browser\states.spec.ts:135:1 › blur pauses; Escape with nothing selected pauses; Resume returns focus to the board (3.2s)
+  ok 41 [nested] › tests\browser\input-modes.spec.ts:51:3 › mouse, touch and keyboard place corner_3_2 in identical cells at anchor 4,2 (16.1s)
+  ok 49 [nested] › tests\browser\input-modes.spec.ts:94:1 › a held Enter commits once (3.5s)
+[root] DPR 2: seeds 1,2,3,4,6,7,8,11,12,13,27,31 rendered all 19 shapes
+  ok 28 [root] › tests\browser\layout.spec.ts:17:3 › all 19 pieces render at DPR 2 where the logical mapping puts them (50.4s)
+  ok 48 [nested] › tests\browser\states.spec.ts:152:1 › reduced motion: the placement keeps cells unscaled while it resolves (6.2s)
+  ok 50 [nested] › tests\browser\unsupported.spec.ts:6:1 › shows the HTML error and a working Retry when WebGL2 is unavailable (2.8s)
+  ok 51 [nested] › tests\browser\input-modes.spec.ts:115:1 › only handled puzzle keys are prevented; Tab, shortcuts and scrolling stay with the browser (2.9s)
+  ok 55 [nested] › tests\browser\input-modes.spec.ts:145:1 › a slot button moves focus to the board; a drag replaces the selection (5.1s)
+[nested] live listeners: baseline 34, after each restart 34, 34, 34, 34, 34
+  ok 53 [nested] › tests\browser\states.spec.ts:170:1 › Retry tears the session down: no listener growth and no late callbacks (9.4s)
+[webkit] Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/27.2 Safari/605.1.15
+  ok 56 [webkit] › tests\browser\replay.spec.ts:10:1 › golden vectors and bounded draws match Node in this engine (1.2s)
+[firefox] Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:157.0) Gecko/20100101 Firefox/157.0
+  ok 54 [firefox] › tests\browser\replay.spec.ts:10:1 › golden vectors and bounded draws match Node in this engine (6.9s)
+[webkit] recorded seed 2026: 20 moves, trace sha256 55f9ad8b515e571c7fb761ebef69511f6835e45d370ea12293d6c29edacd2968
+  ok 57 [webkit] › tests\browser\replay.spec.ts:49:3 › recorded session replay (T11) › the recorded sequence gives identical states in this engine and in Node (1.8s)
+[firefox] recorded seed 2026: 20 moves, trace sha256 55f9ad8b515e571c7fb761ebef69511f6835e45d370ea12293d6c29edacd2968
+  ok 58 [firefox] › tests\browser\replay.spec.ts:49:3 › recorded session replay (T11) › the recorded sequence gives identical states in this engine and in Node (2.1s)
+  ok 42 [nested] › tests\browser\pointer.spec.ts:108:3 › mouse at DPR 2: ghost and committed cells coincide at all four board corners (39.8s)
+[nested] DPR 2: seeds 1,2,3,4,6,7,8,11,12,13,27,31 rendered all 19 shapes
+  ok 43 [nested] › tests\browser\layout.spec.ts:17:3 › all 19 pieces render at DPR 2 where the logical mapping puts them (45.3s)
+  ok 45 [root] › tests\browser\pointer.spec.ts:108:3 › mouse at DPR 3: ghost and committed cells coincide at all four board corners (46.4s)
+  ok 61 [root] › tests\browser\pointer.spec.ts:108:3 › touch at DPR 1: ghost and committed cells coincide at all four board corners (11.2s)
+[root] DPR 3: seeds 1,2,3,4,6,7,8,11,12,13,27,31 rendered all 19 shapes
+  ok 52 [root] › tests\browser\layout.spec.ts:17:3 › all 19 pieces render at DPR 3 where the logical mapping puts them (45.2s)
+[root] phone-360x640: canvas 360x415 CSS px, board cell 30.0 CSS px, page height 640
+  ok 63 [root] › tests\browser\layout.spec.ts:76:3 › layout fits phone-360x640 with no cropped controls (1.6s)
+[root] phone-landscape-844x390: canvas 215x248 CSS px, board cell 17.9 CSS px, page height 400
+  ok 64 [root] › tests\browser\layout.spec.ts:76:3 › layout fits phone-landscape-844x390 with no cropped controls (1.5s)
+[root] desktop-1280x720: canvas 492x568 CSS px, board cell 41.0 CSS px, page height 720
+  ok 65 [root] › tests\browser\layout.spec.ts:76:3 › layout fits desktop-1280x720 with no cropped controls (1.6s)
+[root] desktop-1920x1080: canvas 805x928 CSS px, board cell 67.1 CSS px, page height 1080
+  ok 66 [root] › tests\browser\layout.spec.ts:76:3 › layout fits desktop-1920x1080 with no cropped controls (1.5s)
+[root] tablet-1024x768: canvas 534x616 CSS px, board cell 44.5 CSS px, page height 768
+  ok 67 [root] › tests\browser\layout.spec.ts:76:3 › layout fits tablet-1024x768 with no cropped controls (2.0s)
+[root] narrow-window-420x1000: canvas 420x484 CSS px, board cell 35.0 CSS px, page height 1000
+  ok 68 [root] › tests\browser\layout.spec.ts:76:3 › layout fits narrow-window-420x1000 with no cropped controls (1.2s)
+  ok 59 [nested] › tests\browser\pointer.spec.ts:108:3 › mouse at DPR 3: ghost and committed cells coincide at all four board corners (34.7s)
+[nested] DPR 3: seeds 1,2,3,4,6,7,8,11,12,13,27,31 rendered all 19 shapes
+  ok 60 [nested] › tests\browser\layout.spec.ts:17:3 › all 19 pieces render at DPR 3 where the logical mapping puts them (39.3s)
+  ok 69 [nested] › tests\browser\pointer.spec.ts:108:3 › touch at DPR 1: ghost and committed cells coincide at all four board corners (10.4s)
+[nested] phone-360x640: canvas 360x415 CSS px, board cell 30.0 CSS px, page height 640
+  ok 70 [nested] › tests\browser\layout.spec.ts:76:3 › layout fits phone-360x640 with no cropped controls (1.0s)
+[nested] phone-landscape-844x390: canvas 215x248 CSS px, board cell 17.9 CSS px, page height 400
+  ok 72 [nested] › tests\browser\layout.spec.ts:76:3 › layout fits phone-landscape-844x390 with no cropped controls (944ms)
+[nested] desktop-1280x720: canvas 492x568 CSS px, board cell 41.0 CSS px, page height 720
+  ok 73 [nested] › tests\browser\layout.spec.ts:76:3 › layout fits desktop-1280x720 with no cropped controls (976ms)
+[nested] desktop-1920x1080: canvas 805x928 CSS px, board cell 67.1 CSS px, page height 1080
+  ok 74 [nested] › tests\browser\layout.spec.ts:76:3 › layout fits desktop-1920x1080 with no cropped controls (1.1s)
+  ok 62 [root] › tests\browser\pointer.spec.ts:108:3 › touch at DPR 3: ghost and committed cells coincide at all four board corners (29.2s)
+[nested] tablet-1024x768: canvas 534x616 CSS px, board cell 44.5 CSS px, page height 768
+  ok 75 [nested] › tests\browser\layout.spec.ts:76:3 › layout fits tablet-1024x768 with no cropped controls (1.4s)
+[nested] narrow-window-420x1000: canvas 420x484 CSS px, board cell 35.0 CSS px, page height 1000
+  ok 77 [nested] › tests\browser\layout.spec.ts:76:3 › layout fits narrow-window-420x1000 with no cropped controls (658ms)
+  ok 76 [root] › tests\browser\pointer.spec.ts:150:1 › an invalid spot shows an outline and cross, and releasing there consumes nothing (7.3s)
+  ok 78 [root] › tests\browser\pointer.spec.ts:196:3 › window blur during a drag cancels it; the later release over a legal cell consumes nothing (2.1s)
+  ok 79 [root] › tests\browser\pointer.spec.ts:196:3 › hidden tab during a drag cancels it; the later release over a legal cell consumes nothing (2.1s)
+  ok 80 [root] › tests\browser\pointer.spec.ts:196:3 › resize during a drag cancels it; the later release over a legal cell consumes nothing (2.0s)
+  ok 81 [root] › tests\browser\pointer.spec.ts:196:3 › orientation change during a drag cancels it; the later release over a legal cell consumes nothing (2.2s)
+  ok 71 [nested] › tests\browser\pointer.spec.ts:108:3 › touch at DPR 3: ghost and committed cells coincide at all four board corners (22.4s)
+  ok 82 [root] › tests\browser\pointer.spec.ts:196:3 › pointer capture loss during a drag cancels it; the later release over a legal cell consumes nothing (2.1s)
+  ok 84 [root] › tests\browser\pointer.spec.ts:219:1 › release outside the canvas consumes nothing (1.2s)
+  ok 85 [root] › tests\browser\pointer.spec.ts:230:1 › touch pointercancel consumes nothing (1.2s)
+  ok 86 [root] › tests\browser\pointer.spec.ts:242:1 › a second finger is ignored while the first drags (1.5s)
+  ok 87 [root] › tests\browser\pointer.spec.ts:269:1 › a drag never produces a click; a plain tap still does (1.8s)
+  ok 83 [nested] › tests\browser\pointer.spec.ts:150:1 › an invalid spot shows an outline and cross, and releasing there consumes nothing (6.2s)
+  ok 88 [nested] › tests\browser\pointer.spec.ts:196:3 › window blur during a drag cancels it; the later release over a legal cell consumes nothing (1.4s)
+  ok 89 [nested] › tests\browser\pointer.spec.ts:196:3 › hidden tab during a drag cancels it; the later release over a legal cell consumes nothing (1.5s)
+  ok 90 [nested] › tests\browser\pointer.spec.ts:196:3 › resize during a drag cancels it; the later release over a legal cell consumes nothing (1.6s)
+  ok 91 [nested] › tests\browser\pointer.spec.ts:196:3 › orientation change during a drag cancels it; the later release over a legal cell consumes nothing (1.6s)
+  ok 92 [nested] › tests\browser\pointer.spec.ts:196:3 › pointer capture loss during a drag cancels it; the later release over a legal cell consumes nothing (1.6s)
+  ok 93 [nested] › tests\browser\pointer.spec.ts:219:1 › release outside the canvas consumes nothing (1.0s)
+  ok 94 [nested] › tests\browser\pointer.spec.ts:230:1 › touch pointercancel consumes nothing (1.1s)
+  ok 95 [nested] › tests\browser\pointer.spec.ts:242:1 › a second finger is ignored while the first drags (1.1s)
+  ok 96 [nested] › tests\browser\pointer.spec.ts:269:1 › a drag never produces a click; a plain tap still does (1.3s)
+
+  96 passed (3.1m)

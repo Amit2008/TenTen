@@ -122,11 +122,14 @@ test('only handled puzzle keys are prevented; Tab, shortcuts and scrolling stay 
   await tabToCanvas(page);
   await seen();
   await page.keyboard.press('ArrowDown'); // nothing selected: the page scrolls
-  await page.keyboard.press('Escape'); // nothing selected: left for pause (T16)
   await page.keyboard.press('Control+1'); // a browser shortcut chord
   await page.keyboard.press('4'); // beyond the tray size
-  expect(await seen()).toEqual(['ArrowDown:false', 'Escape:false', 'Control:false', '1:false', '4:false']);
+  expect(await seen()).toEqual(['ArrowDown:false', 'Control:false', '1:false', '4:false']);
   expect(await page.evaluate(() => scrollY)).toBeGreaterThan(0);
+  await page.keyboard.press('Escape'); // nothing selected: opens pause (T16), so it is handled
+  expect(await seen()).toEqual(['Escape:true']);
+  await page.getByRole('button', { name: 'Resume' }).click();
+  await seen();
   await page.keyboard.press('1');
   await page.keyboard.press('ArrowDown');
   await page.keyboard.press('Escape');

@@ -6,6 +6,7 @@ import type { GameplayConfig, SessionState } from '../../domain/models/types';
  */
 export class Hud {
   readonly #buttons: HTMLButtonElement[];
+  readonly #listeners = new AbortController();
 
   constructor(
     private readonly config: GameplayConfig,
@@ -18,7 +19,7 @@ export class Hud {
       button.type = 'button';
       button.textContent = String(i + 1);
       button.setAttribute('aria-pressed', 'false');
-      button.addEventListener('click', () => onSelect(i));
+      button.addEventListener('click', () => onSelect(i), { signal: this.#listeners.signal });
       return button;
     });
     slots.replaceChildren(...this.#buttons);
@@ -42,6 +43,7 @@ export class Hud {
   }
 
   destroy(): void {
+    this.#listeners.abort();
     this.slots.replaceChildren();
   }
 }

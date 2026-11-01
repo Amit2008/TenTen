@@ -203,6 +203,12 @@ for (const [name, trigger] of CANCELS)
     await trigger(page);
     await driver.move(dropPoint([4, 4], grabbed, box, 'mouse'));
     await driver.up();
+    // Blur and a hidden tab also pause the game (T16); come back before reading the board.
+    if (await page.locator('#paused').isVisible()) {
+      await page.evaluate(() => Object.defineProperty(document, 'hidden', { configurable: true, get: () => false }));
+      await page.getByRole('button', { name: 'Resume' }).click();
+      await canvasBox(page); // rendering was stopped while paused: wait for the first frames after Resume
+    }
     await expectBoard(page, box, state, name);
     // The piece is back in the tray.
     const [pixel] = await sample(page, [trayCellClient(state, 0, grabbed, await canvasBox(page))]);
