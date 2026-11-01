@@ -97,11 +97,12 @@ test('the move commits before its clear animation, locks input, pauses when hidd
   // Committed at once: score and tray already show the result while the clear is still fading.
   await expect(page.locator('#score')).toHaveText(String(scores[CLEAR_MOVE]));
   expect(await state(page)).toBe('resolving');
-  await page.screenshot({ path: `docs/evidence/t16/clear-fade-${info.project.name}.png` });
 
-  // A command during resolving is not accepted.
+  // A command during resolving is not accepted. Still resolving afterwards proves the attempt fell inside the window.
   await place(page, box, CLEAR_MOVE + 1);
+  expect(await state(page)).toBe('resolving');
   await expect(page.locator('#score')).toHaveText(String(scores[CLEAR_MOVE]));
+  await page.screenshot({ path: `docs/evidence/t16/clear-fade-${info.project.name}.png` });
 
   // Hidden tab: paused, Resume shown, and the render loop stops requesting frames.
   await hide(page);

@@ -1,5 +1,6 @@
 import type { Application } from 'pixi.js';
 import { loadContent } from '../adapters/content/load-content';
+import { applyTheme, bindSettingsForm, installDialogButtons } from '../adapters/dom/dialogs';
 import { Hud } from '../adapters/dom/hud';
 import { attachKeyboard } from '../adapters/dom/keyboard';
 import { Screens } from '../adapters/dom/screens';
@@ -11,6 +12,7 @@ import { Lifecycle } from '../application/lifecycle/lifecycle';
 import { createGenerator, weightedPieceSource } from '../application/piece-source/piece-source';
 import { checkRun } from '../application/save/envelope';
 import { GameSession, startSession, type SessionRules } from '../application/session/session';
+import { reducesMotion, type Settings } from '../application/settings/settings';
 import type { PlacePiece, SessionState } from '../domain/models/types';
 import { DragController } from '../presentation/drag/drag';
 import { MoveFeedback } from '../presentation/feedback/feedback';
@@ -41,6 +43,8 @@ let saves: Saves | undefined;
 /** Aborted on teardown: removes every listener the running session added to window, document and the shell. */
 let sessionListeners: AbortController | undefined;
 let loadGeneration = 0;
+/** A content request that hangs becomes an error with Retry instead of an endless "Loading…". */
+const LOAD_TIMEOUT_MS = 15_000;
 let loadAbort: AbortController | undefined;
 
 /** `?seed=<1..4294967295>` (tests) starts a new run at once with a reproducible first deal. */
@@ -69,8 +73,9 @@ async function start({ loadLatest = false } = {}): Promise<void> {
   teardown();
   errorPanel.hidden = true;
   status.textContent = 'Loading…';
+  const timeout = setTimeout(() => abort.abort(new DOMException('Loading took too long.', 'TimeoutError')), LOAD_TIMEOUT_MS);
   try {
-    const content = await loadContent(appUrl(''), (url, init) => fetch(url, init), abort.signal);
+    const content = await loadContent(appUrl(''), (url, init) => fetch(url, init), abort.signal).finally(() => clearTimeout(timeout));
     if (generation !== loadGeneration) return;
     const created = await createWebGL2App(content.runtime);
     if (generation !== loadGeneration) return void created.destroy(true);
@@ -123,7 +128,22 @@ async function start({ loadLatest = false } = {}): Promise<void> {
     show(empty);
     hudPanel.hidden = false;
 
-    const reducedMotion = theme.reducedMotion || matchMedia('(prefers-reduced-motion: reduce)').matches;
+    // Settings apply as soon as they change and are saved through the same queue as moves.
+    const defaults: Settings = {
+      masterVolume: Math.round(content.audio.masterVolume * 100),
+      musicVolume: Math.round(content.audio.musicVolume * 100),
+      effectsVolume: Math.round(content.audio.sfxVolume * 100),
+      theme: 'light',
+      motion: 'system',
+    };
+    let settings = opened.settings(defaults);
+    applyTheme(settings);
+    const unbindSettings = bindSettingsForm(settings, (next) => {
+      settings = next;
+      applyTheme(next);
+      opened.saveSettings(next);
+    });
+    const systemReducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
     let resultsPending = false;
     const states = new PresentationStates(runtime.animationDtCapSeconds, (frame) => {
       view.showFeedback(frame);
@@ -151,7 +171,8 @@ async function start({ loadLatest = false } = {}): Promise<void> {
         show(result.state);
         opened.save(result.state); // queued right away; Saved shows only once the transaction completes
         resultsPending = result.state.status === 'game_over';
-        states.play(new MoveFeedback(before, result, theme.feedbackMs, reducedMotion));
+        const reduced = reducesMotion(settings, systemReducedMotion.matches, theme.reducedMotion);
+        states.play(new MoveFeedback(before, result, theme.feedbackMs, reduced));
       }
       selection.refresh();
       sync();
@@ -264,7 +285,7 @@ async function start({ loadLatest = false } = {}): Promise<void> {
     disposeFit = fitToHost(app, host, viewport, runtime.resolutionCap);
     const disposePointer = attachPointer(canvas, drag);
     const disposeKeyboard = attachKeyboard(canvas, selection, gameplay.traySize, pause);
-    disposeInput = () => (disposePointer(), disposeKeyboard(), screens.destroy());
+    disposeInput = () => (disposePointer(), disposeKeyboard(), screens.destroy(), unbindSettings());
     // Another tab saved first: stop play until the player loads the latest save (GDD 9.2).
     // Rendering keeps running so the board stays visible under the notice; only input is blocked.
     lockGame = () => {
@@ -287,10 +308,13 @@ async function start({ loadLatest = false } = {}): Promise<void> {
     console.error(error);
     status.textContent = '';
     const rendererError = error instanceof Error && error.name === 'RendererUnavailableError';
+    const timedOut = (abort.signal.reason as Error | undefined)?.name === 'TimeoutError';
     webglHelp.hidden = !rendererError;
     errorMessage.textContent = rendererError
       ? error.message
-      : error instanceof Error && error.name === 'ContentError'
+      : timedOut
+        ? 'Loading took too long. Check your connection and try again.'
+        : error instanceof Error && error.name === 'ContentError'
           ? `The game content could not be loaded. ${error.message}`
           : 'The game could not load. Check your connection and try again.';
     errorPanel.hidden = false;
@@ -298,5 +322,6 @@ async function start({ loadLatest = false } = {}): Promise<void> {
   }
 }
 
+installDialogButtons();
 retry.addEventListener('click', () => void start());
 void start();

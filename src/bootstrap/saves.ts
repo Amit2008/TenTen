@@ -2,6 +2,7 @@
 import { openSaveStore, revisionOf, SaveUnavailableError, type IdbSaveStore } from '../adapters/indexeddb/save-store';
 import { checkRun, parseEnvelope, snapshot, type SaveEnvelope, type SaveSnapshot } from '../application/save/envelope';
 import { SaveQueue, type SaveStatus } from '../application/save/save-queue';
+import { parseSettings, type Settings } from '../application/settings/settings';
 import type { SessionState } from '../domain/models/types';
 
 const statusText = document.getElementById('save-status')!;
@@ -9,6 +10,8 @@ const retryButton = document.getElementById('save-retry') as HTMLButtonElement;
 const notice = document.getElementById('save-notice')!;
 const noticeText = document.getElementById('save-notice-text')!;
 const noticeActions = document.getElementById('save-notice-actions')!;
+const noticeDetail = document.getElementById('save-notice-detail') as HTMLDetailsElement;
+const noticeDetailText = document.getElementById('save-notice-detail-text')!;
 
 const STATUS_TEXT: Record<SaveStatus, string> = {
   saved: 'Saved',
@@ -40,14 +43,20 @@ export interface Saves {
   best(): number;
   /** The player set a damaged save aside and asked for a new game. */
   readonly startNew: boolean;
-  /** Call for every new run and after every accepted move (and, from T19, every settings change). */
+  /** Call for every new run and after every accepted move. */
   save(state: SessionState): void;
+  /** Stored settings, with defaults for anything missing or invalid. */
+  settings(defaults: Settings): Settings;
+  /** Saved through the same ordered queue as moves. */
+  saveSettings(settings: Settings): void;
   close(): void;
 }
 
 /** Shows a recovery message with buttons; resolves with the chosen action's result. */
-function ask<T>(message: string, actions: readonly (readonly [label: string, choose: () => T])[]): Promise<T> {
+function ask<T>(message: string, actions: readonly (readonly [label: string, choose: () => T])[], detail = ''): Promise<T> {
   noticeText.textContent = message;
+  noticeDetail.hidden = !detail;
+  noticeDetailText.textContent = detail;
   return new Promise((resolve) => {
     noticeActions.replaceChildren(
       ...actions.map(([label, choose]) => {
@@ -68,6 +77,7 @@ function ask<T>(message: string, actions: readonly (readonly [label: string, cho
 
 function hideNotice(): void {
   notice.hidden = true;
+  noticeDetail.hidden = true;
   noticeActions.replaceChildren();
 }
 
@@ -124,20 +134,23 @@ export async function prepareSaves(ctx: SaveContext): Promise<Saves> {
     expected = revisionOf(records.current);
     let envelope: SaveEnvelope | null = null;
     let problem: string | null = null;
+    let detail = '';
     if (records.current !== undefined) {
       try {
         envelope = parseEnvelope(records.current);
       } catch (error) {
-        problem = `The saved game could not be read (${error instanceof Error ? error.message : 'invalid data'}).`;
+        problem = 'Your saved game could not be read.';
+        detail = error instanceof Error ? error.message : 'invalid data';
       }
     }
     const check = envelope?.active ? ctx.checkRun(envelope.active) : null;
     if (check && !check.ok)
-      problem = check.reason === 'incompatible' ? 'The saved game was played with different rules.' : `The saved game is damaged (${check.detail}).`;
+      problem = check.reason === 'incompatible' ? 'Your saved game was played with different rules, so it cannot be continued here.' : 'Your saved game is damaged.';
+    if (check && !check.ok) detail = check.detail;
     previous = envelope;
     if (problem) {
       // A damaged or incompatible record is moved aside to "preserved", never deleted or put into backup.
-      const replacement = ctx.forceNew ? setAside() : await chooseRecovery(records.backup, problem);
+      const replacement = ctx.forceNew ? setAside() : await chooseRecovery(records.backup, problem, detail);
       if (!ctx.isCurrent()) throw new Error('superseded');
       startNew = replacement.active === null;
       previous = replacement;
@@ -175,6 +188,11 @@ export async function prepareSaves(ctx: SaveContext): Promise<Saves> {
       previous = snapshot(previous, ctx.contentVersion, state);
       queue!.enqueue(previous);
     },
+    settings: (defaults) => parseSettings(previous?.settings ?? {}, defaults),
+    saveSettings(settings) {
+      previous = { ...(previous ?? setAside()), contentVersion: ctx.contentVersion, settings: { ...settings } };
+      queue!.enqueue(previous);
+    },
     async continuable() {
       const inMemory = previous?.active?.status === 'active' ? previous.active : null;
       if (!store || queue!.status === 'session_only') return inMemory;
@@ -209,7 +227,7 @@ export async function prepareSaves(ctx: SaveContext): Promise<Saves> {
   }
 
   /** Restore backup (when it is readable and compatible) or set the record aside for a new game. */
-  async function chooseRecovery(rawBackup: unknown, problem: string): Promise<SaveSnapshot> {
+  async function chooseRecovery(rawBackup: unknown, problem: string, detail: string): Promise<SaveSnapshot> {
     let backup: SaveEnvelope | null = null;
     try {
       backup = rawBackup === undefined ? null : parseEnvelope(rawBackup);
@@ -218,10 +236,10 @@ export async function prepareSaves(ctx: SaveContext): Promise<Saves> {
     }
     const backupRun = backup?.active ? ctx.checkRun(backup.active) : null;
     const restorable = backup && (!backup.active || backupRun?.ok);
-    const choice = await ask<'backup' | 'new'>(`${problem} It is kept in this browser.`, [
+    const choice = await ask<'backup' | 'new'>(`${problem} It is kept in this browser, not deleted.`, [
       ...(restorable ? [['Restore backup', () => 'backup' as const] as const] : []),
       ['Start a new game', () => 'new' as const],
-    ]);
+    ], detail);
     // The backup's best scores and settings come back with it.
     return choice === 'backup' && backup ? { ...backup, contentVersion: ctx.contentVersion } : setAside();
   }
