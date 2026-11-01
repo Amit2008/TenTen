@@ -7,6 +7,7 @@ import { cryptoSeed } from '../adapters/random/crypto-seed';
 import { attachPointer } from '../adapters/pointer/pointer-adapter';
 import { createWebGL2App, fitToHost, setRendering } from '../adapters/rendering/webgl-app';
 import { createGenerator, weightedPieceSource } from '../application/piece-source/piece-source';
+import { checkRun } from '../application/save/envelope';
 import { GameSession, startSession, type SessionRules } from '../application/session/session';
 import type { PlacePiece, SessionState } from '../domain/models/types';
 import { DragController } from '../presentation/drag/drag';
@@ -15,6 +16,7 @@ import { SelectionController } from '../presentation/input_modes/selection';
 import { PresentationStates } from '../presentation/states/states';
 import { boardLayout, trayLayout, viewportRect } from '../presentation/views/layout';
 import { appUrl } from './app-url';
+import { prepareSaves, type Saves } from './saves';
 import './shell.css';
 
 const host = document.getElementById('game')!;
@@ -33,14 +35,17 @@ let app: Application | undefined;
 let hud: Hud | undefined;
 let disposeFit: (() => void) | undefined;
 let disposeInput: (() => void) | undefined;
+let saves: Saves | undefined;
 /** Aborted on teardown: removes every listener the running session added to window, document and the shell. */
 let sessionListeners: AbortController | undefined;
 let loadGeneration = 0;
 let loadAbort: AbortController | undefined;
 
-/** `?seed=<1..4294967295>` gives a reproducible first deal for tests; otherwise the CSPRNG seeds it. */
+const seedParam = new URLSearchParams(location.search).get('seed');
+
+/** `?seed=<1..4294967295>` starts a new run with a reproducible first deal (tests); otherwise the CSPRNG seeds it. */
 function initialSeed(): number {
-  const param = new URLSearchParams(location.search).get('seed');
+  const param = seedParam;
   const seed = param && /^\d{1,10}$/.test(param) ? Number(param) : 0;
   return seed >= 1 && seed <= 0xffffffff ? seed : cryptoSeed();
 }
@@ -51,14 +56,16 @@ function teardown(): void {
   disposeFit?.();
   app?.destroy(true);
   hud?.destroy();
+  saves?.close();
   hudPanel.hidden = true;
   pausePanel.hidden = true;
   slotGroup.inert = false;
   delete host.dataset.state;
-  app = hud = disposeFit = disposeInput = sessionListeners = undefined;
+  app = hud = disposeFit = disposeInput = sessionListeners = saves = undefined;
 }
 
-async function start(): Promise<void> {
+/** `loadLatest`: reload the stored run (after a conflict) even when `?seed=` would start a new one. */
+async function start({ loadLatest = false } = {}): Promise<void> {
   const generation = ++loadGeneration;
   loadAbort?.abort();
   const abort = (loadAbort = new AbortController());
@@ -72,9 +79,25 @@ async function start(): Promise<void> {
     if (generation !== loadGeneration) return void created.destroy(true);
     app = created;
     const { gameplay, runtime, theme } = content;
-    // shortcut: session id and seed are created per page load; T17/T18 add saves, Continue and restart.
     const rules: SessionRules = { config: gameplay, gameplayHash: content.gameplayHash, source: weightedPieceSource };
-    const session = new GameSession(rules, startSession(rules, crypto.randomUUID(), createGenerator(initialSeed())));
+    // A conflict can be reported before the game is wired up; it is applied as soon as it is.
+    let conflicted = false;
+    let lockGame = (): void => {};
+    // shortcut: a compatible active run resumes automatically until the main menu offers Continue (T18).
+    const opened = (saves = await prepareSaves({
+      contentVersion: content.contentVersion,
+      gameplayHash: content.gameplayHash,
+      checkRun: (run) => checkRun(run, gameplay, content.gameplayHash),
+      newRun: () => startSession(rules, crypto.randomUUID(), createGenerator(initialSeed())),
+      forceNew: seedParam !== null && !loadLatest,
+      isCurrent: () => generation === loadGeneration,
+      onConflict: () => {
+        conflicted = true;
+        lockGame();
+      },
+      reload: () => void start({ loadLatest: true }),
+    }));
+    const session = new GameSession(rules, opened.run);
     const board = boardLayout(runtime.boardRect, gameplay.columns, gameplay.rows);
     const tray = trayLayout(runtime.trayRect, gameplay.traySize, gameplay.catalog);
     const viewport = viewportRect(runtime.logicalSize, runtime.boardRect);
@@ -111,6 +134,7 @@ async function start(): Promise<void> {
       const result = session.place(command);
       if (result.accepted) {
         show(result.state);
+        opened.save(result.state); // queued right away; Saved shows only once the transaction completes
         states.play(new MoveFeedback(before, result, theme.feedbackMs, reducedMotion));
       }
       selection.refresh();
@@ -143,7 +167,7 @@ async function start(): Promise<void> {
 
     // Pause stops the render loop entirely; only Resume starts it again (GDD 6.3).
     const pause = (): void => {
-      if (states.paused) return;
+      if (states.paused || conflicted) return;
       drag.cancel();
       states.pause();
       setRendering(shownApp, false);
@@ -153,7 +177,7 @@ async function start(): Promise<void> {
       sync();
     };
     const resume = (): void => {
-      if (!states.paused) return;
+      if (!states.paused || conflicted) return;
       pausePanel.hidden = true;
       canvas.inert = slotGroup.inert = false;
       states.resume();
@@ -173,6 +197,17 @@ async function start(): Promise<void> {
     const disposePointer = attachPointer(canvas, drag);
     const disposeKeyboard = attachKeyboard(canvas, selection, gameplay.traySize, pause);
     disposeInput = () => (disposePointer(), disposeKeyboard());
+    // Another tab saved first: stop play until the player loads the latest save (GDD 9.2).
+    // Rendering keeps running so the board stays visible under the notice; only input is blocked.
+    lockGame = () => {
+      drag.cancel();
+      states.pause();
+      setRendering(shownApp, true); // also when a blur pause had stopped it
+      canvas.inert = slotGroup.inert = true;
+      pausePanel.hidden = true;
+      sync();
+    };
+    if (conflicted) lockGame();
     sync();
     if (session.state.status === 'active') status.textContent = `Renderer ready (WebGL2). Content ${content.contentVersion} loaded.`;
   } catch (error) {

@@ -37,6 +37,8 @@ body {
 
 #retry,
 #resume,
+#save-retry,
+#save-notice button,
 #slots button {
   min-width: 44px;
   min-height: 44px;
@@ -48,6 +50,37 @@ body {
   flex: 1 0 auto;
   display: flex;
   flex-direction: column;
+}
+
+#save-status {
+  margin-left: 12px;
+  font-size: 1rem;
+}
+
+#save-retry {
+  margin-left: 8px;
+  font-size: 1rem;
+}
+
+#save-notice {
+  margin: 0 16px 8px;
+  padding: 12px 16px;
+  background: var(--bg);
+  border-left: 4px solid var(--accent);
+}
+
+#save-notice p {
+  margin: 0 0 8px;
+}
+
+#save-notice-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.save-note {
+  font-size: 0.875rem;
 }
 
 #score-line {
@@ -87,6 +120,8 @@ body {
 
 #retry:focus-visible,
 #resume:focus-visible,
+#save-retry:focus-visible,
+#save-notice button:focus-visible,
 #slots button:focus-visible,
 #game canvas:focus-visible,
 a:focus-visible {

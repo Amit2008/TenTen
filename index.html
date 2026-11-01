@@ -19,9 +19,18 @@
         </p>
         <button id="retry" type="button">Retry</button>
       </section>
+      <section id="save-notice" role="alert" hidden>
+        <p id="save-notice-text"></p>
+        <p id="save-notice-actions"></p>
+        <p class="save-note">Saves stay in this browser on this device. Clearing site data or private browsing can remove them.</p>
+      </section>
       <section id="hud" aria-label="Game" hidden>
         <div id="game">
-          <p id="score-line">Score <span id="score">0</span></p>
+          <p id="score-line">
+            Score <span id="score">0</span>
+            <span id="save-status" aria-live="polite"></span>
+            <button id="save-retry" type="button" hidden>Retry saving</button>
+          </p>
           <div id="slots" role="group" aria-label="Tray slots"></div>
           <section id="paused" role="dialog" aria-labelledby="paused-title" hidden>
             <h2 id="paused-title">Paused</h2>
