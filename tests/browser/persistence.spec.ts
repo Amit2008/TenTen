@@ -70,11 +70,19 @@ async function place(page: Page, box: ClientBox, i: number) {
   await expect(page.locator('#game')).toHaveAttribute('data-state', 'idle');
 }
 
-async function openPage(context: BrowserContext, path = `./?seed=${SEED}`) {
+/** Opens the game. Without a seed the main menu comes first; `resume` then clicks Continue (T18). */
+async function openPage(context: BrowserContext, path = `./?seed=${SEED}`, resume = false) {
   const page = await context.newPage();
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(e.message));
-  return { page, errors, box: await ready(page, path) };
+  const box = await ready(page, path);
+  if (resume) await continueRun(page);
+  return { page, errors, box };
+}
+
+async function continueRun(page: Page) {
+  await page.getByRole('button', { name: 'Continue' }).click();
+  await expect(page.locator('#game')).toHaveAttribute('data-state', 'idle');
 }
 
 test('restore after reload keeps board, tray, score and the future deals', async ({ browser, baseURL }, info) => {
@@ -89,7 +97,8 @@ test('restore after reload keeps board, tray, score and the future deals', async
   expect(before.backup!.storageRevision).toBe(5);
   const shot = await page.locator('#game canvas').screenshot();
 
-  await ready(page, './'); // no seed: resume
+  await ready(page, './'); // no seed: the menu offers Continue
+  await continueRun(page);
   await expect(saveStatus(page)).toHaveText('Saved');
   await expect(page.locator('#score')).toHaveText(String(scores[4]));
   await canvasBox(page);
@@ -189,7 +198,7 @@ test.describe('two tabs', () => {
     const context = await browser.newContext({ viewport: { width: 800, height: 1000 }, baseURL: baseURL! });
     const a = await openPage(context);
     await expect(saveStatus(a.page)).toHaveText('Saved');
-    const b = await openPage(context, './'); // resumes the same run
+    const b = await openPage(context, './', true); // continues the same run
     await expect(saveStatus(b.page)).toHaveText('Saved');
 
     await place(a.page, a.box, 0);
@@ -225,7 +234,7 @@ test.describe('two tabs', () => {
     const context = await browser.newContext({ viewport: { width: 800, height: 1000 }, baseURL: baseURL! });
     const a = await openPage(context);
     await expect(saveStatus(a.page)).toHaveText('Saved');
-    const b = await openPage(context, './');
+    const b = await openPage(context, './', true);
     await expect(saveStatus(b.page)).toHaveText('Saved');
     const before = (await readDb(a.page)).current!.storageRevision;
     // Both tabs commit a move (different ones) at the same moment.
@@ -275,6 +284,7 @@ test.describe('damaged and incompatible saves', () => {
     await page.screenshot({ path: `docs/evidence/t17/damaged-${info.project.name}.png` });
     await alert.getByRole('button', { name: 'Restore backup' }).click();
     await expect(page.getByRole('status')).toHaveText(/Renderer ready/);
+    await continueRun(page);
     await expect(page.locator('#score')).toHaveText(String(scores[0])); // the backup is one move older
     const after = await readDb(page);
     expect(after.preserved).toMatchObject({ garbage: true });

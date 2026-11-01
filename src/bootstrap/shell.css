@@ -150,8 +150,8 @@ a:focus-visible {
   align-self: stretch;
 }
 
-/* Covers the whole game group; the canvas and slot buttons are inert underneath. */
-#game > #paused:not([hidden]) {
+/* Pause, menu, confirmation and results cover the whole game group; the board is inert underneath. */
+#game > .overlay:not([hidden]) {
   position: absolute;
   inset: 0;
   display: flex;
@@ -162,8 +162,27 @@ a:focus-visible {
   background: rgb(235 231 221 / 0.9);
 }
 
-#paused h2 {
+#game > .overlay h2,
+#game > .overlay p {
   margin: 0;
+}
+
+#game > .overlay button {
+  min-width: 200px;
+  min-height: 44px;
+  padding: 0 20px;
+  font: inherit;
+}
+
+#game > .overlay button:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.overlay-note {
+  max-width: 20rem;
+  text-align: center;
+  font-size: 0.875rem;
 }
 
 #game canvas {
