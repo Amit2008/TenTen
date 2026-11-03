@@ -17,10 +17,18 @@
           This game needs WebGL2. Make sure hardware acceleration is turned on in your browser settings, update
           your browser, or try another one. <a href="https://get.webgl.org/webgl2/" rel="noopener">Check WebGL2 support</a>.
         </p>
-        <button id="retry" type="button">Retry</button>
+        <p class="actions">
+          <button id="retry" type="button">Retry</button>
+          <button type="button" data-dialog="help">How to play</button>
+          <button type="button" data-dialog="credits">Credits</button>
+        </p>
       </section>
       <section id="save-notice" role="alert" hidden>
         <p id="save-notice-text"></p>
+        <details id="save-notice-detail" hidden>
+          <summary>Technical details</summary>
+          <p id="save-notice-detail-text"></p>
+        </details>
         <p id="save-notice-actions"></p>
         <p class="save-note">Saves stay in this browser on this device. Clearing site data or private browsing can remove them.</p>
       </section>
@@ -36,12 +44,16 @@
             <h2 id="paused-title">Paused</h2>
             <button id="resume" type="button">Resume</button>
             <button id="pause-restart" type="button">Restart</button>
+            <button type="button" data-dialog="settings">Settings</button>
             <button id="pause-menu" type="button">Main menu</button>
           </section>
           <section id="menu" class="overlay" role="dialog" aria-labelledby="menu-title" hidden>
             <h2 id="menu-title">Line Garden</h2>
             <button id="menu-continue" type="button" hidden>Continue</button>
             <button id="menu-new" type="button">New game</button>
+            <button type="button" data-dialog="help">How to play</button>
+            <button type="button" data-dialog="settings">Settings</button>
+            <button type="button" data-dialog="credits">Credits</button>
             <p class="overlay-note">To quit, close this tab. Your game is saved after every move.</p>
           </section>
           <section id="confirm-new" class="overlay" role="alertdialog" aria-labelledby="confirm-title" aria-describedby="confirm-text" hidden>
@@ -60,6 +72,68 @@
         </div>
       </section>
     </main>
+
+    <dialog id="help" aria-labelledby="help-title">
+      <h2 id="help-title">How to play</h2>
+      <p>Place the three pieces from the tray onto the 10 by 10 board. Pieces cannot be rotated.</p>
+      <p>Fill a whole row or column and it clears. Rows and columns that fill at the same time clear together.</p>
+      <p>You score 1 point per placed cell and 10 points per cleared line. When all three pieces are placed, you get three new ones.</p>
+      <p>The game ends when none of the pieces you hold fits anywhere on the board.</p>
+      <h3>Controls</h3>
+      <ul>
+        <li><strong>Mouse or touch:</strong> drag a piece onto the board. On touch screens the piece floats above your finger.</li>
+        <li><strong>Tap or click:</strong> pick a piece (or its 1, 2, 3 button), then tap the board cell for the piece's top-left corner.</li>
+        <li><strong>Keyboard:</strong> 1 to 3 pick a piece, arrow keys move it, Enter or Space places it, Escape cancels or pauses.</li>
+      </ul>
+      <form method="dialog"><button>Close</button></form>
+    </dialog>
+
+    <dialog id="settings" aria-labelledby="settings-title">
+      <h2 id="settings-title">Settings</h2>
+      <form id="settings-form">
+        <p class="field">
+          <label for="set-master">Master volume</label>
+          <input id="set-master" name="masterVolume" type="range" min="0" max="100" step="5" />
+          <output for="set-master"></output>
+        </p>
+        <p class="field">
+          <label for="set-music">Music volume</label>
+          <input id="set-music" name="musicVolume" type="range" min="0" max="100" step="5" />
+          <output for="set-music"></output>
+        </p>
+        <p class="field">
+          <label for="set-effects">Effects volume</label>
+          <input id="set-effects" name="effectsVolume" type="range" min="0" max="100" step="5" />
+          <output for="set-effects"></output>
+        </p>
+        <fieldset>
+          <legend>Theme</legend>
+          <label><input type="radio" name="theme" value="light" /> Light</label>
+          <label><input type="radio" name="theme" value="high_contrast" /> High contrast</label>
+        </fieldset>
+        <fieldset>
+          <legend>Motion</legend>
+          <label><input type="radio" name="motion" value="system" /> Follow my device setting</label>
+          <label><input type="radio" name="motion" value="reduce" /> Reduce motion</label>
+          <label><input type="radio" name="motion" value="full" /> Full motion</label>
+        </fieldset>
+      </form>
+      <p class="settings-note">
+        Your game and settings are stored only in this browser on this device. Clearing site data, private browsing or
+        switching browsers can remove them. There is no account or cloud copy.
+      </p>
+      <form method="dialog"><button>Close</button></form>
+    </dialog>
+
+    <dialog id="credits" aria-labelledby="credits-title">
+      <h2 id="credits-title">Credits</h2>
+      <p>Line Garden (working title) is an original browser puzzle inspired by the classic block-placement genre. It
+        uses no artwork, sounds or logos from other games.</p>
+      <p>Graphics are drawn in code. Rendering uses <a href="https://pixijs.com/" rel="noopener">PixiJS</a> (MIT
+        License). Text uses your system's fonts.</p>
+      <form method="dialog"><button>Close</button></form>
+    </dialog>
+
     <script type="module" src="/src/bootstrap/main.ts"></script>
   </body>
 </html>

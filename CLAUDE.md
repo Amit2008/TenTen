@@ -17,7 +17,7 @@ A browser block-placement puzzle inspired by 1010! classic endless mode: a 10x10
 
 ## Key rules (details in the GDD)
 
-- Do one task at a time, then stop at the task boundary.
+- Do one task at a time: finish it through merge before starting the next. Never mix two tasks on one branch.
 - Never fabricate results. A check that wasn't run is marked NOT RUN.
 - The domain layer stays pure: no Pixi, DOM, IndexedDB, audio, wall-clock time or Math.random. `tests/unit/architecture.test.ts` enforces this.
 - Each PlacePiece command is one atomic transaction. Score per move is placed cells + 10 × completed lines.

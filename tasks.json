@@ -426,7 +426,7 @@
       "depends_on": [
         "T18"
       ],
-      "status": "not_started",
+      "status": "done",
       "allowed_scope": [
         "presentation/menus",
         "content/text",
@@ -439,7 +439,8 @@
         "Unsupported WebGL and blocked audio leave a useful HTML interface."
       ],
       "evidence": "DOM accessibility and first-load walkthrough.",
-      "boundary": "Do not add account or cloud-sync flows."
+      "boundary": "Do not add account or cloud-sync flows.",
+      "handoff": "docs/handoffs/T19.md"
     },
     {
       "id": "T20",

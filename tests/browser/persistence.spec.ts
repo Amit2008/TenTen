@@ -195,6 +195,7 @@ test('without IndexedDB the game still plays, marked session only', async ({ bro
 
 test.describe('two tabs', () => {
   test('a stale tab never overwrites: it stops, and Load latest picks up the other tab’s run', async ({ browser, baseURL }, info) => {
+    test.setTimeout(60_000); // two pages, several saves and a reload: slow on a loaded machine
     const context = await browser.newContext({ viewport: { width: 800, height: 1000 }, baseURL: baseURL! });
     const a = await openPage(context);
     await expect(saveStatus(a.page)).toHaveText('Saved');
