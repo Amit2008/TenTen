@@ -478,7 +478,7 @@
         "T19a",
         "T12"
       ],
-      "status": "not_started",
+      "status": "done",
       "allowed_scope": [
         "tests/integration",
         "docs/evidence",
@@ -491,7 +491,8 @@
         "No stuck pointer, resolving lock, default-scroll regression or duplicate move remains."
       ],
       "evidence": "Browser test logs, device recordings and lifecycle checklist.",
-      "boundary": "Emulated touch and headless WebKit do not establish real iPhone behavior."
+      "boundary": "Emulated touch and headless WebKit do not establish real iPhone behavior.",
+      "handoff": "docs/handoffs/T20.md"
     },
     {
       "id": "T21",

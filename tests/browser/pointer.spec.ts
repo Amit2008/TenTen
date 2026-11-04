@@ -147,6 +147,35 @@ for (const [kind, dpr] of [['mouse', 1], ['mouse', 2], ['mouse', 3], ['touch', 1
   });
 }
 
+test('after an orientation change a touch drag previews and places on the same cells (T20)', async ({ browser, baseURL }) => {
+  const { context, page, errors } = await newPage(browser, baseURL!, 3, true);
+  const driver = await touch(page);
+  const m = mirror();
+  // Landscape then back to portrait; top-left and top-right corners are legal for this deal (see the corner test).
+  for (const [slot, size] of [[0, { width: 1000, height: 800 }], [1, { width: 800, height: 1000 }]] as const) {
+    await page.setViewportSize(size);
+    await page.evaluate(() => screen.orientation.dispatchEvent(new Event('change')));
+    const box = await canvasBox(page);
+    const state = m.session.state;
+    const shape = shapeById(state.tray[slot]!.shapeId);
+    const anchor: Cell = slot === 0 ? [0, 0] : [config.columns - shape.width, 0];
+    expect(canPlace(state.board, shape, anchor)).toBe(true);
+    const grabbed = shape.cells[0]!;
+    await driver.down(trayCellClient(state, slot, grabbed, box));
+    await driver.move(dropPoint(anchor, grabbed, box, 'touch'));
+    const placed = placementCells(shape, anchor);
+    const ghost = await sample(page, placed.map((c) => ghostSamplePoint(c, box)));
+    const want = blend(shapeColor(shape.id), theme.empty_cell, theme.ghost_alpha);
+    placed.forEach((c, i) => expectColor(ghost[i]!, want, `${size.width}x${size.height} ghost at ${c}`));
+    await driver.up();
+    m.place(slot, anchor);
+    await canvasBox(page);
+    await expectBoard(page, box, m.session.state, `${size.width}x${size.height} after lift`);
+  }
+  expect(errors).toEqual([]);
+  await context.close();
+});
+
 test('an invalid spot shows an outline and cross, and releasing there consumes nothing', async ({ browser, baseURL }, info) => {
   const { context, page, box } = await newPage(browser, baseURL!, 2);
   const driver = mouse(page);

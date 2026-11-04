@@ -1,0 +1,21 @@
+
+Running 12 tests using 3 workers
+
+[root] 19 moves, Node final 68b46764c04b0ff9 | 30 fps (measured 31 rAF/s): final 68b46764c04b0ff9 | 60 fps (measured 54 rAF/s): final 68b46764c04b0ff9 | 144 fps (measured 85 rAF/s): final 68b46764c04b0ff9
+  ok  1 [root] › tests\browser\integration.spec.ts:98:1 › 30, 60 and 144 fps traces give identical logical state hashes, matching Node (16.2s)
+[nested] 19 moves, Node final 68b46764c04b0ff9 | 30 fps (measured 31 rAF/s): final 68b46764c04b0ff9 | 60 fps (measured 51 rAF/s): final 68b46764c04b0ff9 | 144 fps (measured 78 rAF/s): final 68b46764c04b0ff9
+  ok  3 [nested] › tests\browser\integration.spec.ts:98:1 › 30, 60 and 144 fps traces give identical logical state hashes, matching Node (16.4s)
+[root] 19 moves, Node final 68b46764c04b0ff9 | 30 fps (measured 31 rAF/s): final 68b46764c04b0ff9 | 60 fps (measured 50 rAF/s): final 68b46764c04b0ff9 | 144 fps (measured 81 rAF/s): final 68b46764c04b0ff9
+  ok  2 [root] › tests\browser\integration.spec.ts:98:1 › 30, 60 and 144 fps traces give identical logical state hashes, matching Node (16.5s)
+  ok  4 [root] › tests\browser\integration.spec.ts:129:1 › refresh during a clear: Continue shows the committed clear once, and play goes on (8.8s)
+  ok  5 [nested] › tests\browser\integration.spec.ts:129:1 › refresh during a clear: Continue shows the committed clear once, and play goes on (8.7s)
+  ok  6 [root] › tests\browser\integration.spec.ts:129:1 › refresh during a clear: Continue shows the committed clear once, and play goes on (8.9s)
+  ok  8 [nested] › tests\browser\integration.spec.ts:154:1 › a touch swipe on the board never scrolls the page; the same swipe outside it does (1.2s)
+  ok  7 [root] › tests\browser\integration.spec.ts:154:1 › a touch swipe on the board never scrolls the page; the same swipe outside it does (1.4s)
+  ok  9 [root] › tests\browser\integration.spec.ts:154:1 › a touch swipe on the board never scrolls the page; the same swipe outside it does (1.2s)
+[nested] 19 moves, Node final 68b46764c04b0ff9 | 30 fps (measured 30 rAF/s): final 68b46764c04b0ff9 | 60 fps (measured 62 rAF/s): final 68b46764c04b0ff9 | 144 fps (measured 99 rAF/s): final 68b46764c04b0ff9
+  ok 10 [nested] › tests\browser\integration.spec.ts:98:1 › 30, 60 and 144 fps traces give identical logical state hashes, matching Node (16.3s)
+  ok 11 [nested] › tests\browser\integration.spec.ts:129:1 › refresh during a clear: Continue shows the committed clear once, and play goes on (4.6s)
+  ok 12 [nested] › tests\browser\integration.spec.ts:154:1 › a touch swipe on the board never scrolls the page; the same swipe outside it does (1.3s)
+
+  12 passed (1.1m)
