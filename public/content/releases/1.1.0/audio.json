@@ -7,11 +7,11 @@
   "shuffle": true,
   "repeat_playlist": true,
   "effects": {
-    "pick": null,
-    "place": null,
-    "clear": null,
-    "invalid": null,
-    "game_over": null
+    "pick": "audio/pick.wav",
+    "place": "audio/place.wav",
+    "clear": "audio/clear.wav",
+    "invalid": "audio/invalid.wav",
+    "game_over": "audio/game_over.wav"
   },
   "missing_asset_policy": "silent_with_log"
 }

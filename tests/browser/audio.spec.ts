@@ -97,7 +97,11 @@ async function placeFirst(page: Page) {
   await expect(page.locator('#score')).not.toHaveText(before!);
 }
 
-test('the shipped configuration has no audio and never creates an AudioContext', async ({ page }) => {
+test('an audio.json with no tracks or effects never creates an AudioContext', async ({ page }) => {
+  await page.route('**/releases/*/audio.json', async (route) => {
+    const shipped = await (await route.fetch()).json();
+    await route.fulfill({ json: { ...shipped, music_tracks: [], effects: noEffects } });
+  });
   await page.addInitScript(() => {
     const w = window as unknown as { created: number };
     w.created = 0;
@@ -205,4 +209,23 @@ test('a finished track advances the playlist, and the volume settings drive the 
   await page.getByLabel('Master volume').fill('0');
   await page.getByLabel('Music volume').fill('55');
   expect(await gains()).toEqual([0, 55, 70]);
+});
+
+test('the shipped effects load after New game and a move plays pick and place', async ({ page }) => {
+  await page.addInitScript(() => {
+    const w = window as unknown as { started: number[] };
+    w.started = [];
+    const start = AudioBufferSourceNode.prototype.start;
+    AudioBufferSourceNode.prototype.start = function (...args: Parameters<typeof start>) {
+      w.started.push(Math.round(this.buffer!.duration * 100) / 100);
+      return start.apply(this, args);
+    };
+  });
+  await ready(page, './');
+  await page.getByRole('button', { name: 'New game' }).click();
+  await expect.poll(async () => (await page.evaluate(() => performance.getEntriesByType('resource').map((r) => r.name))).filter((n) => /\/audio\/\w+\.wav$/.test(n)).length).toBe(5);
+  await page.waitForTimeout(300); // decoding finishes after the fetch
+  await placeFirst(page);
+  // pick.wav is 0.07 s and place.wav 0.14 s (tools/audio/make-sounds.mjs).
+  await expect.poll(() => page.evaluate(() => (window as unknown as { started: number[] }).started)).toEqual([0.07, 0.14]);
 });

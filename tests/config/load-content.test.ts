@@ -38,6 +38,7 @@ describe('loadContent', () => {
     expect(bundle.theme.dark.tile).toBeUndefined();
     expect(bundle.runtime.boardRect).toEqual([60, 190, 600, 600]);
     expect(bundle.audio.musicTracks).toEqual([]);
+    expect(bundle.audio.effects.place).toBe('audio/place.wav');
     expect(Object.isFrozen(bundle.runtime.boardRect)).toBe(true);
     // The index is revalidated; every request stays under the app base.
     expect(log[0]).toBe(`${BASE}content/index.json cache=no-cache`);
