@@ -1,4 +1,5 @@
 import type { Application } from 'pixi.js';
+import { WebAudioOutput } from '../adapters/audio/web-audio';
 import { loadContent } from '../adapters/content/load-content';
 import { applyTheme, bindSettingsForm, installDialogButtons } from '../adapters/dom/dialogs';
 import { Hud } from '../adapters/dom/hud';
@@ -14,7 +15,7 @@ import { checkRun } from '../application/save/envelope';
 import { GameSession, startSession, type SessionRules } from '../application/session/session';
 import { appliedTheme, reducesMotion, type Settings } from '../application/settings/settings';
 import type { PlacePiece, SessionState } from '../domain/models/types';
-import { DragController } from '../presentation/drag/drag';
+import { DragController, type DragPreview } from '../presentation/drag/drag';
 import { MoveFeedback } from '../presentation/feedback/feedback';
 import { SelectionController } from '../presentation/input_modes/selection';
 import { PresentationStates } from '../presentation/states/states';
@@ -35,9 +36,13 @@ const slotGroup = document.getElementById('slots')!;
 const pausePanel = document.getElementById('paused')!;
 const resumeButton = document.getElementById('resume') as HTMLButtonElement;
 const pauseButton = document.getElementById('pause-button') as HTMLButtonElement;
+const soundButton = document.getElementById('sound-button') as HTMLButtonElement;
+/** Explicit Play, Resume and Enable sound gestures: the only clicks that may start audio (GDD 9.3). */
+const SOUND_GESTURES = '#menu-continue, #menu-new, #confirm-yes, #results-again, #resume, #sound-button';
 
 let app: Application | undefined;
 let hud: Hud | undefined;
+let audio: WebAudioOutput | undefined;
 let disposeFit: (() => void) | undefined;
 let disposeInput: (() => void) | undefined;
 let saves: Saves | undefined;
@@ -67,12 +72,14 @@ function teardown(): void {
   disposeFit?.();
   app?.destroy(true);
   hud?.destroy();
+  audio?.destroy();
+  soundButton.hidden = true;
   saves?.close();
   hudPanel.hidden = true;
   pausePanel.hidden = true;
-  slotGroup.inert = pauseButton.inert = false;
+  slotGroup.inert = pauseButton.inert = soundButton.inert = false;
   delete host.dataset.state;
-  app = hud = disposeFit = disposeInput = sessionListeners = saves = undefined;
+  app = hud = audio = disposeFit = disposeInput = sessionListeners = saves = undefined;
 }
 
 /** `loadLatest`: continue the stored run (after a conflict) even when `?seed=` would start a new one. */
@@ -150,6 +157,7 @@ async function start({ loadLatest = false } = {}): Promise<void> {
       motion: 'system',
     };
     let settings = opened.settings(defaults);
+    const sound = (audio = new WebAudioOutput(content.audio, content.releaseUrl, settings, (blocked) => (soundButton.hidden = !blocked)));
     const systemDark = matchMedia('(prefers-color-scheme: dark)');
     const renderer = app.renderer;
     // Only colors change; the board, tray and save stay as they are.
@@ -164,6 +172,7 @@ async function start({ loadLatest = false } = {}): Promise<void> {
     const unbindSettings = bindSettingsForm(settings, (next) => {
       settings = next;
       showTheme();
+      sound.setVolumes(next);
       opened.saveSettings(next);
     });
     const systemReducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
@@ -180,7 +189,7 @@ async function start({ loadLatest = false } = {}): Promise<void> {
     });
     /** The board takes input only while a run is played: not paused, not behind a screen, not stale. */
     const sync = (): void => {
-      canvas.inert = slotGroup.inert = pauseButton.inert = conflicted || states.paused || !lifecycle.playing;
+      canvas.inert = slotGroup.inert = pauseButton.inert = soundButton.inert = conflicted || states.paused || !lifecycle.playing;
       host.dataset.state = lifecycle.playing ? states.label(drag.dragging, selection.selected) : lifecycle.screen;
     };
 
@@ -192,6 +201,8 @@ async function start({ loadLatest = false } = {}): Promise<void> {
       const result = session.place(command);
       if (result.accepted) {
         show(result.state);
+        sound.play(result.cleared.length > 0 ? 'clear' : 'place');
+        if (result.state.status === 'game_over') sound.play('game_over');
         opened.save(result.state); // queued right away; Saved shows only once the transaction completes
         resultsPending = result.state.status === 'game_over';
         const reduced = reducesMotion(settings, systemReducedMotion.matches, theme.reducedMotion);
@@ -200,10 +211,14 @@ async function start({ loadLatest = false } = {}): Promise<void> {
       selection.refresh();
       sync();
     };
+    let selectedSlot: number | null = null;
+    let dragPreview: DragPreview | null = null;
     const selection = new SelectionController(
       { config: gameplay, board, tray },
       current,
       (preview) => {
+        if (preview && preview.slot !== selectedSlot) sound.play('pick');
+        selectedSlot = preview?.slot ?? null;
         view.showSelection(preview);
         shownHud.setSelected(preview?.slot ?? null);
         sync();
@@ -214,6 +229,10 @@ async function start({ loadLatest = false } = {}): Promise<void> {
       { config: gameplay, viewport, board, tray, dragThresholdCssPx: runtime.dragThresholdCssPx, touchLiftCssPx: runtime.touchLiftCssPx },
       current,
       (preview) => {
+        if (preview && !dragPreview) sound.play('pick');
+        // The piece goes back to the tray from an invalid spot (a valid one commits and plays its own sound).
+        if (!preview && dragPreview && !dragPreview.valid) sound.play('invalid');
+        dragPreview = preview;
         if (preview) selection.clear(); // a direct drag replaces any tap/keyboard selection
         view.showDrag(preview);
         sync();
@@ -230,6 +249,7 @@ async function start({ loadLatest = false } = {}): Promise<void> {
       if (!lifecycle.playing || states.paused || conflicted) return;
       drag.cancel();
       states.pause();
+      sound.suspend();
       setRendering(shownApp, false);
       pausePanel.hidden = false;
       resumeButton.focus();
@@ -301,6 +321,9 @@ async function start({ loadLatest = false } = {}): Promise<void> {
     resumeButton.addEventListener('click', resume, { signal });
     pauseButton.addEventListener('click', pause, { signal });
     systemDark.addEventListener('change', showTheme, { signal });
+    document.addEventListener('click', (e) => (e.target as Element).closest?.(SOUND_GESTURES) && sound.unlock(), { signal });
+    // Hidden tabs are silent even on the menu, where the game itself does not pause.
+    document.addEventListener('visibilitychange', () => document.hidden && sound.suspend(), { signal });
     if (runtime.pauseOnHidden) {
       window.addEventListener('blur', pause, { signal });
       document.addEventListener('visibilitychange', () => document.hidden && pause(), { signal });

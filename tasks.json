@@ -526,7 +526,7 @@
       "depends_on": [
         "T19"
       ],
-      "status": "not_started",
+      "status": "done",
       "allowed_scope": [
         "src/adapters/audio",
         "public/content/audio",
@@ -539,7 +539,8 @@
         "MP3 music and WAV effects are verified on the browser matrix when supplied."
       ],
       "evidence": "Audio-policy fixtures plus actual device playback results.",
-      "boundary": "Optional final music may remain absent; test fixtures are not final assets."
+      "boundary": "Optional final music may remain absent; test fixtures are not final assets.",
+      "handoff": "docs/handoffs/T22.md"
     },
     {
       "id": "T23",
