@@ -574,7 +574,7 @@
         "T23",
         "T17"
       ],
-      "status": "not_started",
+      "status": "done",
       "allowed_scope": [
         "docs/configuration",
         "public/content",
@@ -587,7 +587,8 @@
         "Old tabs keep a consistent content version; cosmetic updates preserve resume."
       ],
       "evidence": "Content diffs, two-version HTTP test and rollback trace.",
-      "boundary": "Changing hosted content is an operator deployment, not local player file editing."
+      "boundary": "Changing hosted content is an operator deployment, not local player file editing.",
+      "handoff": "docs/handoffs/T24.md"
     },
     {
       "id": "T25",
