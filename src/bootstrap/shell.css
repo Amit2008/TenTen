@@ -3,6 +3,9 @@
   --letterbox: #ebe7dd;
   --text: #203538;
   --accent: #247d80;
+  --backdrop: rgb(32 53 56 / 0.4);
+  --overlay: rgb(235 231 221 / 0.9);
+  color-scheme: light;
   font: 16px/1.5 system-ui, sans-serif;
   color: var(--text);
   background: var(--letterbox);
@@ -14,6 +17,29 @@
   --letterbox: #ffffff;
   --text: #000000;
   --accent: #00454a;
+}
+
+/* Dark (Settings, or the device preference before the saved setting is read). Matches theme.json "dark". */
+:root[data-theme='dark'] {
+  --bg: #1b2426;
+  --letterbox: #141b1d;
+  --text: #e4edec;
+  --accent: #4fbfc2;
+  --backdrop: rgb(0 0 0 / 0.6);
+  --overlay: rgb(20 27 29 / 0.9);
+  color-scheme: dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --bg: #1b2426;
+    --letterbox: #141b1d;
+    --text: #e4edec;
+    --accent: #4fbfc2;
+    --backdrop: rgb(0 0 0 / 0.6);
+    --overlay: rgb(20 27 29 / 0.9);
+    color-scheme: dark;
+  }
 }
 
 body {
@@ -44,7 +70,7 @@ dialog {
 }
 
 dialog::backdrop {
-  background: rgb(32 53 56 / 0.4);
+  background: var(--backdrop);
 }
 
 dialog h2 {
@@ -251,7 +277,7 @@ a:focus-visible {
   align-items: center;
   justify-content: center;
   gap: 16px;
-  background: rgb(235 231 221 / 0.9);
+  background: var(--overlay);
 }
 
 #game > .overlay h2,

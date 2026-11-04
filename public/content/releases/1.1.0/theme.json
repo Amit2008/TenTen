@@ -7,6 +7,13 @@
   "accent": "#247D80",
   "invalid": "#B54139",
   "ghost_alpha": 120,
+  "dark": {
+    "background": "#1B2426",
+    "empty_cell": "#2E3A3C",
+    "text": "#E4EDEC",
+    "accent": "#4FBFC2",
+    "invalid": "#F0806F"
+  },
   "tile_corner_radius": 5,
   "colors": {
     "single": "#247D80",

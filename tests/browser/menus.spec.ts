@@ -63,7 +63,7 @@ test('settings: labeled controls work by keyboard, apply at once and survive a r
   await expect(master).toHaveValue('70'); // audio.json default
   await expect(dialog.getByRole('slider', { name: 'Music volume' })).toHaveValue('30');
   await expect(dialog.getByRole('slider', { name: 'Effects volume' })).toHaveValue('70');
-  await expect(dialog.getByRole('radio', { name: 'Light' })).toBeChecked();
+  await expect(dialog.getByRole('radio', { name: 'Match my device (light or dark)' })).toBeChecked();
   await expect(dialog.getByRole('radio', { name: 'Follow my device setting' })).toBeChecked();
 
   await master.focus();
@@ -71,7 +71,7 @@ test('settings: labeled controls work by keyboard, apply at once and survive a r
   await page.keyboard.press('ArrowLeft');
   await expect(master).toHaveValue('60');
   await expect(dialog.locator('output[for="set-master"]')).toHaveText('60%');
-  await dialog.getByRole('radio', { name: 'Light' }).focus();
+  await dialog.getByRole('radio', { name: 'Dark', exact: true }).focus();
   await page.keyboard.press('ArrowDown'); // radio group: moves to High contrast
   await expect(dialog.getByRole('radio', { name: 'High contrast' })).toBeChecked();
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'high_contrast');

@@ -1,4 +1,4 @@
-import { parseSettings, type Settings } from '../../application/settings/settings';
+import { parseSettings, type AppliedTheme, type Settings } from '../../application/settings/settings';
 
 /**
  * Buttons with `data-dialog="<id>"` open that native modal dialog: the browser traps focus, closes it on Escape and
@@ -41,7 +41,7 @@ export function bindSettingsForm(settings: Settings, onChange: (settings: Settin
   return () => listeners.abort();
 }
 
-/** High contrast restyles the HTML at once; canvas colors follow with the theme work (T21). */
-export function applyTheme(settings: Settings): void {
-  document.documentElement.dataset.theme = settings.theme;
+/** Restyles the HTML at once. The canvas switches light/dark itself; its high-contrast colors come with T21. */
+export function applyTheme(theme: AppliedTheme): void {
+  document.documentElement.dataset.theme = theme;
 }

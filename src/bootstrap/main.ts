@@ -12,7 +12,7 @@ import { Lifecycle } from '../application/lifecycle/lifecycle';
 import { createGenerator, weightedPieceSource } from '../application/piece-source/piece-source';
 import { checkRun } from '../application/save/envelope';
 import { GameSession, startSession, type SessionRules } from '../application/session/session';
-import { reducesMotion, type Settings } from '../application/settings/settings';
+import { appliedTheme, reducesMotion, type Settings } from '../application/settings/settings';
 import type { PlacePiece, SessionState } from '../domain/models/types';
 import { DragController } from '../presentation/drag/drag';
 import { MoveFeedback } from '../presentation/feedback/feedback';
@@ -113,7 +113,6 @@ async function start({ loadLatest = false } = {}): Promise<void> {
     const empty: SessionState = { ...startSession(rules, 'none', createGenerator(1)), tray: Array<null>(gameplay.traySize).fill(null) };
     const current = (): SessionState => session?.state ?? empty;
 
-    app.renderer.background.color = theme.background;
     const view = new GameView(gameplay, theme, content.colorKeys, board, tray);
     app.stage.addChild(view.container);
     const canvas = app.canvas;
@@ -133,14 +132,24 @@ async function start({ loadLatest = false } = {}): Promise<void> {
       masterVolume: Math.round(content.audio.masterVolume * 100),
       musicVolume: Math.round(content.audio.musicVolume * 100),
       effectsVolume: Math.round(content.audio.sfxVolume * 100),
-      theme: 'light',
+      theme: 'system',
       motion: 'system',
     };
     let settings = opened.settings(defaults);
-    applyTheme(settings);
+    const systemDark = matchMedia('(prefers-color-scheme: dark)');
+    const renderer = app.renderer;
+    // Only colors change; the board, tray and save stay as they are.
+    const showTheme = (): void => {
+      const shown = appliedTheme(settings, systemDark.matches);
+      applyTheme(shown);
+      const palette = shown === 'dark' ? theme.dark : theme;
+      renderer.background.color = palette.background;
+      view.setPalette(palette);
+    };
+    showTheme();
     const unbindSettings = bindSettingsForm(settings, (next) => {
       settings = next;
-      applyTheme(next);
+      showTheme();
       opened.saveSettings(next);
     });
     const systemReducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
@@ -276,6 +285,7 @@ async function start({ loadLatest = false } = {}): Promise<void> {
 
     const { signal } = (sessionListeners = new AbortController());
     resumeButton.addEventListener('click', resume, { signal });
+    systemDark.addEventListener('change', showTheme, { signal });
     if (runtime.pauseOnHidden) {
       window.addEventListener('blur', pause, { signal });
       document.addEventListener('visibilitychange', () => document.hidden && pause(), { signal });

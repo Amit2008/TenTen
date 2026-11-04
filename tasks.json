@@ -443,11 +443,39 @@
       "handoff": "docs/handoffs/T19.md"
     },
     {
+      "id": "T19a",
+      "title": "Add dark mode colors",
+      "phase": "C",
+      "depends_on": [
+        "T19"
+      ],
+      "status": "done",
+      "allowed_scope": [
+        "public/content/releases (theme)",
+        "src/adapters/content",
+        "src/adapters/pixi",
+        "src/adapters/dom",
+        "src/application/settings",
+        "styles",
+        "index.html",
+        "tests"
+      ],
+      "work": "Add a dark palette for the HTML screens and the WebGL board and tray. Theme choices become Follow my device, Light, Dark and High contrast; Follow my device uses prefers-color-scheme and updates when it changes. Switching repaints the board without touching game state.",
+      "acceptance_checks": [
+        "Dark mode colors every HTML screen, dialog and native control, and the canvas background, empty cells, preview outline, invalid cross and anchor marker.",
+        "Text and focus rings in dark mode meet WCAG AA contrast (4.5:1 text, 3:1 focus and outlines).",
+        "Switching theme mid-run keeps the board, tray, score and save unchanged; the gameplay hash is unchanged."
+      ],
+      "evidence": "Browser tests, pixel checks and light/dark screenshots.",
+      "boundary": "Tile colors and geometry stay as in T13; final high-contrast canvas theme remains T21.",
+      "handoff": "docs/handoffs/T19a.md"
+    },
+    {
       "id": "T20",
       "title": "Validate browser input and lifecycle integration",
       "phase": "C",
       "depends_on": [
-        "T19",
+        "T19a",
         "T12"
       ],
       "status": "not_started",

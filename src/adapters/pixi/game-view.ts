@@ -4,7 +4,7 @@ import type { DragPreview } from '../../presentation/drag/drag';
 import type { FeedbackFrame } from '../../presentation/feedback/feedback';
 import type { PlacementPreview } from '../../presentation/views/preview';
 import { cellOrigin, slotGrid, type GridLayout, type TrayLayout } from '../../presentation/views/layout';
-import type { ThemeConfig } from '../content/presentation-config';
+import type { ThemeConfig, ThemePalette } from '../content/presentation-config';
 
 // GDD 7.2: 3-pixel inset at a 60-pixel pitch; the theme radius is also given at that pitch.
 const INSET_PER_PITCH = 3 / 60;
@@ -22,6 +22,8 @@ export class GameView {
   #pulsed: Graphics[] = [];
   #floatingShape: string | null = null;
   #ghostKey = '';
+  #palette: ThemePalette;
+  #shownBoard: BoardState | null = null;
 
   constructor(
     private readonly config: GameplayConfig,
@@ -31,6 +33,7 @@ export class GameView {
     private readonly board: GridLayout,
     private readonly tray: TrayLayout,
   ) {
+    this.#palette = theme;
     // Each cell is drawn around its own center so the placement pulse scales in place.
     const unit = { x: -board.pitch / 2, y: -board.pitch / 2, pitch: board.pitch, columns: 1, rows: 1 };
     for (let y = 0; y < board.rows; y++)
@@ -84,10 +87,10 @@ export class GameView {
     const g = this.#ghost;
     const width = this.board.pitch * 0.06;
     const [x, y, w, h] = this.tray.slots[preview.slot]!;
-    g.roundRect(x + width, y + width, w - 2 * width, h - 2 * width, 8).stroke({ width, color: this.theme.accent });
+    g.roundRect(x + width, y + width, w - 2 * width, h - 2 * width, 8).stroke({ width, color: this.#palette.accent });
     // A ring on the anchor cell: the bounding-box origin, visible even when that cell of the shape is empty.
     const [ax, ay] = cellOrigin(this.board, preview.anchor);
-    g.circle(ax + this.board.pitch / 2, ay + this.board.pitch / 2, this.board.pitch * 0.22).stroke({ width, color: this.theme.text });
+    g.circle(ax + this.board.pitch / 2, ay + this.board.pitch / 2, this.board.pitch * 0.22).stroke({ width, color: this.#palette.text });
   }
 
   /** Draws one feedback frame over the committed board; null restores every cell. Cosmetic only. */
@@ -115,13 +118,21 @@ export class GameView {
     this.#fading.alpha = frame.clearedAlpha;
   }
 
+  /** Light/dark switch: retints empty cells now; outlines and markers use it from their next draw. */
+  setPalette(palette: ThemePalette): void {
+    this.#palette = palette;
+    this.#ghostKey = '';
+    if (this.#shownBoard) this.#updateBoard(this.#shownBoard);
+  }
+
   update(state: SessionState): void {
     this.#updateBoard(state.board);
     state.tray.forEach((slot, i) => this.#updateSlot(i, slot));
   }
 
   #updateBoard(board: BoardState): void {
-    board.cells.forEach((key, i) => (this.#cells[i]!.tint = key === null ? this.theme.emptyCell : this.#color(key)));
+    this.#shownBoard = board;
+    board.cells.forEach((key, i) => (this.#cells[i]!.tint = key === null ? this.#palette.emptyCell : this.#color(key)));
   }
 
   #updateSlot(index: number, slot: SlotInstance | null): void {
@@ -148,7 +159,7 @@ export class GameView {
         g.moveTo(l + s / 4, t + s / 4).lineTo(l + (3 * s) / 4, t + (3 * s) / 4);
         g.moveTo(l + (3 * s) / 4, t + s / 4).lineTo(l + s / 4, t + (3 * s) / 4);
       }
-      g.stroke({ width: pitch * 0.06, color: this.theme.invalid });
+      g.stroke({ width: pitch * 0.06, color: this.#palette.invalid });
       return;
     }
     const fill = { color: this.#color(shape.id), alpha: this.theme.ghostAlpha / 255 };
@@ -159,7 +170,7 @@ export class GameView {
     for (let y = 0; y < this.board.rows; y++)
       for (let x = 0; x < this.board.columns; x++)
         if (completedRows.includes(y) || completedColumns.includes(x)) g.rect(...this.#inner([x, y]));
-    g.stroke({ width: pitch * 0.06, color: this.theme.accent });
+    g.stroke({ width: pitch * 0.06, color: this.#palette.accent });
   }
 
   /** Square inside a board cell after the inset: [left, top, size]. */
