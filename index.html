@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <title>Line Garden</title>
   </head>
   <body>
@@ -38,6 +39,9 @@
             Score <span id="score">0</span>
             <span id="save-status" aria-live="polite"></span>
             <button id="save-retry" type="button" hidden>Retry saving</button>
+            <button id="pause-button" type="button" aria-label="Pause">
+              <svg aria-hidden="true" viewBox="0 0 24 24" width="24" height="24"><rect x="6" y="5" width="4" height="14" rx="1" /><rect x="14" y="5" width="4" height="14" rx="1" /></svg>
+            </button>
           </p>
           <div id="slots" role="group" aria-label="Tray slots"></div>
           <section id="paused" class="overlay" role="dialog" aria-labelledby="paused-title" hidden>
@@ -84,6 +88,7 @@
         <li><strong>Mouse or touch:</strong> drag a piece onto the board. On touch screens the piece floats above your finger.</li>
         <li><strong>Tap or click:</strong> pick a piece (or its 1, 2, 3 button), then tap the board cell for the piece's top-left corner.</li>
         <li><strong>Keyboard:</strong> 1 to 3 pick a piece, arrow keys move it, Enter or Space places it, Escape cancels or pauses.</li>
+        <li><strong>Pause:</strong> the pause button beside the score, or Escape.</li>
       </ul>
       <form method="dialog"><button>Close</button></form>
     </dialog>
@@ -132,7 +137,8 @@
       <p>Line Garden (working title) is an original browser puzzle inspired by the classic block-placement genre. It
         uses no artwork, sounds or logos from other games.</p>
       <p>Graphics are drawn in code. Rendering uses <a href="https://pixijs.com/" rel="noopener">PixiJS</a> (MIT
-        License). Text uses your system's fonts.</p>
+        License). Text is set in Atkinson Hyperlegible by Braille Institute of America (<a
+        href="licenses/OFL-Atkinson-Hyperlegible.txt">SIL Open Font License 1.1</a>).</p>
       <form method="dialog"><button>Close</button></form>
     </dialog>
 

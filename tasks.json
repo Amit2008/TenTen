@@ -501,7 +501,7 @@
       "depends_on": [
         "T20"
       ],
-      "status": "not_started",
+      "status": "done",
       "allowed_scope": [
         "public/content/themes",
         "public/content/icons",
@@ -516,7 +516,8 @@
         "Bundled assets have recorded sources and licenses."
       ],
       "evidence": "Approved screenshots and asset manifest.",
-      "boundary": "Do not ship the reference screenshot, logo or extracted game art."
+      "boundary": "Do not ship the reference screenshot, logo or extracted game art.",
+      "handoff": "docs/handoffs/T21.md"
     },
     {
       "id": "T22",

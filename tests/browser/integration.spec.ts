@@ -173,8 +173,8 @@ test('a touch swipe on the board never scrolls the page; the same swipe outside 
 
   // Control: the same emulated swipe on HTML does scroll, so the unchanged offset above is the canvas refusing it.
   await page.evaluate(() => scrollTo(0, 0));
-  const status = (await page.getByRole('status').boundingBox())!;
-  await swipe([status.x + 4, status.y + status.height / 2]);
+  const html = (await page.locator('#score-line').boundingBox())!;
+  await swipe([html.x + 4, html.y + html.height / 2]);
   expect(await page.evaluate(() => scrollY)).toBeGreaterThan(0);
   await context.close();
 });

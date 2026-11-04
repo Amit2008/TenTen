@@ -34,6 +34,7 @@ const scoreOutput = document.getElementById('score')!;
 const slotGroup = document.getElementById('slots')!;
 const pausePanel = document.getElementById('paused')!;
 const resumeButton = document.getElementById('resume') as HTMLButtonElement;
+const pauseButton = document.getElementById('pause-button') as HTMLButtonElement;
 
 let app: Application | undefined;
 let hud: Hud | undefined;
@@ -46,6 +47,15 @@ let loadGeneration = 0;
 /** A content request that hangs becomes an error with Retry instead of an endless "Loading…". */
 const LOAD_TIMEOUT_MS = 15_000;
 let loadAbort: AbortController | undefined;
+
+/** Bundled font (GDD 7.2): the score and slot rows that size the canvas are measured only after it is in. */
+const FONT_TIMEOUT_MS = 3000;
+async function fontReady(): Promise<void> {
+  const faces = Promise.all(['400', '700'].map((weight) => document.fonts.load(`${weight} 1em "Atkinson Hyperlegible"`)));
+  const late = new Promise((resolve) => setTimeout(resolve, FONT_TIMEOUT_MS));
+  // Missing or slow font: play on with system fonts; fitToHost refits if it arrives later.
+  await Promise.race([faces, late]).catch((error: unknown) => console.warn('Font not loaded; using system fonts.', error));
+}
 
 /** `?seed=<1..4294967295>` (tests) starts a new run at once with a reproducible first deal. */
 const seedParam = new URLSearchParams(location.search).get('seed');
@@ -60,7 +70,7 @@ function teardown(): void {
   saves?.close();
   hudPanel.hidden = true;
   pausePanel.hidden = true;
-  slotGroup.inert = false;
+  slotGroup.inert = pauseButton.inert = false;
   delete host.dataset.state;
   app = hud = disposeFit = disposeInput = sessionListeners = saves = undefined;
 }
@@ -73,9 +83,13 @@ async function start({ loadLatest = false } = {}): Promise<void> {
   teardown();
   errorPanel.hidden = true;
   status.textContent = 'Loading…';
+  status.classList.remove('visually-hidden');
   const timeout = setTimeout(() => abort.abort(new DOMException('Loading took too long.', 'TimeoutError')), LOAD_TIMEOUT_MS);
   try {
-    const content = await loadContent(appUrl(''), (url, init) => fetch(url, init), abort.signal).finally(() => clearTimeout(timeout));
+    const [content] = await Promise.all([
+      loadContent(appUrl(''), (url, init) => fetch(url, init), abort.signal).finally(() => clearTimeout(timeout)),
+      fontReady(),
+    ]);
     if (generation !== loadGeneration) return;
     const created = await createWebGL2App(content.runtime);
     if (generation !== loadGeneration) return void created.destroy(true);
@@ -142,7 +156,7 @@ async function start({ loadLatest = false } = {}): Promise<void> {
     const showTheme = (): void => {
       const shown = appliedTheme(settings, systemDark.matches);
       applyTheme(shown);
-      const palette = shown === 'dark' ? theme.dark : theme;
+      const palette = shown === 'dark' ? theme.dark : shown === 'high_contrast' ? theme.highContrast : theme;
       renderer.background.color = palette.background;
       view.setPalette(palette);
     };
@@ -166,7 +180,7 @@ async function start({ loadLatest = false } = {}): Promise<void> {
     });
     /** The board takes input only while a run is played: not paused, not behind a screen, not stale. */
     const sync = (): void => {
-      canvas.inert = slotGroup.inert = conflicted || states.paused || !lifecycle.playing;
+      canvas.inert = slotGroup.inert = pauseButton.inert = conflicted || states.paused || !lifecycle.playing;
       host.dataset.state = lifecycle.playing ? states.label(drag.dragging, selection.selected) : lifecycle.screen;
     };
 
@@ -285,6 +299,7 @@ async function start({ loadLatest = false } = {}): Promise<void> {
 
     const { signal } = (sessionListeners = new AbortController());
     resumeButton.addEventListener('click', resume, { signal });
+    pauseButton.addEventListener('click', pause, { signal });
     systemDark.addEventListener('change', showTheme, { signal });
     if (runtime.pauseOnHidden) {
       window.addEventListener('blur', pause, { signal });
@@ -308,6 +323,7 @@ async function start({ loadLatest = false } = {}): Promise<void> {
     if (conflicted) lockGame();
 
     status.textContent = `Renderer ready (WebGL2). Content ${content.contentVersion} loaded.`;
+    status.classList.add('visually-hidden'); // still announced; the board gets the room on small screens
     // A seeded load and a set-aside damaged save start playing at once; Load latest continues the stored run.
     if (opened.startNew || seed !== null) beginRun(newRun(), true);
     else if (loadLatest) await continueGame();

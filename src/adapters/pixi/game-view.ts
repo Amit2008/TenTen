@@ -23,7 +23,7 @@ export class GameView {
   #floatingShape: string | null = null;
   #ghostKey = '';
   #palette: ThemePalette;
-  #shownBoard: BoardState | null = null;
+  #shown: SessionState | null = null;
 
   constructor(
     private readonly config: GameplayConfig,
@@ -118,20 +118,22 @@ export class GameView {
     this.#fading.alpha = frame.clearedAlpha;
   }
 
-  /** Light/dark switch: retints empty cells now; outlines and markers use it from their next draw. */
+  /** Theme switch: retints the board and tray now; outlines, markers and the floating piece use it from their next draw. */
   setPalette(palette: ThemePalette): void {
     this.#palette = palette;
     this.#ghostKey = '';
-    if (this.#shownBoard) this.#updateBoard(this.#shownBoard);
+    this.#floatingShape = null;
+    for (const slot of this.#slots) slot.instanceId = -1; // forces a redraw with the new tile color
+    if (this.#shown) this.update(this.#shown);
   }
 
   update(state: SessionState): void {
+    this.#shown = state;
     this.#updateBoard(state.board);
     state.tray.forEach((slot, i) => this.#updateSlot(i, slot));
   }
 
   #updateBoard(board: BoardState): void {
-    this.#shownBoard = board;
     board.cells.forEach((key, i) => (this.#cells[i]!.tint = key === null ? this.#palette.emptyCell : this.#color(key)));
   }
 
@@ -190,6 +192,6 @@ export class GameView {
   }
 
   #color(key: TileKey): string {
-    return this.theme.colors[this.colorKeys[key]!]!;
+    return this.#palette.tile ?? this.theme.colors[this.colorKeys[key]!]!;
   }
 }

@@ -72,6 +72,8 @@ export function fitToHost(app: Application, host: HTMLElement, [x, y, width, hei
   };
   const observer = new ResizeObserver(fit);
   observer.observe(host);
+  // The rows above and below the canvas can change height too (late font, Retry saving): refit then as well.
+  for (const child of host.children) if (child !== app.canvas) observer.observe(child);
   // A DPR change (zoom, moving monitors) does not always resize the host.
   let dprQuery: MediaQueryList | undefined;
   const watchDpr = (): void => {
