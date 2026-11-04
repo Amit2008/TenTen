@@ -1,0 +1,8 @@
+ RUN  v5.0.5 C:/Amit/TenTen
+
+
+ Test Files  20 passed (20)
+      Tests  308 passed (308)
+   Start at  09:43:03
+   Duration  17.45s (tests 96%, import 2%, transform 1%, worker 1%)
+
