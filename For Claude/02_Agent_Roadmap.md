@@ -333,9 +333,26 @@ Evidence: DOM accessibility and first-load walkthrough.
 
 Boundary: Do not add account or cloud-sync flows.
 
+## T19a Add dark mode colors
+
+Phase C | Depends on T19 | Added on Amit's request (3 Nov 2026)
+
+Allowed scope: theme content, content adapter, Pixi view, DOM settings, settings model, styles, index.html, tests.
+
+Work: Add a dark palette for the HTML screens and the WebGL board and tray. Theme choices become Follow my device, Light, Dark and High contrast; Follow my device uses prefers-color-scheme and updates when it changes. Switching repaints the board without touching game state.
+
+Acceptance:
+- Dark mode colors every HTML screen, dialog and native control, and the canvas background, empty cells, preview outline, invalid cross and anchor marker.
+- Text and focus rings in dark mode meet WCAG AA contrast (4.5:1 text, 3:1 focus and outlines).
+- Switching theme mid-run keeps the board, tray, score and save unchanged; the gameplay hash is unchanged.
+
+Evidence: Browser tests, pixel checks and light/dark screenshots.
+
+Boundary: Tile colors and geometry stay as in T13; final high-contrast canvas theme remains T21.
+
 ## T20 Validate browser input and lifecycle integration
 
-Phase C | Depends on T19, T12
+Phase C | Depends on T19a, T12
 
 Allowed scope: tests/integration, docs/evidence, direct scoped fixes.
 

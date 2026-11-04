@@ -1,6 +1,8 @@
 // Player settings (GDD 7.2, 9.2, 9.3). Pure; stored in the save envelope and applied by adapters.
 
-export type ThemeChoice = 'light' | 'high_contrast';
+/** `system` follows prefers-color-scheme (light or dark); the others override it. */
+export type ThemeChoice = 'system' | 'light' | 'dark' | 'high_contrast';
+export type AppliedTheme = Exclude<ThemeChoice, 'system'>;
 /** `system` follows prefers-reduced-motion; the others override it. */
 export type MotionChoice = 'system' | 'reduce' | 'full';
 
@@ -13,7 +15,7 @@ export interface Settings {
   readonly motion: MotionChoice;
 }
 
-const THEMES: readonly ThemeChoice[] = ['light', 'high_contrast'];
+const THEMES: readonly ThemeChoice[] = ['system', 'light', 'dark', 'high_contrast'];
 const MOTIONS: readonly MotionChoice[] = ['system', 'reduce', 'full'];
 
 /**
@@ -41,4 +43,10 @@ export function reducesMotion(settings: Settings, systemPrefersReduced: boolean,
   if (settings.motion === 'reduce') return true;
   if (settings.motion === 'full') return false;
   return systemPrefersReduced || themeDefault;
+}
+
+/** The theme to show: `system` becomes light or dark from the device preference. */
+export function appliedTheme(settings: Settings, systemPrefersDark: boolean): AppliedTheme {
+  if (settings.theme !== 'system') return settings.theme;
+  return systemPrefersDark ? 'dark' : 'light';
 }

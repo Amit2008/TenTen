@@ -1,12 +1,17 @@
-import { Validator } from '../../domain/models/validation';
+import { Validator, type Json } from '../../domain/models/validation';
 
-export interface ThemeConfig {
-  readonly themeId: string;
+/** The colors that change between light and dark; tile colors are shared. */
+export interface ThemePalette {
   readonly background: string;
   readonly emptyCell: string;
   readonly text: string;
   readonly accent: string;
   readonly invalid: string;
+}
+
+export interface ThemeConfig extends ThemePalette {
+  readonly themeId: string;
+  readonly dark: ThemePalette;
   readonly ghostAlpha: number;
   readonly tileCornerRadius: number;
   /** Theme color key -> #RRGGBB. */
@@ -56,20 +61,24 @@ export function parseTheme(json: unknown, requiredColorKeys: Iterable<string>): 
   const v = new Validator('theme.json');
   const t = v.object(json, '', [
     'schema_version', 'theme_id', 'background', 'empty_cell', 'text', 'accent', 'invalid',
-    'ghost_alpha', 'tile_corner_radius', 'colors', 'feedback_ms', 'reduced_motion',
+    'ghost_alpha', 'tile_corner_radius', 'colors', 'feedback_ms', 'reduced_motion', 'dark',
   ]);
   v.literal(t.schema_version, 'schema_version', [1]);
   const colors: Record<string, string> = {};
   for (const [key, value] of Object.entries(v.record(t.colors, 'colors'))) colors[key] = color(v, value, `colors.${key}`);
   for (const key of requiredColorKeys) if (!(key in colors)) v.fail(`colors.${key}`, 'is missing for a catalog shape');
   const feedback = v.object(t.feedback_ms, 'feedback_ms', ['place', 'clear', 'invalid_return']);
+  const palette = (p: Json, prefix: string): ThemePalette => ({
+    background: color(v, p.background, `${prefix}background`),
+    emptyCell: color(v, p.empty_cell, `${prefix}empty_cell`),
+    text: color(v, p.text, `${prefix}text`),
+    accent: color(v, p.accent, `${prefix}accent`),
+    invalid: color(v, p.invalid, `${prefix}invalid`),
+  });
   return {
     themeId: v.string(t.theme_id, 'theme_id'),
-    background: color(v, t.background, 'background'),
-    emptyCell: color(v, t.empty_cell, 'empty_cell'),
-    text: color(v, t.text, 'text'),
-    accent: color(v, t.accent, 'accent'),
-    invalid: color(v, t.invalid, 'invalid'),
+    ...palette(t, ''),
+    dark: palette(v.object(t.dark, 'dark', ['background', 'empty_cell', 'text', 'accent', 'invalid']), 'dark.'),
     ghostAlpha: v.int(t.ghost_alpha, 'ghost_alpha', 0, 255),
     tileCornerRadius: v.number(t.tile_corner_radius, 'tile_corner_radius', 0, 30),
     colors,

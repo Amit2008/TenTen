@@ -33,6 +33,7 @@ describe('loadContent', () => {
     expect(bundle.gameplay.catalog).toHaveLength(19);
     expect(bundle.gameplayHash).toMatch(/^sha256:[0-9a-f]{64}$/);
     expect(bundle.theme.colors.single).toBe('#247D80');
+    expect(bundle.theme.dark.background).toBe('#1B2426');
     expect(bundle.runtime.boardRect).toEqual([60, 190, 600, 600]);
     expect(bundle.audio.musicTracks).toEqual([]);
     expect(Object.isFrozen(bundle.runtime.boardRect)).toBe(true);
@@ -51,6 +52,8 @@ describe('loadContent', () => {
     ['catalog not the manifest pieces file', { [release('rules.json')]: JSON.stringify({ ...shipped('rules.json'), generator: { ...shipped('rules.json').generator, catalog: 'other.json' } }) }, /generator\.catalog must name/],
     ['missing theme color', { [release('theme.json')]: JSON.stringify({ ...shipped('theme.json'), colors: { single: '#247D80' } }) }, /colors\.bar_2_h is missing/],
     ['invalid theme color', { [release('theme.json')]: JSON.stringify({ ...shipped('theme.json'), accent: 'teal' }) }, /accent must be a #RRGGBB color/],
+    ['invalid dark color', { [release('theme.json')]: JSON.stringify({ ...shipped('theme.json'), dark: { ...shipped('theme.json').dark, invalid: 'red' } }) }, /dark\.invalid must be a #RRGGBB color/],
+    ['missing dark palette', { [release('theme.json')]: JSON.stringify({ ...shipped('theme.json'), dark: undefined }) }, /dark/],
     ['non-WebGL2 renderer', { [release('runtime.json')]: JSON.stringify({ ...shipped('runtime.json'), renderer: 'webgpu' }) }, /renderer/],
     ['board rect outside canvas', { [release('runtime.json')]: JSON.stringify({ ...shipped('runtime.json'), board_rect: [60, 190, 700, 600] }) }, /board_rect/],
     ['volume out of range', { [release('audio.json')]: JSON.stringify({ ...shipped('audio.json'), master_volume: 2 }) }, /master_volume/],
