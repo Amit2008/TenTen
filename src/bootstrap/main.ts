@@ -16,10 +16,10 @@ import { GameSession, startSession, type SessionRules } from '../application/ses
 import { appliedTheme, reducesMotion, type Settings } from '../application/settings/settings';
 import type { PlacePiece, SessionState } from '../domain/models/types';
 import { DragController, type DragPreview } from '../presentation/drag/drag';
-import { MoveFeedback } from '../presentation/feedback/feedback';
+import { MoveFeedback, ReturnGlide } from '../presentation/feedback/feedback';
 import { SelectionController } from '../presentation/input_modes/selection';
 import { PresentationStates } from '../presentation/states/states';
-import { boardLayout, trayLayout, viewportRect } from '../presentation/views/layout';
+import { boardLayout, slotGrid, trayLayout, viewportRect } from '../presentation/views/layout';
 import { appUrl } from './app-url';
 import { prepareSaves, type Saves } from './saves';
 import './shell.css';
@@ -213,6 +213,19 @@ async function start({ loadLatest = false } = {}): Promise<void> {
     };
     let selectedSlot: number | null = null;
     let dragPreview: DragPreview | null = null;
+    let glide: { motion: ReturnGlide; shapeId: string } | null = null;
+    const endGlide = (): void => {
+      if (glide) view.showReturn(null, null);
+      glide = null;
+    };
+    /** A released piece that did not commit eases back to its slot (instantly with reduced motion). */
+    const returnPiece = ({ slot, shape, floating }: DragPreview): void => {
+      const reduced = reducesMotion(settings, systemReducedMotion.matches, theme.reducedMotion);
+      if (reduced || theme.feedbackMs.invalidReturn === 0) return;
+      const target = slotGrid(tray, slot, shape);
+      glide = { motion: new ReturnGlide(slot, floating, [target.x, target.y], target.pitch / board.pitch, theme.feedbackMs.invalidReturn), shapeId: shape.id };
+      view.showReturn(glide.motion.frame(), shape.id);
+    };
     const selection = new SelectionController(
       { config: gameplay, board, tray },
       current,
@@ -224,17 +237,26 @@ async function start({ loadLatest = false } = {}): Promise<void> {
         sync();
       },
       commit,
+      () => sound.play('invalid'),
     );
     const drag = new DragController(
       { config: gameplay, viewport, board, tray, dragThresholdCssPx: runtime.dragThresholdCssPx, touchLiftCssPx: runtime.touchLiftCssPx },
       current,
       (preview) => {
-        if (preview && !dragPreview) sound.play('pick');
-        // The piece goes back to the tray from an invalid spot (a valid one commits and plays its own sound).
-        if (!preview && dragPreview && !dragPreview.valid) sound.play('invalid');
+        if (preview && !dragPreview) {
+          endGlide();
+          sound.play('pick');
+        }
+        const returning = !preview && dragPreview && !dragPreview.valid ? dragPreview : null;
         dragPreview = preview;
         if (preview) selection.clear(); // a direct drag replaces any tap/keyboard selection
         view.showDrag(preview);
+        // The piece goes back to the tray (a valid drop commits and plays its own sound). Only a drop over the board
+        // sounds "invalid"; dragging back to the tray to change your mind stays quiet.
+        if (returning) {
+          if (returning.cells.length > 0) sound.play('invalid');
+          returnPiece(returning);
+        }
         sync();
       },
       commit,
@@ -242,7 +264,13 @@ async function start({ loadLatest = false } = {}): Promise<void> {
     );
     const shownApp = app;
     shownApp.ticker.maxFPS = runtime.renderFpsCap;
-    shownApp.ticker.add((t) => states.tick(t.deltaMS / 1000));
+    shownApp.ticker.add((t) => {
+      states.tick(t.deltaMS / 1000);
+      if (!glide) return;
+      glide.motion.advance(Math.min(t.deltaMS / 1000, runtime.animationDtCapSeconds));
+      if (glide.motion.done) endGlide();
+      else view.showReturn(glide.motion.frame(), glide.shapeId);
+    });
 
     // Pause stops the render loop entirely; only Resume (or leaving the run) starts it again (GDD 6.3).
     const pause = (): void => {
@@ -283,6 +311,7 @@ async function start({ loadLatest = false } = {}): Promise<void> {
     const beginRun = (run: SessionState, isNew: boolean): void => {
       session = new GameSession(rules, run);
       states.reset();
+      endGlide();
       resultsPending = false;
       view.showFeedback(null);
       leavePause();

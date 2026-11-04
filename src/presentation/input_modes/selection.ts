@@ -24,6 +24,8 @@ export class SelectionController {
     private readonly getState: () => SessionState,
     private readonly onPreview: (preview: PlacementPreview | null) => void,
     private readonly onCommit: (command: PlacePiece) => void,
+    /** A placement was attempted where the selected piece cannot go (feedback only). */
+    private readonly onRejected: () => void = () => {},
   ) {}
 
   get selected(): boolean {
@@ -85,7 +87,8 @@ export class SelectionController {
 
   commit(): void {
     const preview = this.#preview();
-    if (!preview?.valid) return;
+    if (!preview) return;
+    if (!preview.valid) return this.onRejected();
     const state = this.getState();
     this.onCommit({ type: 'PlacePiece', sessionId: state.sessionId, expectedRevision: state.revision, instanceId: this.#instanceId!, anchor: preview.anchor });
   }

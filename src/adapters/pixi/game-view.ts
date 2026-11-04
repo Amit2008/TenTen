@@ -1,7 +1,7 @@
 import { Container, Graphics, type FillInput } from 'pixi.js';
 import type { BoardState, Cell, GameplayConfig, SessionState, SlotInstance, TileKey } from '../../domain/models/types';
 import type { DragPreview } from '../../presentation/drag/drag';
-import type { FeedbackFrame } from '../../presentation/feedback/feedback';
+import type { FeedbackFrame, ReturnFrame } from '../../presentation/feedback/feedback';
 import type { PlacementPreview } from '../../presentation/views/preview';
 import { cellOrigin, slotGrid, type GridLayout, type TrayLayout } from '../../presentation/views/layout';
 import type { ThemeConfig, ThemePalette } from '../content/presentation-config';
@@ -13,7 +13,8 @@ const INSET_PER_PITCH = 3 / 60;
 export class GameView {
   readonly container = new Container();
   readonly #cells: Graphics[] = [];
-  readonly #slots: { instanceId: number | null; graphics: Graphics }[];
+  /** `key` is session + instance: every run numbers its pieces from the start, so the instance alone is not unique. */
+  readonly #slots: { key: string | null; graphics: Graphics }[];
   readonly #ghost = new Graphics();
   readonly #floating = new Graphics();
   /** Cleared tiles fading out over the committed (already cleared) board. */
@@ -45,7 +46,7 @@ export class GameView {
         this.container.addChild(cell);
       }
     this.container.addChild(this.#fading);
-    this.#slots = tray.slots.map(() => ({ instanceId: null, graphics: this.container.addChild(new Graphics()) }));
+    this.#slots = tray.slots.map(() => ({ key: null, graphics: this.container.addChild(new Graphics()) }));
     // Ghost above the floating piece: the same-color ghost leaves the piece unchanged, and the invalid cross and
     // line outlines stay visible even when the piece sits right over them.
     this.container.addChild(this.#floating, this.#ghost);
@@ -56,6 +57,7 @@ export class GameView {
   showDrag(preview: DragPreview | null): void {
     this.#slots.forEach((s, i) => (s.graphics.visible = preview?.slot !== i));
     this.#floating.visible = preview !== null;
+    this.#floating.scale.set(1);
     if (!preview) {
       this.#ghost.clear();
       this.#ghostKey = '';
@@ -75,6 +77,23 @@ export class GameView {
     if (key === this.#ghostKey) return;
     this.#ghostKey = key;
     this.#drawGhost(preview);
+  }
+
+  /** Invalid-return glide: the floating piece eases back into its (hidden) tray slot; null ends it. */
+  showReturn(frame: ReturnFrame | null, shapeId: string | null): void {
+    this.#slots.forEach((s, i) => (s.graphics.visible = frame?.slot !== i));
+    this.#floating.visible = frame !== null;
+    if (!frame || !shapeId) return void this.#floating.scale.set(1);
+    if (this.#floatingShape !== shapeId) {
+      const shape = this.config.catalog.find((s) => s.id === shapeId)!;
+      this.#floatingShape = shapeId;
+      const grid = { x: 0, y: 0, pitch: this.board.pitch, columns: shape.width, rows: shape.height };
+      this.#floating.clear();
+      for (const [x, y] of shape.cells) this.#tile(this.#floating, grid, x, y);
+      this.#floating.tint = this.#color(shapeId);
+    }
+    this.#floating.position.set(...frame.position);
+    this.#floating.scale.set(frame.scale);
   }
 
   /** Tap/keyboard selection: highlighted tray slot, anchor marker and ghost; the piece stays in the tray. */
@@ -123,25 +142,25 @@ export class GameView {
     this.#palette = palette;
     this.#ghostKey = '';
     this.#floatingShape = null;
-    for (const slot of this.#slots) slot.instanceId = -1; // forces a redraw with the new tile color
+    for (const slot of this.#slots) slot.key = 'repaint'; // forces a redraw with the new tile color
     if (this.#shown) this.update(this.#shown);
   }
 
   update(state: SessionState): void {
     this.#shown = state;
     this.#updateBoard(state.board);
-    state.tray.forEach((slot, i) => this.#updateSlot(i, slot));
+    state.tray.forEach((slot, i) => this.#updateSlot(i, slot, state.sessionId));
   }
 
   #updateBoard(board: BoardState): void {
     board.cells.forEach((key, i) => (this.#cells[i]!.tint = key === null ? this.#palette.emptyCell : this.#color(key)));
   }
 
-  #updateSlot(index: number, slot: SlotInstance | null): void {
+  #updateSlot(index: number, slot: SlotInstance | null, sessionId: string): void {
     const view = this.#slots[index]!;
-    const instanceId = slot?.instanceId ?? null;
-    if (view.instanceId === instanceId) return;
-    view.instanceId = instanceId;
+    const key = slot ? `${sessionId}/${slot.instanceId}` : null;
+    if (view.key === key) return;
+    view.key = key;
     view.graphics.clear();
     if (!slot) return;
     const shape = this.config.catalog.find((s) => s.id === slot.shapeId)!;
