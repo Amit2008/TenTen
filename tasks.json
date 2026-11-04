@@ -550,7 +550,7 @@
         "T21",
         "T22"
       ],
-      "status": "not_started",
+      "status": "done",
       "allowed_scope": [
         "presentation/feedback",
         "presentation/focus",
@@ -563,7 +563,8 @@
         "A complete game is usable by keyboard, by touch and in silence."
       ],
       "evidence": "Comparison recordings and accessibility checklist.",
-      "boundary": "Timing changes are presentation-only; do not introduce score streaks."
+      "boundary": "Timing changes are presentation-only; do not introduce score streaks.",
+      "handoff": "docs/handoffs/T23.md"
     },
     {
       "id": "T24",

@@ -3,7 +3,7 @@ import { createGenerator, scriptedPieceSource } from '../../src/application/piec
 import { GameSession, startSession, type SessionRules } from '../../src/application/session/session';
 import { canonicalJson } from '../../src/domain/models/gameplay-config';
 import type { MoveResult, SessionState } from '../../src/domain/models/types';
-import { MoveFeedback, type FeedbackFrame } from '../../src/presentation/feedback/feedback';
+import { MoveFeedback, ReturnGlide, type FeedbackFrame } from '../../src/presentation/feedback/feedback';
 import { PresentationStates } from '../../src/presentation/states/states';
 import { CLASSIC } from '../domain/helpers';
 
@@ -127,5 +127,26 @@ describe('PresentationStates', () => {
     states.resume();
     while (states.resolving) states.tick(1 / 144);
     expect(canonicalJson(result.state)).toBe(snapshot);
+  });
+});
+
+describe('ReturnGlide (invalid return)', () => {
+  it('eases from the release point to the slot, shrinking to tray pitch, and lands exactly', () => {
+    const glide = new ReturnGlide(2, [100, 300], [500, 820], 0.4, 160);
+    expect(glide.frame()).toEqual({ slot: 2, position: [100, 300], scale: 1 });
+    glide.advance(0.08);
+    const mid = glide.frame();
+    expect(mid.position[0]).toBeGreaterThan(300); // ease-out: past halfway at half time
+    expect(mid.scale).toBeLessThan(0.7);
+    expect(glide.done).toBe(false);
+    glide.advance(0.1);
+    expect(glide.done).toBe(true);
+    expect(glide.frame()).toEqual({ slot: 2, position: [500, 820], scale: 0.4 });
+  });
+
+  it('is done at once with zero duration', () => {
+    const glide = new ReturnGlide(0, [0, 0], [10, 10], 0.5, 0);
+    expect(glide.done).toBe(true);
+    expect(glide.frame().position).toEqual([10, 10]);
   });
 });

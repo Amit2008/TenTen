@@ -1,7 +1,7 @@
 import { Container, Graphics, type FillInput } from 'pixi.js';
 import type { BoardState, Cell, GameplayConfig, SessionState, SlotInstance, TileKey } from '../../domain/models/types';
 import type { DragPreview } from '../../presentation/drag/drag';
-import type { FeedbackFrame } from '../../presentation/feedback/feedback';
+import type { FeedbackFrame, ReturnFrame } from '../../presentation/feedback/feedback';
 import type { PlacementPreview } from '../../presentation/views/preview';
 import { cellOrigin, slotGrid, type GridLayout, type TrayLayout } from '../../presentation/views/layout';
 import type { ThemeConfig, ThemePalette } from '../content/presentation-config';
@@ -56,6 +56,7 @@ export class GameView {
   showDrag(preview: DragPreview | null): void {
     this.#slots.forEach((s, i) => (s.graphics.visible = preview?.slot !== i));
     this.#floating.visible = preview !== null;
+    this.#floating.scale.set(1);
     if (!preview) {
       this.#ghost.clear();
       this.#ghostKey = '';
@@ -75,6 +76,23 @@ export class GameView {
     if (key === this.#ghostKey) return;
     this.#ghostKey = key;
     this.#drawGhost(preview);
+  }
+
+  /** Invalid-return glide: the floating piece eases back into its (hidden) tray slot; null ends it. */
+  showReturn(frame: ReturnFrame | null, shapeId: string | null): void {
+    this.#slots.forEach((s, i) => (s.graphics.visible = frame?.slot !== i));
+    this.#floating.visible = frame !== null;
+    if (!frame || !shapeId) return void this.#floating.scale.set(1);
+    if (this.#floatingShape !== shapeId) {
+      const shape = this.config.catalog.find((s) => s.id === shapeId)!;
+      this.#floatingShape = shapeId;
+      const grid = { x: 0, y: 0, pitch: this.board.pitch, columns: shape.width, rows: shape.height };
+      this.#floating.clear();
+      for (const [x, y] of shape.cells) this.#tile(this.#floating, grid, x, y);
+      this.#floating.tint = this.#color(shapeId);
+    }
+    this.#floating.position.set(...frame.position);
+    this.#floating.scale.set(frame.scale);
   }
 
   /** Tap/keyboard selection: highlighted tray slot, anchor marker and ghost; the piece stays in the tray. */

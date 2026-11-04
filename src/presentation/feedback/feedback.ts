@@ -1,5 +1,6 @@
 // Cosmetic move feedback (GDD 6.3). Driven only by the dt it is given; it never touches the committed state.
 import type { Cell, MoveResult, SessionState, TileKey } from '../../domain/models/types';
+import type { Point } from '../views/layout';
 
 export interface FeedbackTiming {
   readonly place: number;
@@ -59,5 +60,45 @@ export class MoveFeedback {
       cleared: this.#cleared,
       clearedAlpha: 1 - clear,
     };
+  }
+}
+
+/** Where the returning piece is drawn: top-left of its shape-local (0,0) and its scale relative to board pitch. */
+export interface ReturnFrame {
+  readonly slot: number;
+  readonly position: Point;
+  readonly scale: number;
+}
+
+/**
+ * Invalid-return feedback: a piece released where it cannot go glides from the release point back to its tray slot,
+ * shrinking from board pitch to tray pitch. Cosmetic: the piece is already back in the tray in the session state.
+ * With reduced motion (or zero duration) it is done at once, so the transition is identical, just not animated.
+ */
+export class ReturnGlide {
+  #elapsedMs = 0;
+
+  constructor(
+    readonly slot: number,
+    private readonly from: Point,
+    private readonly to: Point,
+    /** Tray pitch / board pitch. */
+    private readonly toScale: number,
+    private readonly durationMs: number,
+  ) {}
+
+  get done(): boolean {
+    return this.#elapsedMs >= this.durationMs;
+  }
+
+  advance(dtSeconds: number): void {
+    this.#elapsedMs += dtSeconds * 1000;
+  }
+
+  frame(): ReturnFrame {
+    const t = this.durationMs > 0 ? Math.min(this.#elapsedMs / this.durationMs, 1) : 1;
+    const ease = 1 - (1 - t) ** 3; // fast start, gentle landing
+    const mix = (a: number, b: number) => a + (b - a) * ease;
+    return { slot: this.slot, position: [mix(this.from[0], this.to[0]), mix(this.from[1], this.to[1])], scale: mix(1, this.toScale) };
   }
 }

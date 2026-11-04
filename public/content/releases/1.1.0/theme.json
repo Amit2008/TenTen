@@ -45,9 +45,9 @@
     "corner_3_3": "#CD6958"
   },
   "feedback_ms": {
-    "place": 90,
-    "clear": 180,
-    "invalid_return": 120
+    "place": 120,
+    "clear": 280,
+    "invalid_return": 160
   },
   "reduced_motion": false
 }
