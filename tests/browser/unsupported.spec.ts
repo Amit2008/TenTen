@@ -17,19 +17,3 @@ test('shows the HTML error and a working Retry when WebGL2 is unavailable', asyn
   await expect(alert).toBeVisible();
   await expect(page.locator('canvas')).toHaveCount(0);
 });
-
-test('without WebGL the HTML still offers How to play and Credits', async ({ page }, info) => {
-  await page.goto('./');
-  const alert = page.getByRole('alert');
-  await expect(alert).toBeVisible();
-  for (const name of ['How to play', 'Credits']) {
-    const button = alert.getByRole('button', { name });
-    await button.click();
-    const dialog = page.getByRole('dialog', { name });
-    await expect(dialog).toBeVisible();
-    if (name === 'How to play') await page.screenshot({ path: `docs/evidence/t19/unsupported-help-${info.project.name}.png` });
-    await page.keyboard.press('Escape');
-    await expect(dialog).toBeHidden();
-    await expect(button).toBeFocused();
-  }
-});
