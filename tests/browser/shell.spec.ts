@@ -30,31 +30,3 @@ test('starts an actual WebGL2 renderer and loads base-relative assets', async ({
   await page.screenshot({ path: `docs/evidence/t03/shell-${info.project.name}.png` });
   expect(errors).toEqual([]);
 });
-
-for (const dpr of [1, 2, 3]) {
-  test(`CSS size and framebuffer stay distinct at DPR ${dpr} (cap 2)`, async ({ browser, baseURL }) => {
-    const context = await browser.newContext({ deviceScaleFactor: dpr, viewport: { width: 800, height: 900 }, baseURL: baseURL! });
-    const page = await context.newPage();
-    await page.goto('./');
-    await expect(page.getByRole('status')).toHaveText(/Renderer ready/);
-    const { css, backing } = await canvasInfo(page);
-    const resolution = Math.min(dpr, 2);
-    expect(backing).toEqual([css[0]! * resolution, css[1]! * resolution]);
-    expect(Math.abs(css[0]! / css[1]! - 720 / 830)).toBeLessThan(0.01); // square cells: viewport aspect preserved
-    await context.close();
-  });
-}
-
-test('refits the canvas when the container resizes, letterboxed without cropping', async ({ page }) => {
-  await page.setViewportSize({ width: 1280, height: 720 });
-  await page.goto('./');
-  await expect(page.getByRole('status')).toHaveText(/Renderer ready/);
-  const wide = await canvasInfo(page);
-  await page.setViewportSize({ width: 360, height: 640 });
-  await expect.poll(async () => (await canvasInfo(page)).css[0]).toBeLessThanOrEqual(360);
-  const narrow = await canvasInfo(page);
-  expect(narrow.css[0]).toBeLessThan(wide.css[0]!);
-  const box = (await page.locator('#game canvas').boundingBox())!;
-  expect(box.x).toBeGreaterThanOrEqual(0);
-  expect(box.y + box.height).toBeLessThanOrEqual(640);
-});

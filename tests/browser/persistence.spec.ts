@@ -41,21 +41,6 @@ const readDb = (page: Page): Promise<Stored> =>
       }),
   );
 
-const writeDb = (page: Page, key: string, value: unknown) =>
-  page.evaluate(
-    ({ key, value }) =>
-      new Promise<void>((resolve) => {
-        const r = indexedDB.open('line-garden');
-        r.onsuccess = () => {
-          const db = r.result;
-          const tx = db.transaction('saves', 'readwrite');
-          tx.objectStore('saves').put(value, key);
-          tx.oncomplete = () => (db.close(), resolve());
-        };
-      }),
-    { key, value },
-  );
-
 const saveStatus = (page: Page) => page.locator('#save-status');
 const cellClient = ([x, y]: Cell, box: ClientBox) => {
   const [left, top] = cellOrigin(BOARD, [x, y]);
@@ -112,37 +97,6 @@ test('restore after reload keeps board, tray, score and the future deals', async
   await context.close();
 });
 
-test('Saving… shows while the transaction is open; Saved only after it completes', async ({ browser, baseURL }) => {
-  const context = await browser.newContext({ viewport: { width: 800, height: 1000 }, baseURL: baseURL! });
-  // Keeps every readwrite transaction alive (chained reads) until the test releases it.
-  await context.addInitScript(() => {
-    const w = window as unknown as { holdWrites: boolean };
-    w.holdWrites = false;
-    const transaction = IDBDatabase.prototype.transaction;
-    IDBDatabase.prototype.transaction = function (this: IDBDatabase, ...args: Parameters<IDBDatabase['transaction']>) {
-      const tx = transaction.apply(this, args);
-      if (args[1] === 'readwrite' && w.holdWrites) {
-        const store = tx.objectStore('saves');
-        const spin = () => {
-          if (w.holdWrites) store.get('spin').onsuccess = spin;
-        };
-        spin();
-      }
-      return tx;
-    } as IDBDatabase['transaction'];
-  });
-  const { page, box } = await openPage(context);
-  await expect(saveStatus(page)).toHaveText('Saved');
-  await page.evaluate(() => ((window as unknown as { holdWrites: boolean }).holdWrites = true));
-  await place(page, box, 0);
-  await page.waitForTimeout(500);
-  await expect(saveStatus(page)).toHaveText('Saving…');
-  await page.evaluate(() => ((window as unknown as { holdWrites: boolean }).holdWrites = false));
-  await expect(saveStatus(page)).toHaveText('Saved');
-  expect((await readDb(page)).current!.active!.score).toBe(scores[0]);
-  await context.close();
-});
-
 test('a failed write (quota) keeps the run playable as session only, and Retry saves the latest state', async ({ browser, baseURL }, info) => {
   const context = await browser.newContext({ viewport: { width: 800, height: 1000 }, baseURL: baseURL! });
   await context.addInitScript(() => {
@@ -176,19 +130,6 @@ test('a failed write (quota) keeps the run playable as session only, and Retry s
   const after = await readDb(page);
   expect(after.current!.active!.score).toBe(scores[2]);
   expect(after.current!.storageRevision).toBe(saved.current!.storageRevision + 1); // only the latest snapshot
-  expect(errors).toEqual([]);
-  await context.close();
-});
-
-test('without IndexedDB the game still plays, marked session only', async ({ browser, baseURL }) => {
-  const context = await browser.newContext({ viewport: { width: 800, height: 1000 }, baseURL: baseURL! });
-  await context.addInitScript(() => Object.defineProperty(window, 'indexedDB', { configurable: true, value: undefined }));
-  const { page, box, errors } = await openPage(context);
-  await expect(saveStatus(page)).toHaveText('Not saved (this session only)');
-  await place(page, box, 0);
-  await expect(page.locator('#score')).toHaveText(String(scores[0]));
-  await page.getByRole('button', { name: 'Retry saving' }).click();
-  await expect(saveStatus(page)).toHaveText('Not saved (this session only)');
   expect(errors).toEqual([]);
   await context.close();
 });
@@ -228,125 +169,6 @@ test.describe('two tabs', () => {
     await expect(saveStatus(a.page)).toHaveText('Not saved (changed in another tab)');
     expect((await readDb(a.page)).current!.active!.score).toBe(scores[1]);
     expect([...a.errors, ...b.errors]).toEqual([]);
-    await context.close();
-  });
-
-  test('simultaneous moves: exactly one write lands, the other tab stops', async ({ browser, baseURL }) => {
-    const context = await browser.newContext({ viewport: { width: 800, height: 1000 }, baseURL: baseURL! });
-    const a = await openPage(context);
-    await expect(saveStatus(a.page)).toHaveText('Saved');
-    const b = await openPage(context, './', true);
-    await expect(saveStatus(b.page)).toHaveText('Saved');
-    const before = (await readDb(a.page)).current!.storageRevision;
-    // Both tabs commit a move (different ones) at the same moment.
-    const go = async (p: typeof a, i: number) => {
-      const { slot, anchor } = recorded.commands[i]!;
-      await p.page.getByRole('button', { name: new RegExp(`^Slot ${slot + 1}`) }).click();
-      await p.page.mouse.click(...cellClient(anchor, p.box));
-    };
-    await Promise.all([go(a, 0), go(b, 0)]);
-    await expect.poll(async () => [await saveStatus(a.page).textContent(), await saveStatus(b.page).textContent()].sort()).toEqual([
-      'Not saved (changed in another tab)',
-      'Saved',
-    ]);
-    const stored = await readDb(a.page);
-    expect(stored.current!.storageRevision).toBe(before + 1);
-    await context.close();
-  });
-
-  test('a restart in another tab stops this tab’s writer', async ({ browser, baseURL }) => {
-    const context = await browser.newContext({ viewport: { width: 800, height: 1000 }, baseURL: baseURL! });
-    const a = await openPage(context);
-    await expect(saveStatus(a.page)).toHaveText('Saved');
-    const b = await openPage(context, './?seed=99'); // a deliberate new game
-    await expect(saveStatus(b.page)).toHaveText('Saved');
-    const newRun = (await readDb(b.page)).current!.active!.sessionId;
-    await a.page.bringToFront();
-    await place(a.page, a.box, 0).catch(() => {});
-    await expect(saveStatus(a.page)).toHaveText('Not saved (changed in another tab)');
-    expect((await readDb(a.page)).current!.active!.sessionId).toBe(newRun);
-    await context.close();
-  });
-});
-
-test.describe('damaged and incompatible saves', () => {
-  test('an unreadable record is preserved; Restore backup brings back the previous state', async ({ browser, baseURL }, info) => {
-    const context = await browser.newContext({ viewport: { width: 800, height: 1000 }, baseURL: baseURL! });
-    const { page, box } = await openPage(context);
-    await place(page, box, 0);
-    await place(page, box, 1);
-    await expect(saveStatus(page)).toHaveText('Saved');
-    const good = await readDb(page);
-    await writeDb(page, 'current', { schemaVersion: 1, storageRevision: good.current!.storageRevision, garbage: true });
-
-    await page.goto('./');
-    const alert = page.getByRole('alert');
-    await expect(alert).toContainText('could not be read');
-    await page.screenshot({ path: `docs/evidence/t17/damaged-${info.project.name}.png` });
-    await alert.getByRole('button', { name: 'Restore backup' }).click();
-    await expect(page.getByRole('status')).toHaveText(/Renderer ready/);
-    await continueRun(page);
-    await expect(page.locator('#score')).toHaveText(String(scores[0])); // the backup is one move older
-    const after = await readDb(page);
-    expect(after.preserved).toMatchObject({ garbage: true });
-    expect(after.backup).toEqual(good.backup); // backup stays the last known-good record
-    await context.close();
-  });
-
-  test('a run saved under different rules is kept and a new game starts only when chosen', async ({ browser, baseURL }) => {
-    const context = await browser.newContext({ viewport: { width: 800, height: 1000 }, baseURL: baseURL! });
-    const { page, box } = await openPage(context);
-    await place(page, box, 0);
-    await expect(saveStatus(page)).toHaveText('Saved');
-    const good = await readDb(page);
-    const old = { ...good.current!, active: { ...good.current!.active!, gameplayHash: 'sha256:old-rules' } };
-    await writeDb(page, 'current', old);
-
-    await page.goto('./');
-    const alert = page.getByRole('alert');
-    await expect(alert).toContainText('different rules');
-    await expect(alert.getByRole('button')).toHaveText(['Restore backup', 'Start a new game']);
-    await alert.getByRole('button', { name: 'Start a new game' }).click();
-    await expect(page.locator('#score')).toHaveText('0');
-    await expect(saveStatus(page)).toHaveText('Saved');
-    expect((await readDb(page)).preserved).toEqual(old);
-    await context.close();
-  });
-});
-
-test.describe('schema upgrades', () => {
-  /** Makes this page open the save database one version higher, as a newer build would. */
-  const newerBuild = () => {
-    const open = IDBFactory.prototype.open;
-    IDBFactory.prototype.open = function (this: IDBFactory, name: string, version?: number) {
-      return open.call(this, name, name === 'line-garden' && version ? version + 1 : version);
-    } as IDBFactory['open'];
-  };
-
-  test('an upgrade blocked by another tab says so and continues once that tab lets go', async ({ browser, baseURL }) => {
-    const context = await browser.newContext({ viewport: { width: 800, height: 1000 }, baseURL: baseURL! });
-    const old = await openPage(context);
-    await expect(saveStatus(old.page)).toHaveText('Saved');
-    // An old tab that does not handle versionchange: hold a raw v1 connection open.
-    await old.page.evaluate(
-      () =>
-        new Promise<void>((resolve) => {
-          const r = indexedDB.open('line-garden', 1);
-          r.onsuccess = () => ((window as unknown as { held: IDBDatabase }).held = r.result, resolve());
-        }),
-    );
-    const page = await context.newPage();
-    await page.addInitScript(newerBuild);
-    await page.goto('./');
-    await expect(page.getByRole('alert')).toContainText('waiting for another Line Garden tab');
-    await expect(page.getByRole('button', { name: 'Reload' })).toBeVisible();
-    await old.page.evaluate(() => (window as unknown as { held: IDBDatabase }).held.close());
-    await expect(page.getByRole('status')).toHaveText(/Renderer ready/);
-    await expect(page.getByRole('alert')).toBeHidden();
-    await expect(page.locator('#score')).toHaveText('0');
-    // The running old app closed its own connection and stopped saving.
-    await expect(old.page.getByRole('alert')).toContainText('newer version of Line Garden');
-    await expect(saveStatus(old.page)).toHaveText('Not saved (this session only)');
     await context.close();
   });
 });

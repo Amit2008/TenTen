@@ -25,6 +25,12 @@ A browser block-placement puzzle inspired by 1010! classic endless mode: a 10x10
 - Hosting base path is `/TenTen/`, and the app must also work at the root.
 - Do not publish anything live without explicit approval.
 
+## Testing (Amit's standing instruction, 4 Nov 2026)
+
+- Amit tests each step by hand. Every task ends with a short manual test guide for him: what to open, what to do, what he should see.
+- Keep automated tests to the essentials: typecheck, the Node unit tests and the small browser core (`npm run test:browser`, about 1–2 minutes). Add a browser test only for something that would lose saves, break the rules or stop the game from loading, and only one per risk.
+- No repeat runs, screenshot evidence or broad regression specs per step. A full diagnostic pass for bugs happens once, after the last task.
+
 ## Git workflow (Amit's standing instruction)
 
 For each task:

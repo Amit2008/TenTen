@@ -33,7 +33,6 @@ const FILES: Record<string, Buffer> = {
   'bad.wav': Buffer.from('this is not audio data at all'.repeat(20)),
 };
 const allEffects = Object.fromEntries(Object.keys(EFFECTS).map((name) => [name, `audio/${name}.wav`]));
-const noEffects = Object.fromEntries(Object.keys(EFFECTS).map((name) => [name, null]));
 
 /** Serves an audio.json naming `tracks` and `effects`, the fixture files, and logs what the page plays. */
 async function withAudio(page: Page, tracks: string[], effects: Record<string, string | null>, opts: { block?: boolean } = {}) {
@@ -85,8 +84,6 @@ async function withAudio(page: Page, tracks: string[], effects: Record<string, s
 
 const log = (page: Page) => page.evaluate(() => (window as unknown as { audioLog: string[] }).audioLog);
 const music = async (page: Page) => (await log(page)).filter((e) => e.startsWith('music'));
-const contextState = (page: Page) => page.evaluate(() => (window as unknown as { contexts: AudioContext[] }).contexts.map((c) => c.state));
-const effect = (name: keyof typeof EFFECTS) => `effect ${EFFECTS[name].toFixed(2)}`;
 
 /** Places the first tray piece at its default anchor on an empty board: slot button (focuses the board), then Enter. */
 async function placeFirst(page: Page) {
@@ -96,44 +93,6 @@ async function placeFirst(page: Page) {
   await page.keyboard.press('Enter');
   await expect(page.locator('#score')).not.toHaveText(before!);
 }
-
-test('an audio.json with no tracks or effects never creates an AudioContext', async ({ page }) => {
-  await page.route('**/releases/*/audio.json', async (route) => {
-    const shipped = await (await route.fetch()).json();
-    await route.fulfill({ json: { ...shipped, music_tracks: [], effects: noEffects } });
-  });
-  await page.addInitScript(() => {
-    const w = window as unknown as { created: number };
-    w.created = 0;
-    const Context = window.AudioContext;
-    window.AudioContext = class extends Context {
-      constructor(options?: AudioContextOptions) {
-        super(options);
-        w.created++;
-      }
-    };
-  });
-  await ready(page, './');
-  await page.getByRole('button', { name: 'New game' }).click();
-  await placeFirst(page);
-  expect(await page.evaluate(() => (window as unknown as { created: number }).created)).toBe(0);
-  await expect(page.locator('#sound-button')).toBeHidden();
-});
-
-test('nothing starts before a gesture; New game starts music, and moves play effects', async ({ page }) => {
-  await withAudio(page, ['audio/long-a.wav', 'audio/long-b.wav'], allEffects);
-  await ready(page, './');
-  await page.waitForTimeout(500);
-  expect(await contextState(page)).toEqual([]);
-  expect(await log(page)).toEqual([]);
-  await page.getByRole('button', { name: 'New game' }).click();
-  await expect.poll(() => contextState(page)).toEqual(['running']);
-  await expect.poll(() => music(page)).toEqual(['music long-a.wav']);
-  await expect.poll(async () => (await page.evaluate(() => performance.getEntriesByType('resource').map((r) => r.name))).filter((n) => n.endsWith('.wav')).length).toBeGreaterThanOrEqual(5);
-  await placeFirst(page);
-  await expect.poll(() => log(page)).toEqual(expect.arrayContaining([effect('pick'), effect('place')]));
-  await expect(page.locator('#sound-button')).toBeHidden();
-});
 
 test('an autoplay refusal never blocks play, and Enable sound starts audio later', async ({ page }) => {
   await withAudio(page, ['audio/long-a.wav'], allEffects, { block: true });
@@ -146,86 +105,4 @@ test('an autoplay refusal never blocks play, and Enable sound starts audio later
   await page.getByRole('button', { name: 'Enable sound' }).click();
   await expect(page.getByRole('button', { name: 'Enable sound' })).toBeHidden();
   await expect.poll(() => music(page)).toEqual(['music long-a.wav']);
-});
-
-test('missing and undecodable audio is skipped a bounded number of times and play goes on silently', async ({ page }) => {
-  const warnings: string[] = [];
-  page.on('console', (m) => m.type() === 'warning' && warnings.push(m.text()));
-  await withAudio(page, ['audio/missing.wav', 'audio/bad.wav'], { ...noEffects, place: 'audio/missing-effect.wav', pick: 'audio/bad.wav' });
-  await ready(page, './');
-  await page.getByRole('button', { name: 'New game' }).click();
-  await expect.poll(() => warnings.filter((w) => /could not be played|is unavailable/.test(w)).length).toBe(4);
-  await page.waitForTimeout(1000); // a retry loop would keep adding attempts
-  expect(await music(page)).toEqual(['music missing.wav', 'music bad.wav']);
-  await placeFirst(page);
-  expect((await log(page)).filter((e) => e.startsWith('effect'))).toEqual([]);
-  await expect(page.locator('#sound-button')).toBeHidden();
-});
-
-test('pause, a hidden tab and rapid restarts never advance the playlist', async ({ page }) => {
-  await withAudio(page, ['audio/long-a.wav', 'audio/long-b.wav'], noEffects);
-  await ready(page, './');
-  await page.getByRole('button', { name: 'New game' }).click();
-  await expect.poll(() => music(page)).toEqual(['music long-a.wav']);
-
-  await page.getByRole('button', { name: 'Pause' }).click();
-  await expect.poll(() => contextState(page)).toEqual(['suspended']);
-  await page.getByRole('button', { name: 'Resume' }).click();
-  await expect.poll(() => contextState(page)).toEqual(['running']);
-
-  await page.evaluate(() => {
-    Object.defineProperty(document, 'hidden', { configurable: true, get: () => true });
-    document.dispatchEvent(new Event('visibilitychange'));
-  });
-  await expect.poll(() => contextState(page)).toEqual(['suspended']);
-  await page.evaluate(() => {
-    Object.defineProperty(document, 'hidden', { configurable: true, get: () => false });
-    document.dispatchEvent(new Event('visibilitychange'));
-  });
-  await page.getByRole('button', { name: 'Resume' }).click();
-
-  for (let i = 0; i < 3; i++) {
-    await page.getByRole('button', { name: 'Pause' }).click();
-    await page.getByRole('dialog', { name: 'Paused' }).getByRole('button', { name: 'Restart' }).click();
-    await page.getByRole('button', { name: 'Start new game' }).click();
-  }
-  await expect.poll(() => contextState(page)).toEqual(['running']);
-  const played = await music(page);
-  expect(played.length).toBeGreaterThan(1);
-  expect(new Set(played)).toEqual(new Set(['music long-a.wav']));
-});
-
-test('a finished track advances the playlist, and the volume settings drive the gains', async ({ page }) => {
-  await withAudio(page, ['audio/short-1.wav', 'audio/short-2.wav'], noEffects);
-  await ready(page, './');
-  await page.getByRole('button', { name: 'New game' }).click();
-  // Tracks keep advancing while this polls; the first three show the order.
-  await expect.poll(async () => (await music(page)).slice(0, 3), { timeout: 10_000 }).toEqual(['music short-1.wav', 'music short-2.wav', 'music short-1.wav']);
-
-  const gains = () => page.evaluate(() => (window as unknown as { gains: GainNode[] }).gains.map((g) => Math.round(g.gain.value * 100)));
-  expect(await gains()).toEqual([70, 30, 70]); // master, music, effects from audio.json
-  await page.getByRole('button', { name: 'Pause' }).click();
-  await page.getByRole('dialog', { name: 'Paused' }).getByRole('button', { name: 'Settings' }).click();
-  await page.getByLabel('Master volume').fill('0');
-  await page.getByLabel('Music volume').fill('55');
-  expect(await gains()).toEqual([0, 55, 70]);
-});
-
-test('the shipped effects load after New game and a move plays pick and place', async ({ page }) => {
-  await page.addInitScript(() => {
-    const w = window as unknown as { started: number[] };
-    w.started = [];
-    const start = AudioBufferSourceNode.prototype.start;
-    AudioBufferSourceNode.prototype.start = function (...args: Parameters<typeof start>) {
-      w.started.push(Math.round(this.buffer!.duration * 100) / 100);
-      return start.apply(this, args);
-    };
-  });
-  await ready(page, './');
-  await page.getByRole('button', { name: 'New game' }).click();
-  await expect.poll(async () => (await page.evaluate(() => performance.getEntriesByType('resource').map((r) => r.name))).filter((n) => /\/audio\/\w+\.wav$/.test(n)).length).toBe(5);
-  await page.waitForTimeout(300); // decoding finishes after the fetch
-  await placeFirst(page);
-  // pick.wav is 0.07 s and place.wav 0.14 s (tools/audio/make-sounds.mjs).
-  await expect.poll(() => page.evaluate(() => (window as unknown as { started: number[] }).started)).toEqual([0.07, 0.14]);
 });
