@@ -1,0 +1,38 @@
+
+Running 32 tests using 3 workers
+
+  ok  1 [nested] › tests\browser\graphics.spec.ts:37:1 › the bundled font is in before the game reports ready, even when it arrives late (1.9s)
+  ok  2 [root] › tests\browser\graphics.spec.ts:37:1 › the bundled font is in before the game reports ready, even when it arrives late (1.9s)
+  ok  3 [root] › tests\browser\graphics.spec.ts:37:1 › the bundled font is in before the game reports ready, even when it arrives late (2.0s)
+  ok  4 [nested] › tests\browser\graphics.spec.ts:47:1 › a missing font falls back to system fonts and the game still plays (415ms)
+  ok  6 [root] › tests\browser\graphics.spec.ts:47:1 › a missing font falls back to system fonts and the game still plays (409ms)
+  ok  5 [root] › tests\browser\graphics.spec.ts:47:1 › a missing font falls back to system fonts and the game still plays (425ms)
+  ok  9 [root] › tests\browser\graphics.spec.ts:56:1 › High contrast paints one dark tile color on light cells, board and tray (1.1s)
+  ok  8 [root] › tests\browser\graphics.spec.ts:56:1 › High contrast paints one dark tile color on light cells, board and tray (1.1s)
+  ok  7 [nested] › tests\browser\graphics.spec.ts:56:1 › High contrast paints one dark tile color on light cells, board and tray (1.2s)
+  ok 10 [root] › tests\browser\graphics.spec.ts:73:1 › the pause button pauses and Resume returns to the board (467ms)
+  ok 12 [nested] › tests\browser\graphics.spec.ts:73:1 › the pause button pauses and Resume returns to the board (481ms)
+  ok 11 [root] › tests\browser\graphics.spec.ts:73:1 › the pause button pauses and Resume returns to the board (486ms)
+  ok 14 [nested] › tests\browser\graphics.spec.ts:101:1 › no label is clipped at the smallest supported view and DPR 3 (1.7s)
+  -  16 [nested] › tests\browser\graphics.spec.ts:133:3 › screenshot: light at the smallest view
+  -  17 [nested] › tests\browser\graphics.spec.ts:133:3 › screenshot: dark at the smallest view
+  -  18 [nested] › tests\browser\graphics.spec.ts:133:3 › screenshot: high-contrast at the smallest view
+  ok 13 [root] › tests\browser\graphics.spec.ts:101:1 › no label is clipped at the smallest supported view and DPR 3 (2.1s)
+  ok 15 [root] › tests\browser\graphics.spec.ts:101:1 › no label is clipped at the smallest supported view and DPR 3 (2.1s)
+  ok 19 [root] › tests\browser\graphics.spec.ts:133:3 › screenshot: light at the smallest view (872ms)
+  ok 20 [root] › tests\browser\graphics.spec.ts:133:3 › screenshot: light at the smallest view (933ms)
+  ok 22 [root] › tests\browser\graphics.spec.ts:133:3 › screenshot: dark at the smallest view (1.0s)
+  ok 23 [root] › tests\browser\graphics.spec.ts:133:3 › screenshot: dark at the smallest view (979ms)
+  ok 21 [nested] › tests\browser\graphics.spec.ts:37:1 › the bundled font is in before the game reports ready, even when it arrives late (1.9s)
+  ok 26 [nested] › tests\browser\graphics.spec.ts:47:1 › a missing font falls back to system fonts and the game still plays (576ms)
+  ok 25 [root] › tests\browser\graphics.spec.ts:133:3 › screenshot: high-contrast at the smallest view (1.2s)
+  ok 24 [root] › tests\browser\graphics.spec.ts:133:3 › screenshot: high-contrast at the smallest view (1.2s)
+  ok 27 [nested] › tests\browser\graphics.spec.ts:56:1 › High contrast paints one dark tile color on light cells, board and tray (1.2s)
+  ok 28 [nested] › tests\browser\graphics.spec.ts:73:1 › the pause button pauses and Resume returns to the board (583ms)
+  ok 29 [nested] › tests\browser\graphics.spec.ts:101:1 › no label is clipped at the smallest supported view and DPR 3 (1.4s)
+  -  30 [nested] › tests\browser\graphics.spec.ts:133:3 › screenshot: light at the smallest view
+  -  31 [nested] › tests\browser\graphics.spec.ts:133:3 › screenshot: dark at the smallest view
+  -  32 [nested] › tests\browser\graphics.spec.ts:133:3 › screenshot: high-contrast at the smallest view
+
+  6 skipped
+  26 passed (26.3s)

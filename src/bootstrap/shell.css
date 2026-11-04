@@ -1,3 +1,18 @@
+/* Bundled font (SIL OFL 1.1, see docs/assets/ASSETS.md). Latin subset; other characters fall back to system fonts. */
+@font-face {
+  font-family: 'Atkinson Hyperlegible';
+  font-weight: 400;
+  font-display: swap;
+  src: url('./fonts/atkinson-hyperlegible-latin-400-normal.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Atkinson Hyperlegible';
+  font-weight: 700;
+  font-display: swap;
+  src: url('./fonts/atkinson-hyperlegible-latin-700-normal.woff2') format('woff2');
+}
+
 :root {
   --bg: #f6f3ec;
   --letterbox: #ebe7dd;
@@ -6,7 +21,8 @@
   --backdrop: rgb(32 53 56 / 0.4);
   --overlay: rgb(235 231 221 / 0.9);
   color-scheme: light;
-  font: 16px/1.5 system-ui, sans-serif;
+  accent-color: var(--accent); /* native sliders and radios follow the theme */
+  font: 16px/1.5 'Atkinson Hyperlegible', system-ui, sans-serif;
   color: var(--text);
   background: var(--letterbox);
 }
@@ -16,7 +32,7 @@
   --bg: #ffffff;
   --letterbox: #ffffff;
   --text: #000000;
-  --accent: #00454a;
+  --accent: #005fcc; /* theme.json high_contrast.accent: 6:1 on white */
 }
 
 /* Dark (Settings, or the device preference before the saved setting is read). Matches theme.json "dark". */
@@ -56,6 +72,18 @@ button,
 input,
 select {
   font: inherit;
+}
+
+/* One button style for every screen; selected and disabled slot buttons refine it below. */
+button {
+  color: var(--text);
+  background: var(--bg);
+  border: 2px solid var(--accent);
+  border-radius: 8px;
+}
+
+button:hover:not(:disabled) {
+  box-shadow: inset 0 0 0 1px var(--accent);
 }
 
 dialog {
@@ -202,10 +230,28 @@ dialog input[type='radio'] {
 }
 
 #score-line {
+  position: relative;
   margin: 0;
-  padding: 0 16px 8px;
+  /* Side padding keeps the centered score clear of the pause button. */
+  padding: 0 64px 8px;
   font-size: 1.5rem;
   text-align: center;
+}
+
+/* Out of the flow, so the score row height (and so the canvas size) does not change. */
+#pause-button {
+  position: absolute;
+  top: 0;
+  right: 16px;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+}
+
+#pause-button svg {
+  fill: currentColor;
 }
 
 #slots {
@@ -217,10 +263,6 @@ dialog input[type='radio'] {
 
 #slots button {
   min-width: 64px;
-  color: var(--text);
-  background: var(--bg);
-  border: 2px solid var(--accent);
-  border-radius: 8px;
 }
 
 /* Selected: filled, plus a heavier border, so the state does not rely on color alone. */
@@ -241,6 +283,7 @@ dialog input[type='radio'] {
 #save-retry:focus-visible,
 #save-notice button:focus-visible,
 #slots button:focus-visible,
+#pause-button:focus-visible,
 #game canvas:focus-visible,
 a:focus-visible {
   outline: 3px solid var(--accent);

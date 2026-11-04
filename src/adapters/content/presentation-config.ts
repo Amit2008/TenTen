@@ -1,17 +1,20 @@
 import { Validator, type Json } from '../../domain/models/validation';
 
-/** The colors that change between light and dark; tile colors are shared. */
+/** The colors that change between light, dark and high contrast; tile colors are shared unless `tile` is set. */
 export interface ThemePalette {
   readonly background: string;
   readonly emptyCell: string;
   readonly text: string;
   readonly accent: string;
   readonly invalid: string;
+  /** One color for every tile (high contrast): occupancy then never depends on hue. */
+  readonly tile?: string;
 }
 
 export interface ThemeConfig extends ThemePalette {
   readonly themeId: string;
   readonly dark: ThemePalette;
+  readonly highContrast: ThemePalette;
   readonly ghostAlpha: number;
   readonly tileCornerRadius: number;
   /** Theme color key -> #RRGGBB. */
@@ -48,6 +51,7 @@ export interface AudioConfig {
   readonly effects: Readonly<Record<(typeof EFFECT_NAMES)[number], string | null>>;
 }
 
+const PALETTE_KEYS = ['background', 'empty_cell', 'text', 'accent', 'invalid'];
 const HEX = /^#[0-9a-f]{6}$/i;
 
 function color(v: Validator, value: unknown, path: string): string {
@@ -61,13 +65,14 @@ export function parseTheme(json: unknown, requiredColorKeys: Iterable<string>): 
   const v = new Validator('theme.json');
   const t = v.object(json, '', [
     'schema_version', 'theme_id', 'background', 'empty_cell', 'text', 'accent', 'invalid',
-    'ghost_alpha', 'tile_corner_radius', 'colors', 'feedback_ms', 'reduced_motion', 'dark',
+    'ghost_alpha', 'tile_corner_radius', 'colors', 'feedback_ms', 'reduced_motion', 'dark', 'high_contrast',
   ]);
   v.literal(t.schema_version, 'schema_version', [1]);
   const colors: Record<string, string> = {};
   for (const [key, value] of Object.entries(v.record(t.colors, 'colors'))) colors[key] = color(v, value, `colors.${key}`);
   for (const key of requiredColorKeys) if (!(key in colors)) v.fail(`colors.${key}`, 'is missing for a catalog shape');
   const feedback = v.object(t.feedback_ms, 'feedback_ms', ['place', 'clear', 'invalid_return']);
+  const highContrast = v.object(t.high_contrast, 'high_contrast', [...PALETTE_KEYS, 'tile']);
   const palette = (p: Json, prefix: string): ThemePalette => ({
     background: color(v, p.background, `${prefix}background`),
     emptyCell: color(v, p.empty_cell, `${prefix}empty_cell`),
@@ -78,7 +83,11 @@ export function parseTheme(json: unknown, requiredColorKeys: Iterable<string>): 
   return {
     themeId: v.string(t.theme_id, 'theme_id'),
     ...palette(t, ''),
-    dark: palette(v.object(t.dark, 'dark', ['background', 'empty_cell', 'text', 'accent', 'invalid']), 'dark.'),
+    dark: palette(v.object(t.dark, 'dark', PALETTE_KEYS), 'dark.'),
+    highContrast: {
+      ...palette(highContrast, 'high_contrast.'),
+      tile: color(v, highContrast.tile, 'high_contrast.tile'),
+    },
     ghostAlpha: v.int(t.ghost_alpha, 'ghost_alpha', 0, 255),
     tileCornerRadius: v.number(t.tile_corner_radius, 'tile_corner_radius', 0, 30),
     colors,

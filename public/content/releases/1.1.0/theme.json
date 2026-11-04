@@ -14,6 +14,14 @@
     "accent": "#4FBFC2",
     "invalid": "#F0806F"
   },
+  "high_contrast": {
+    "background": "#FFFFFF",
+    "empty_cell": "#D9D9D9",
+    "text": "#8A2BE2",
+    "accent": "#005FCC",
+    "invalid": "#C8102E",
+    "tile": "#000000"
+  },
   "tile_corner_radius": 5,
   "colors": {
     "single": "#247D80",

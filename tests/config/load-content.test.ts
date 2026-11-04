@@ -34,6 +34,8 @@ describe('loadContent', () => {
     expect(bundle.gameplayHash).toMatch(/^sha256:[0-9a-f]{64}$/);
     expect(bundle.theme.colors.single).toBe('#247D80');
     expect(bundle.theme.dark.background).toBe('#1B2426');
+    expect(bundle.theme.highContrast).toMatchObject({ background: '#FFFFFF', tile: '#000000' });
+    expect(bundle.theme.dark.tile).toBeUndefined();
     expect(bundle.runtime.boardRect).toEqual([60, 190, 600, 600]);
     expect(bundle.audio.musicTracks).toEqual([]);
     expect(Object.isFrozen(bundle.runtime.boardRect)).toBe(true);
@@ -53,6 +55,8 @@ describe('loadContent', () => {
     ['missing theme color', { [release('theme.json')]: JSON.stringify({ ...shipped('theme.json'), colors: { single: '#247D80' } }) }, /colors\.bar_2_h is missing/],
     ['invalid theme color', { [release('theme.json')]: JSON.stringify({ ...shipped('theme.json'), accent: 'teal' }) }, /accent must be a #RRGGBB color/],
     ['invalid dark color', { [release('theme.json')]: JSON.stringify({ ...shipped('theme.json'), dark: { ...shipped('theme.json').dark, invalid: 'red' } }) }, /dark\.invalid must be a #RRGGBB color/],
+    ['missing high-contrast tile', { [release('theme.json')]: JSON.stringify({ ...shipped('theme.json'), high_contrast: { ...shipped('theme.json').high_contrast, tile: undefined } }) }, /high_contrast\.tile/],
+    ['invalid high-contrast color', { [release('theme.json')]: JSON.stringify({ ...shipped('theme.json'), high_contrast: { ...shipped('theme.json').high_contrast, accent: 'blue' } }) }, /high_contrast\.accent must be a #RRGGBB color/],
     ['missing dark palette', { [release('theme.json')]: JSON.stringify({ ...shipped('theme.json'), dark: undefined }) }, /dark/],
     ['non-WebGL2 renderer', { [release('runtime.json')]: JSON.stringify({ ...shipped('runtime.json'), renderer: 'webgpu' }) }, /renderer/],
     ['board rect outside canvas', { [release('runtime.json')]: JSON.stringify({ ...shipped('runtime.json'), board_rect: [60, 190, 700, 600] }) }, /board_rect/],
