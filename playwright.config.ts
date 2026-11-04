@@ -17,7 +17,7 @@ export default defineConfig({
     { name: 'root', use: { ...devices['Desktop Chrome'], baseURL: `http://localhost:${root.port}/` } },
     { name: 'nested', use: { ...devices['Desktop Chrome'], baseURL: `http://localhost:${nested.port}${nested.base}` } },
     // Engine-independent rule checks (GDD 10): Playwright's Firefox and WebKit builds, not real Safari or devices.
-    { name: 'firefox', testMatch: 'replay.spec.ts', use: { ...devices['Desktop Firefox'] } },
-    { name: 'webkit', testMatch: 'replay.spec.ts', use: { ...devices['Desktop Safari'] } },
+    { name: 'firefox', testMatch: /(replay|sounds).spec.ts$/, use: { ...devices['Desktop Firefox'] } },
+    { name: 'webkit', testMatch: /(replay|sounds).spec.ts$/, use: { ...devices['Desktop Safari'] } },
   ],
 });

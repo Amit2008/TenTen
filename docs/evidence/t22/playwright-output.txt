@@ -1,0 +1,263 @@
+(node:10724) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 184 tests using 3 workers
+
+  ok   1 [root] › tests\browser\content.spec.ts:3:1 › loads the pinned content version at startup (2.9s)
+  ok   3 [root] › tests\browser\audio.spec.ts:100:1 › an audio.json with no tracks or effects never creates an AudioContext (3.6s)
+  ok   4 [root] › tests\browser\content.spec.ts:8:1 › a content failure shows an HTML error, not a spinner, and Retry recovers (771ms)
+  ok   6 [root] › tests\browser\content.spec.ts:26:1 › malformed hosted rules are rejected before play (231ms)
+  ok   2 [root] › tests\browser\dark-mode.spec.ts:12:1 › Dark mid-run repaints the page and the board, and leaves the run and its save alone (4.6s)
+  ok   5 [root] › tests\browser\audio.spec.ts:123:1 › nothing starts before a gesture; New game starts music, and moves play effects (1.4s)
+  ok   8 [root] › tests\browser\dark-mode.spec.ts:53:1 › Match my device follows prefers-color-scheme, also when it changes (783ms)
+  ok  10 [root] › tests\browser\dark-mode.spec.ts:65:1 › a chosen Light overrides a dark device (1.0s)
+  ok   9 [root] › tests\browser\audio.spec.ts:138:1 › an autoplay refusal never blocks play, and Enable sound starts audio later (1.4s)
+  ok  12 [root] › tests\browser\input-modes.spec.ts:46:1 › the seed deals an empty-origin shape first (1ms)
+  ok   7 [root] › tests\browser\graphics.spec.ts:37:1 › the bundled font is in before the game reports ready, even when it arrives late (2.4s)
+  ok  14 [root] › tests\browser\graphics.spec.ts:47:1 › a missing font falls back to system fonts and the game still plays (1.5s)
+  ok  11 [root] › tests\browser\audio.spec.ts:151:1 › missing and undecodable audio is skipped a bounded number of times and play goes on silently (2.9s)
+  ok  15 [root] › tests\browser\graphics.spec.ts:56:1 › High contrast paints one dark tile color on light cells, board and tray (4.1s)
+  ok  16 [root] › tests\browser\audio.spec.ts:165:1 › pause, a hidden tab and rapid restarts never advance the playlist (4.2s)
+  ok  17 [root] › tests\browser\graphics.spec.ts:73:1 › the pause button pauses and Resume returns to the board (1.4s)
+  ok  13 [root] › tests\browser\input-modes.spec.ts:51:3 › mouse, touch and keyboard place corner_3_2 in identical cells at anchor 0,0 (13.8s)
+  ok  18 [root] › tests\browser\audio.spec.ts:198:1 › a finished track advances the playlist, and the volume settings drive the gains (6.7s)
+  ok  19 [root] › tests\browser\graphics.spec.ts:101:1 › no label is clipped at the smallest supported view and DPR 3 (7.3s)
+  ok  21 [root] › tests\browser\audio.spec.ts:214:1 › the shipped effects load after New game and a move plays pick and place (2.2s)
+  ok  22 [root] › tests\browser\graphics.spec.ts:133:3 › screenshot: light at the smallest view (4.7s)
+  ok  24 [root] › tests\browser\graphics.spec.ts:133:3 › screenshot: dark at the smallest view (3.3s)
+  ok  20 [root] › tests\browser\input-modes.spec.ts:51:3 › mouse, touch and keyboard place corner_3_2 in identical cells at anchor 7,7 (10.9s)
+  ok  25 [root] › tests\browser\graphics.spec.ts:133:3 › screenshot: high-contrast at the smallest view (4.3s)
+  ok  26 [root] › tests\browser\input-modes.spec.ts:51:3 › mouse, touch and keyboard place corner_3_2 in identical cells at anchor 4,2 (9.1s)
+  ok  28 [root] › tests\browser\input-modes.spec.ts:94:1 › a held Enter commits once (2.5s)
+  ok  29 [root] › tests\browser\input-modes.spec.ts:115:1 › only handled puzzle keys are prevented; Tab, shortcuts and scrolling stay with the browser (1.3s)
+  ok  30 [root] › tests\browser\input-modes.spec.ts:145:1 › a slot button moves focus to the board; a drag replaces the selection (1.7s)
+[root] DPR 1: seeds 1,2,3,4,6,7,8,11,12,13,27,31 rendered all 19 shapes
+  ok  27 [root] › tests\browser\layout.spec.ts:17:3 › all 19 pieces render at DPR 1 where the logical mapping puts them (17.0s)
+  ok  31 [root] › tests\browser\lifecycle.spec.ts:69:1 › menu walkthrough: New game, pause, Main menu keeps the run, Continue, Restart asks first (5.8s)
+[root] 19 moves, Node final 68b46764c04b0ff9 | 30 fps (measured 29 rAF/s): final 68b46764c04b0ff9 | 60 fps (measured 37 rAF/s): final 68b46764c04b0ff9 | 144 fps (measured 55 rAF/s): final 68b46764c04b0ff9
+  ok  23 [root] › tests\browser\integration.spec.ts:98:1 › 30, 60 and 144 fps traces give identical logical state hashes, matching Node (30.4s)
+[root] before reload: shown 16, status Saving… | after reload: Continue shows 11 (last completed save), stored 11 | replayed move 3: 16, Saved
+  ok  33 [root] › tests\browser\lifecycle.spec.ts:119:1 › refresh trace: Continue restores the last completed save, never a write that did not finish (4.3s)
+  ok  34 [root] › tests\browser\integration.spec.ts:129:1 › refresh during a clear: Continue shows the committed clear once, and play goes on (10.2s)
+  ok  36 [root] › tests\browser\integration.spec.ts:154:1 › a touch swipe on the board never scrolls the page; the same swipe outside it does (1.4s)
+[root] How to play tab stops: Close
+[root] Credits tab stops: PixiJS > SIL Open Font License 1.1 > Close
+[root] Settings tab stops: Master volume > Music volume > Effects volume > Match my device (light or dark) > Follow my device setting > Close
+  ok  37 [root] › tests\browser\menus.spec.ts:16:1 › first load by keyboard: every menu control shows focus, and each dialog opens, closes and returns focus (2.1s)
+  ok  35 [root] › tests\browser\lifecycle.spec.ts:163:1 › game over shows results once; a refresh neither shows them again nor counts the score twice (11.2s)
+  ok  38 [root] › tests\browser\menus.spec.ts:58:1 › settings: labeled controls work by keyboard, apply at once and survive a reload (1.4s)
+  ok  39 [root] › tests\browser\lifecycle.spec.ts:200:1 › New game in another tab asks first, then stops this tab’s writer (6.1s)
+  ok  40 [root] › tests\browser\menus.spec.ts:92:1 › the motion setting overrides the device preference both ways (5.5s)
+  ok  42 [root] › tests\browser\menus.spec.ts:125:1 › a hung content request ends in an error with Retry instead of endless loading (540ms)
+  ok  43 [root] › tests\browser\menus.spec.ts:141:1 › a damaged save is explained in plain words, with the technical reason folded away (864ms)
+[root] DPR 2: seeds 1,2,3,4,6,7,8,11,12,13,27,31 rendered all 19 shapes
+  ok  32 [root] › tests\browser\layout.spec.ts:17:3 › all 19 pieces render at DPR 2 where the logical mapping puts them (29.5s)
+  ok  41 [root] › tests\browser\persistence.spec.ts:88:1 › restore after reload keeps board, tray, score and the future deals (9.0s)
+  ok  46 [root] › tests\browser\persistence.spec.ts:115:1 › Saving… shows while the transaction is open; Saved only after it completes (2.1s)
+  ok  44 [root] › tests\browser\pointer.spec.ts:108:3 › mouse at DPR 1: ghost and committed cells coincide at all four board corners (15.7s)
+  ok  47 [root] › tests\browser\persistence.spec.ts:146:1 › a failed write (quota) keeps the run playable as session only, and Retry saves the latest state (7.1s)
+  ok  49 [root] › tests\browser\persistence.spec.ts:183:1 › without IndexedDB the game still plays, marked session only (2.0s)
+  ok  50 [root] › tests\browser\persistence.spec.ts:197:3 › two tabs › a stale tab never overwrites: it stops, and Load latest picks up the other tab’s run (24.6s)
+  ok  51 [root] › tests\browser\persistence.spec.ts:234:3 › two tabs › simultaneous moves: exactly one write lands, the other tab stops (7.5s)
+  ok  52 [root] › tests\browser\persistence.spec.ts:257:3 › two tabs › a restart in another tab stops this tab’s writer (10.8s)
+  ok  48 [root] › tests\browser\pointer.spec.ts:108:3 › mouse at DPR 2: ghost and committed cells coincide at all four board corners (49.3s)
+  ok  53 [root] › tests\browser\persistence.spec.ts:273:3 › damaged and incompatible saves › an unreadable record is preserved; Restore backup brings back the previous state (4.4s)
+[root] DPR 3: seeds 1,2,3,4,6,7,8,11,12,13,27,31 rendered all 19 shapes
+  ok  45 [root] › tests\browser\layout.spec.ts:17:3 › all 19 pieces render at DPR 3 where the logical mapping puts them (1.1m)
+  ok  55 [root] › tests\browser\persistence.spec.ts:296:3 › damaged and incompatible saves › a run saved under different rules is kept and a new game starts only when chosen (3.9s)
+[root] phone-360x640: canvas 360x415 CSS px, board cell 30.0 CSS px, page height 640
+  ok  56 [root] › tests\browser\layout.spec.ts:76:3 › layout fits phone-360x640 with no cropped controls (2.0s)
+[root] phone-landscape-844x390: canvas 241x278 CSS px, board cell 20.1 CSS px, page height 390
+  ok  58 [root] › tests\browser\layout.spec.ts:76:3 › layout fits phone-landscape-844x390 with no cropped controls (1.4s)
+  ok  57 [root] › tests\browser\persistence.spec.ts:326:3 › schema upgrades › an upgrade blocked by another tab says so and continues once that tab lets go (3.2s)
+(node:32320) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+[chromium] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.8078.4 Safari/537.36
+  ok  60 [root] › tests\browser\replay.spec.ts:10:1 › golden vectors and bounded draws match Node in this engine (133ms)
+[root] desktop-1280x720: canvas 527x608 CSS px, board cell 43.9 CSS px, page height 720
+  ok  59 [root] › tests\browser\layout.spec.ts:76:3 › layout fits desktop-1280x720 with no cropped controls (824ms)
+[chromium] recorded seed 2026: 20 moves, trace sha256 55f9ad8b515e571c7fb761ebef69511f6835e45d370ea12293d6c29edacd2968
+  ok  61 [root] › tests\browser\replay.spec.ts:49:3 › recorded session replay (T11) › the recorded sequence gives identical states in this engine and in Node (139ms)
+[root] desktop-1920x1080: canvas 839x968 CSS px, board cell 69.9 CSS px, page height 1080
+  ok  62 [root] › tests\browser\layout.spec.ts:76:3 › layout fits desktop-1920x1080 with no cropped controls (830ms)
+[root] http://localhost:4173/ {"isWebGL2":true,"gpu":"ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)","css":[527,608],"backing":[527,608],"dpr":1}
+  ok  63 [root] › tests\browser\shell.spec.ts:18:1 › starts an actual WebGL2 renderer and loads base-relative assets (716ms)
+[root] tablet-1024x768: canvas 569x656 CSS px, board cell 47.4 CSS px, page height 768
+  ok  65 [root] › tests\browser\shell.spec.ts:35:3 › CSS size and framebuffer stay distinct at DPR 1 (cap 2) (2.9s)
+  ok  64 [root] › tests\browser\layout.spec.ts:76:3 › layout fits tablet-1024x768 with no cropped controls (4.0s)
+[root] narrow-window-420x1000: canvas 420x484 CSS px, board cell 35.0 CSS px, page height 1000
+  ok  66 [root] › tests\browser\shell.spec.ts:35:3 › CSS size and framebuffer stay distinct at DPR 2 (cap 2) (1.8s)
+  ok  67 [root] › tests\browser\layout.spec.ts:76:3 › layout fits narrow-window-420x1000 with no cropped controls (1.2s)
+  ok  69 [root] › tests\browser\sounds.spec.ts:6:1 › the shipped sound effects decode (537ms)
+  ok  68 [root] › tests\browser\shell.spec.ts:35:3 › CSS size and framebuffer stay distinct at DPR 3 (cap 2) (930ms)
+  ok  71 [root] › tests\browser\shell.spec.ts:48:1 › refits the canvas when the container resizes, letterboxed without cropping (2.4s)
+  ok  72 [root] › tests\browser\unsupported.spec.ts:6:1 › shows the HTML error and a working Retry when WebGL2 is unavailable (1.4s)
+  ok  73 [root] › tests\browser\unsupported.spec.ts:21:1 › without WebGL the HTML still offers How to play and Credits (998ms)
+  ok  74 [nested] › tests\browser\audio.spec.ts:100:1 › an audio.json with no tracks or effects never creates an AudioContext (1.6s)
+  ok  75 [nested] › tests\browser\audio.spec.ts:123:1 › nothing starts before a gesture; New game starts music, and moves play effects (3.6s)
+  ok  70 [root] › tests\browser\states.spec.ts:89:1 › the move commits before its clear animation, locks input, pauses when hidden and never replays on Resume (15.3s)
+  ok  77 [root] › tests\browser\states.spec.ts:136:1 › blur pauses; Escape with nothing selected pauses; Resume returns focus to the board (1.9s)
+  ok  76 [nested] › tests\browser\audio.spec.ts:138:1 › an autoplay refusal never blocks play, and Enable sound starts audio later (2.4s)
+  ok  54 [root] › tests\browser\pointer.spec.ts:108:3 › mouse at DPR 3: ghost and committed cells coincide at all four board corners (36.3s)
+  ok  79 [nested] › tests\browser\audio.spec.ts:151:1 › missing and undecodable audio is skipped a bounded number of times and play goes on silently (3.8s)
+  x   78 [root] › tests\browser\states.spec.ts:153:1 › reduced motion: the placement keeps cells unscaled while it resolves (4.0s)
+  ok  81 [nested] › tests\browser\audio.spec.ts:165:1 › pause, a hidden tab and rapid restarts never advance the playlist (4.9s)
+  ok  83 [nested] › tests\browser\audio.spec.ts:198:1 › a finished track advances the playlist, and the volume settings drive the gains (5.9s)
+  ok  84 [nested] › tests\browser\audio.spec.ts:214:1 › the shipped effects load after New game and a move plays pick and place (4.7s)
+[root] live listeners: baseline 49, after each restart 49, 49, 49, 49, 49
+  ok  85 [nested] › tests\browser\content.spec.ts:3:1 › loads the pinned content version at startup (784ms)
+  ok  82 [root] › tests\browser\states.spec.ts:171:1 › Retry tears the session down: no listener growth and no late callbacks (13.9s)
+  ok  80 [root] › tests\browser\pointer.spec.ts:108:3 › touch at DPR 1: ghost and committed cells coincide at all four board corners (17.3s)
+  ok  86 [nested] › tests\browser\content.spec.ts:8:1 › a content failure shows an HTML error, not a spinner, and Retry recovers (514ms)
+  ok  88 [nested] › tests\browser\content.spec.ts:26:1 › malformed hosted rules are rejected before play (285ms)
+  ok  89 [nested] › tests\browser\graphics.spec.ts:37:1 › the bundled font is in before the game reports ready, even when it arrives late (2.0s)
+  ok  90 [nested] › tests\browser\graphics.spec.ts:47:1 › a missing font falls back to system fonts and the game still plays (572ms)
+  ok  91 [nested] › tests\browser\graphics.spec.ts:56:1 › High contrast paints one dark tile color on light cells, board and tray (1.4s)
+  ok  93 [nested] › tests\browser\graphics.spec.ts:73:1 › the pause button pauses and Resume returns to the board (718ms)
+  ok  92 [nested] › tests\browser\dark-mode.spec.ts:12:1 › Dark mid-run repaints the page and the board, and leaves the run and its save alone (3.6s)
+  ok  94 [nested] › tests\browser\graphics.spec.ts:101:1 › no label is clipped at the smallest supported view and DPR 3 (2.2s)
+  -   96 [nested] › tests\browser\graphics.spec.ts:133:3 › screenshot: light at the smallest view
+  -   97 [nested] › tests\browser\graphics.spec.ts:133:3 › screenshot: dark at the smallest view
+  -   98 [nested] › tests\browser\graphics.spec.ts:133:3 › screenshot: high-contrast at the smallest view
+  ok  99 [nested] › tests\browser\input-modes.spec.ts:46:1 › the seed deals an empty-origin shape first (0ms)
+  ok  95 [nested] › tests\browser\dark-mode.spec.ts:53:1 › Match my device follows prefers-color-scheme, also when it changes (1.0s)
+  ok 101 [nested] › tests\browser\dark-mode.spec.ts:65:1 › a chosen Light overrides a dark device (1.0s)
+  ok 100 [nested] › tests\browser\input-modes.spec.ts:51:3 › mouse, touch and keyboard place corner_3_2 in identical cells at anchor 0,0 (6.5s)
+  ok 103 [nested] › tests\browser\input-modes.spec.ts:51:3 › mouse, touch and keyboard place corner_3_2 in identical cells at anchor 7,7 (7.3s)
+  ok  87 [root] › tests\browser\pointer.spec.ts:108:3 › touch at DPR 3: ghost and committed cells coincide at all four board corners (23.9s)
+  ok 104 [nested] › tests\browser\input-modes.spec.ts:51:3 › mouse, touch and keyboard place corner_3_2 in identical cells at anchor 4,2 (5.9s)
+  ok 106 [nested] › tests\browser\input-modes.spec.ts:94:1 › a held Enter commits once (2.1s)
+  ok 107 [nested] › tests\browser\input-modes.spec.ts:115:1 › only handled puzzle keys are prevented; Tab, shortcuts and scrolling stay with the browser (935ms)
+  ok 108 [nested] › tests\browser\input-modes.spec.ts:145:1 › a slot button moves focus to the board; a drag replaces the selection (1.9s)
+  ok 105 [root] › tests\browser\pointer.spec.ts:150:1 › after an orientation change a touch drag previews and places on the same cells (T20) (9.5s)
+[nested] 19 moves, Node final 68b46764c04b0ff9 | 30 fps (measured 31 rAF/s): final 68b46764c04b0ff9 | 60 fps (measured 40 rAF/s): final 68b46764c04b0ff9 | 144 fps (measured 60 rAF/s): final 68b46764c04b0ff9
+  ok 102 [nested] › tests\browser\integration.spec.ts:98:1 › 30, 60 and 144 fps traces give identical logical state hashes, matching Node (24.7s)
+  ok 110 [root] › tests\browser\pointer.spec.ts:179:1 › an invalid spot shows an outline and cross, and releasing there consumes nothing (8.2s)
+  ok 111 [nested] › tests\browser\integration.spec.ts:129:1 › refresh during a clear: Continue shows the committed clear once, and play goes on (10.2s)
+  ok 112 [root] › tests\browser\pointer.spec.ts:225:3 › window blur during a drag cancels it; the later release over a legal cell consumes nothing (3.0s)
+[nested] DPR 1: seeds 1,2,3,4,6,7,8,11,12,13,27,31 rendered all 19 shapes
+  ok 109 [nested] › tests\browser\layout.spec.ts:17:3 › all 19 pieces render at DPR 1 where the logical mapping puts them (13.2s)
+  ok 113 [nested] › tests\browser\integration.spec.ts:154:1 › a touch swipe on the board never scrolls the page; the same swipe outside it does (1.2s)
+  ok 114 [root] › tests\browser\pointer.spec.ts:225:3 › hidden tab during a drag cancels it; the later release over a legal cell consumes nothing (2.6s)
+  ok 117 [root] › tests\browser\pointer.spec.ts:225:3 › resize during a drag cancels it; the later release over a legal cell consumes nothing (3.2s)
+  ok 116 [nested] › tests\browser\lifecycle.spec.ts:69:1 › menu walkthrough: New game, pause, Main menu keeps the run, Continue, Restart asks first (5.4s)
+  ok 118 [root] › tests\browser\pointer.spec.ts:225:3 › orientation change during a drag cancels it; the later release over a legal cell consumes nothing (3.6s)
+[nested] before reload: shown 16, status Saving… | after reload: Continue shows 11 (last completed save), stored 11 | replayed move 3: 16, Saved
+  ok 119 [nested] › tests\browser\lifecycle.spec.ts:119:1 › refresh trace: Continue restores the last completed save, never a write that did not finish (3.9s)
+  ok 120 [root] › tests\browser\pointer.spec.ts:225:3 › pointer capture loss during a drag cancels it; the later release over a legal cell consumes nothing (4.0s)
+  ok 122 [root] › tests\browser\pointer.spec.ts:248:1 › release outside the canvas consumes nothing (2.9s)
+  ok 123 [root] › tests\browser\pointer.spec.ts:259:1 › touch pointercancel consumes nothing (1.8s)
+  ok 124 [root] › tests\browser\pointer.spec.ts:271:1 › a second finger is ignored while the first drags (2.0s)
+  ok 125 [root] › tests\browser\pointer.spec.ts:298:1 › a drag never produces a click; a plain tap still does (2.5s)
+  ok 121 [nested] › tests\browser\lifecycle.spec.ts:163:1 › game over shows results once; a refresh neither shows them again nor counts the score twice (12.9s)
+  ok 126 [nested] › tests\browser\lifecycle.spec.ts:200:1 › New game in another tab asks first, then stops this tab’s writer (5.0s)
+[nested] How to play tab stops: Close
+[nested] DPR 2: seeds 1,2,3,4,6,7,8,11,12,13,27,31 rendered all 19 shapes
+  ok 115 [nested] › tests\browser\layout.spec.ts:17:3 › all 19 pieces render at DPR 2 where the logical mapping puts them (28.4s)
+[nested] Credits tab stops: PixiJS > SIL Open Font License 1.1 > Close
+[nested] Settings tab stops: Master volume > Music volume > Effects volume > Match my device (light or dark) > Follow my device setting > Close
+  ok 127 [nested] › tests\browser\menus.spec.ts:16:1 › first load by keyboard: every menu control shows focus, and each dialog opens, closes and returns focus (2.6s)
+  ok 130 [nested] › tests\browser\menus.spec.ts:58:1 › settings: labeled controls work by keyboard, apply at once and survive a reload (2.2s)
+  ok 128 [nested] › tests\browser\persistence.spec.ts:88:1 › restore after reload keeps board, tray, score and the future deals (6.6s)
+  ok 132 [nested] › tests\browser\persistence.spec.ts:115:1 › Saving… shows while the transaction is open; Saved only after it completes (1.9s)
+  ok 131 [nested] › tests\browser\menus.spec.ts:92:1 › the motion setting overrides the device preference both ways (4.9s)
+  ok 134 [nested] › tests\browser\menus.spec.ts:125:1 › a hung content request ends in an error with Retry instead of endless loading (451ms)
+  ok 135 [nested] › tests\browser\menus.spec.ts:141:1 › a damaged save is explained in plain words, with the technical reason folded away (1.0s)
+  ok 133 [nested] › tests\browser\persistence.spec.ts:146:1 › a failed write (quota) keeps the run playable as session only, and Retry saves the latest state (3.1s)
+  ok 137 [nested] › tests\browser\persistence.spec.ts:183:1 › without IndexedDB the game still plays, marked session only (2.1s)
+  ok 136 [nested] › tests\browser\pointer.spec.ts:108:3 › mouse at DPR 1: ghost and committed cells coincide at all four board corners (15.0s)
+  ok 138 [nested] › tests\browser\persistence.spec.ts:197:3 › two tabs › a stale tab never overwrites: it stops, and Load latest picks up the other tab’s run (15.2s)
+  ok 140 [nested] › tests\browser\persistence.spec.ts:234:3 › two tabs › simultaneous moves: exactly one write lands, the other tab stops (4.9s)
+[nested] DPR 3: seeds 1,2,3,4,6,7,8,11,12,13,27,31 rendered all 19 shapes
+  ok 129 [nested] › tests\browser\layout.spec.ts:17:3 › all 19 pieces render at DPR 3 where the logical mapping puts them (34.7s)
+[nested] phone-360x640: canvas 360x415 CSS px, board cell 30.0 CSS px, page height 640
+  ok 142 [nested] › tests\browser\layout.spec.ts:76:3 › layout fits phone-360x640 with no cropped controls (1.1s)
+[nested] phone-landscape-844x390: canvas 241x278 CSS px, board cell 20.1 CSS px, page height 390
+  ok 143 [nested] › tests\browser\layout.spec.ts:76:3 › layout fits phone-landscape-844x390 with no cropped controls (1.1s)
+[nested] desktop-1280x720: canvas 527x608 CSS px, board cell 43.9 CSS px, page height 720
+  ok 144 [nested] › tests\browser\layout.spec.ts:76:3 › layout fits desktop-1280x720 with no cropped controls (688ms)
+[nested] desktop-1920x1080: canvas 839x968 CSS px, board cell 69.9 CSS px, page height 1080
+  ok 145 [nested] › tests\browser\layout.spec.ts:76:3 › layout fits desktop-1920x1080 with no cropped controls (1.2s)
+[nested] tablet-1024x768: canvas 569x656 CSS px, board cell 47.4 CSS px, page height 768
+  ok 146 [nested] › tests\browser\layout.spec.ts:76:3 › layout fits tablet-1024x768 with no cropped controls (1.8s)
+[nested] narrow-window-420x1000: canvas 420x484 CSS px, board cell 35.0 CSS px, page height 1000
+  ok 147 [nested] › tests\browser\layout.spec.ts:76:3 › layout fits narrow-window-420x1000 with no cropped controls (1.2s)
+  ok 141 [nested] › tests\browser\persistence.spec.ts:257:3 › two tabs › a restart in another tab stops this tab’s writer (9.0s)
+(node:19820) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+[chromium] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.8078.4 Safari/537.36
+  ok 149 [nested] › tests\browser\replay.spec.ts:10:1 › golden vectors and bounded draws match Node in this engine (104ms)
+[chromium] recorded seed 2026: 20 moves, trace sha256 55f9ad8b515e571c7fb761ebef69511f6835e45d370ea12293d6c29edacd2968
+  ok 150 [nested] › tests\browser\replay.spec.ts:49:3 › recorded session replay (T11) › the recorded sequence gives identical states in this engine and in Node (195ms)
+[nested] http://localhost:4174/TenTen/ {"isWebGL2":true,"gpu":"ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)","css":[527,608],"backing":[527,608],"dpr":1}
+  ok 151 [nested] › tests\browser\shell.spec.ts:18:1 › starts an actual WebGL2 renderer and loads base-relative assets (698ms)
+  ok 152 [nested] › tests\browser\shell.spec.ts:35:3 › CSS size and framebuffer stay distinct at DPR 1 (cap 2) (648ms)
+  ok 148 [nested] › tests\browser\persistence.spec.ts:273:3 › damaged and incompatible saves › an unreadable record is preserved; Restore backup brings back the previous state (2.5s)
+  ok 153 [nested] › tests\browser\shell.spec.ts:35:3 › CSS size and framebuffer stay distinct at DPR 2 (cap 2) (792ms)
+  ok 155 [nested] › tests\browser\shell.spec.ts:35:3 › CSS size and framebuffer stay distinct at DPR 3 (cap 2) (910ms)
+  ok 154 [nested] › tests\browser\persistence.spec.ts:296:3 › damaged and incompatible saves › a run saved under different rules is kept and a new game starts only when chosen (1.8s)
+  ok 156 [nested] › tests\browser\shell.spec.ts:48:1 › refits the canvas when the container resizes, letterboxed without cropping (502ms)
+  ok 158 [nested] › tests\browser\sounds.spec.ts:6:1 › the shipped sound effects decode (409ms)
+  ok 157 [nested] › tests\browser\persistence.spec.ts:326:3 › schema upgrades › an upgrade blocked by another tab says so and continues once that tab lets go (2.2s)
+  ok 139 [nested] › tests\browser\pointer.spec.ts:108:3 › mouse at DPR 2: ghost and committed cells coincide at all four board corners (26.7s)
+  ok 161 [nested] › tests\browser\unsupported.spec.ts:6:1 › shows the HTML error and a working Retry when WebGL2 is unavailable (1.4s)
+  ok 162 [nested] › tests\browser\unsupported.spec.ts:21:1 › without WebGL the HTML still offers How to play and Credits (351ms)
+(node:22032) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+[firefox] Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:157.0) Gecko/20100101 Firefox/157.0
+  ok 163 [firefox] › tests\browser\replay.spec.ts:10:1 › golden vectors and bounded draws match Node in this engine (1.2s)
+[firefox] recorded seed 2026: 20 moves, trace sha256 55f9ad8b515e571c7fb761ebef69511f6835e45d370ea12293d6c29edacd2968
+  ok 164 [firefox] › tests\browser\replay.spec.ts:49:3 › recorded session replay (T11) › the recorded sequence gives identical states in this engine and in Node (3.0s)
+  ok 159 [nested] › tests\browser\states.spec.ts:89:1 › the move commits before its clear animation, locks input, pauses when hidden and never replays on Resume (13.9s)
+  ok 165 [nested] › tests\browser\states.spec.ts:136:1 › blur pauses; Escape with nothing selected pauses; Resume returns focus to the board (945ms)
+  ok 166 [firefox] › tests\browser\sounds.spec.ts:6:1 › the shipped sound effects decode (4.2s)
+  ok 167 [nested] › tests\browser\states.spec.ts:153:1 › reduced motion: the placement keeps cells unscaled while it resolves (3.8s)
+(node:6376) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+[webkit] Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/27.2 Safari/605.1.15
+  ok 169 [webkit] › tests\browser\replay.spec.ts:10:1 › golden vectors and bounded draws match Node in this engine (643ms)
+[webkit] recorded seed 2026: 20 moves, trace sha256 55f9ad8b515e571c7fb761ebef69511f6835e45d370ea12293d6c29edacd2968
+  ok 170 [webkit] › tests\browser\replay.spec.ts:49:3 › recorded session replay (T11) › the recorded sequence gives identical states in this engine and in Node (816ms)
+[nested] live listeners: baseline 49, after each restart 49, 49, 49, 49, 49
+  ok 168 [nested] › tests\browser\states.spec.ts:171:1 › Retry tears the session down: no listener growth and no late callbacks (4.9s)
+  -  171 [webkit] › tests\browser\sounds.spec.ts:6:1 › the shipped sound effects decode
+  ok 160 [nested] › tests\browser\pointer.spec.ts:108:3 › mouse at DPR 3: ghost and committed cells coincide at all four board corners (24.0s)
+  ok 172 [nested] › tests\browser\pointer.spec.ts:108:3 › touch at DPR 1: ghost and committed cells coincide at all four board corners (6.6s)
+  ok 173 [nested] › tests\browser\pointer.spec.ts:108:3 › touch at DPR 3: ghost and committed cells coincide at all four board corners (18.6s)
+  ok 174 [nested] › tests\browser\pointer.spec.ts:150:1 › after an orientation change a touch drag previews and places on the same cells (T20) (7.2s)
+  ok 175 [nested] › tests\browser\pointer.spec.ts:179:1 › an invalid spot shows an outline and cross, and releasing there consumes nothing (5.9s)
+  ok 176 [nested] › tests\browser\pointer.spec.ts:225:3 › window blur during a drag cancels it; the later release over a legal cell consumes nothing (2.2s)
+  ok 177 [nested] › tests\browser\pointer.spec.ts:225:3 › hidden tab during a drag cancels it; the later release over a legal cell consumes nothing (2.2s)
+  ok 178 [nested] › tests\browser\pointer.spec.ts:225:3 › resize during a drag cancels it; the later release over a legal cell consumes nothing (2.2s)
+  ok 179 [nested] › tests\browser\pointer.spec.ts:225:3 › orientation change during a drag cancels it; the later release over a legal cell consumes nothing (2.3s)
+  ok 180 [nested] › tests\browser\pointer.spec.ts:225:3 › pointer capture loss during a drag cancels it; the later release over a legal cell consumes nothing (2.4s)
+  ok 181 [nested] › tests\browser\pointer.spec.ts:248:1 › release outside the canvas consumes nothing (1.4s)
+  ok 182 [nested] › tests\browser\pointer.spec.ts:259:1 › touch pointercancel consumes nothing (1.3s)
+  ok 183 [nested] › tests\browser\pointer.spec.ts:271:1 › a second finger is ignored while the first drags (1.3s)
+  ok 184 [nested] › tests\browser\pointer.spec.ts:298:1 › a drag never produces a click; a plain tap still does (1.7s)
+
+
+  1) [root] › tests\browser\states.spec.ts:153:1 › reduced motion: the placement keeps cells unscaled while it resolves 
+
+    Error: no-preference: gap pixel rgb(246,243,236)
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: false
+    Received: true
+
+      164 |     const [gap] = await sample(page, [cellClient([anchor[0] + cx, anchor[1] + cy], box, 0.04, 0.5)]);
+      165 |     const isBackground = colorDistance(gap!, theme.background) <= 6;
+    > 166 |     expect(isBackground, `${motion}: gap pixel rgb(${gap})`).toBe(motion === 'reduce');
+          |                                                              ^
+      167 |     await context.close();
+      168 |   }
+      169 | });
+        at C:\Amit\TenTen\tests\browser\states.spec.ts:166:62
+
+    Error Context: test-results\states-reduced-motion-the--c4da7--unscaled-while-it-resolves-root\error-context.md
+
+  1 failed
+    [root] › tests\browser\states.spec.ts:153:1 › reduced motion: the placement keeps cells unscaled while it resolves 
+  4 skipped
+  179 passed (6.9m)

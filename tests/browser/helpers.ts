@@ -6,7 +6,7 @@ import { parseGameplay } from '../../src/domain/models/gameplay-config';
 import { boardLayout, trayLayout, viewportRect, type ClientBox, type Point, type Rect } from '../../src/presentation/views/layout';
 
 // Shared by the browser specs: the shipped content, the page's layout computed in Node, and screen-pixel sampling.
-const release = (file: string) => JSON.parse(readFileSync(`public/content/releases/1.1.0/${file}`, 'utf8'));
+export const release = (file: string) => JSON.parse(readFileSync(`public/content/releases/1.1.0/${file}`, 'utf8'));
 export const { config, colorKeys } = parseGameplay(release('rules.json'), release('pieces.json'));
 export const runtime = release('runtime.json');
 export const theme = release('theme.json');

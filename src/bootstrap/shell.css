@@ -239,7 +239,8 @@ dialog input[type='radio'] {
 }
 
 /* Out of the flow, so the score row height (and so the canvas size) does not change. */
-#pause-button {
+#pause-button,
+#sound-button {
   position: absolute;
   top: 0;
   right: 16px;
@@ -250,7 +251,17 @@ dialog input[type='radio'] {
   padding: 0;
 }
 
-#pause-button svg {
+#sound-button {
+  right: auto;
+  left: 16px;
+}
+
+#sound-button[hidden] {
+  display: none;
+}
+
+#pause-button svg,
+#sound-button svg {
   fill: currentColor;
 }
 
@@ -284,6 +295,7 @@ dialog input[type='radio'] {
 #save-notice button:focus-visible,
 #slots button:focus-visible,
 #pause-button:focus-visible,
+#sound-button:focus-visible,
 #game canvas:focus-visible,
 a:focus-visible {
   outline: 3px solid var(--accent);
