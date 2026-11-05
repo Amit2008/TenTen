@@ -1,6 +1,6 @@
 # T27 play-feel review
 
-- **Status:** PENDING. Round 1 changes are done and waiting for Amit to re-check them.
+- **Status:** ACCEPTED. Amit approved the round 1 changes on 5 Nov 2026.
 - **Candidate:** `main` at `e66dcd9` (the T26 merge), production build with content 1.1.0 and ruleset `classic_proposed_v1`. It is served locally with `vite preview --host` at `http://localhost:4300/` and `http://10.30.40.235:4300/` (local network only, nothing is published).
 
 ## What is being reviewed, and the current values
@@ -23,7 +23,7 @@
 
 ## Decision
 
-Round 1 asked for two changes. Both are implemented and awaiting Amit's re-check.
+Round 1 asked for two changes. Both were implemented, and Amit re-checked them and replied "approved" (5 Nov 2026). The review is accepted.
 
 1. **Pickup collider.** A press anywhere inside a tray piece's bounding box now picks it up for a drag. That includes the empty cells of L shapes (`src/presentation/drag/drag.ts`). Taps already selected anywhere in the slot. The grabbed cell, even an empty one, stays under the pointer, so the ghost and the placed cells still match.
 2. **Line clear.** Each cleared tile now shrinks about its centre and fades, one after another along its line: rows left to right, columns top to bottom, and crossing lines sweep from their top-left. The new theme key is `feedback_ms.clear_stagger` (optional, default 0, at most 200 ms). Content 1.1.0 now has `clear` 200 ms per tile (was 280 ms for all tiles at once) and `clear_stagger` 25 ms. A full 10-tile line therefore takes 425 ms. With reduced motion, the tiles fade together without shrinking, over 200 ms.
