@@ -1,0 +1,32 @@
+[
+  {
+    "channel": "chrome",
+    "version": "156.0.8078.80",
+    "status": "Renderer ready (WebGL2). Content 1.1.0 loaded.",
+    "loadMs": 1961,
+    "score": "1",
+    "restored": "1",
+    "afterContext": "1",
+    "finalState": "idle",
+    "origins": [
+      "https://amit2008.github.io"
+    ],
+    "errors": [],
+    "failed": []
+  },
+  {
+    "channel": "msedge",
+    "version": "156.0.4314.58",
+    "status": "Renderer ready (WebGL2). Content 1.1.0 loaded.",
+    "loadMs": 989,
+    "score": "5",
+    "restored": "5",
+    "afterContext": "5",
+    "finalState": "idle",
+    "origins": [
+      "https://amit2008.github.io"
+    ],
+    "errors": [],
+    "failed": []
+  }
+]

@@ -40,3 +40,20 @@ Neither change touches the rules, so the gameplay hash is unchanged. `theme.json
 - `npx playwright test --workers=4`: 34 passed.
   - The first run had 2 `content-deploy` failures on the root project. Playwright had reused an older `vite preview` on port 4173 that was serving a stale `dist/`. After a rebuild, all 34 passed.
 - Candidate rebuilt from the working tree and served again at `http://10.30.40.235:4300/`.
+
+## Round 2 (5 Nov 2026, during T29, on the live build)
+
+> there is still something that needs fixing
+> I feel that is not so easy to click on shapes before dragging them
+> we should have bigger interaction area when we try to drag a shape
+
+**Change.** A drag now starts from anywhere in a tray slot's whole column below the board (`src/presentation/drag/drag.ts`). The column is the slot's width, and the first and last slots reach the canvas edges. It runs from the board's bottom edge to the canvas bottom.
+
+A press outside the shape grabs the shape's nearest bounding-box cell, and the piece jumps so that cell sits under the pointer. The ghost and the placed cells still match. Taps already selected anywhere in the slot.
+
+The rules and the gameplay hash are unchanged.
+
+**Retests:**
+- Typecheck: clean. `npm test`: 325 passed, including a new test for pickup from the canvas corners and the gap under the board, with exact ghost anchors.
+- `npx playwright test --workers=4`: 34 passed.
+- Status: waiting for Amit's re-check on the live site.

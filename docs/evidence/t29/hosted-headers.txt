@@ -1,0 +1,64 @@
+== /TenTen/
+HTTP/1.1 200 OK
+Content-Type: text/html; charset=utf-8
+Last-Modified: Thu, 05 Nov 2026 12:54:10 GMT
+ETag: W/"6aec7c72-262e"
+Cache-Control: max-age=600
+Content-Encoding: gzip
+== /TenTen/content/index.json
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+Last-Modified: Thu, 05 Nov 2026 12:54:10 GMT
+ETag: "6aec7c72-66"
+Cache-Control: max-age=600
+== /TenTen/content/releases/1.1.0/manifest.json
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+Last-Modified: Thu, 05 Nov 2026 12:54:10 GMT
+ETag: "6aec7c72-ff"
+Cache-Control: max-age=600
+== /TenTen/content/releases/1.1.0/theme.json
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+Last-Modified: Thu, 05 Nov 2026 12:54:10 GMT
+ETag: W/"6aec7c72-4cf"
+Cache-Control: max-age=600
+Content-Encoding: gzip
+== /TenTen/content/releases/1.1.0/audio/clear.wav
+HTTP/1.1 200 OK
+Content-Type: audio/wav
+Last-Modified: Thu, 05 Nov 2026 12:54:10 GMT
+ETag: "6aec7c72-ea74"
+Cache-Control: max-age=600
+== /TenTen/assets/index-DVcORB1Z.js
+HTTP/1.1 200 OK
+Content-Type: application/javascript; charset=utf-8
+Last-Modified: Thu, 05 Nov 2026 12:54:10 GMT
+ETag: W/"6aec7c72-4982e"
+Cache-Control: max-age=600
+Content-Encoding: gzip
+== /TenTen/assets/atkinson-hyperlegible-latin-400-normal-BrHNak5F.woff2
+HTTP/1.1 200 OK
+Content-Type: font/woff2
+Last-Modified: Thu, 05 Nov 2026 12:54:10 GMT
+ETag: "6aec7c72-4338"
+Cache-Control: max-age=600
+== /TenTen/icon.svg
+HTTP/1.1 200 OK
+Content-Type: image/svg+xml
+Last-Modified: Thu, 05 Nov 2026 12:54:10 GMT
+ETag: W/"6aec7c72-2fc"
+Cache-Control: max-age=600
+Content-Encoding: gzip
+== /TenTen/licenses/MIT-PixiJS.txt
+HTTP/1.1 200 OK
+Content-Type: text/plain; charset=utf-8
+Last-Modified: Thu, 05 Nov 2026 12:54:10 GMT
+ETag: W/"6aec7c72-444"
+Cache-Control: max-age=600
+Content-Encoding: gzip
+== http:// redirect
+HTTP/1.1 301 Moved Permanently
+Location: https://amit2008.github.io/TenTen/
+== missing path
+404

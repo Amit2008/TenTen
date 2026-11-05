@@ -75,6 +75,32 @@ describe('picking', () => {
     }
   });
 
+  it('the whole slot column below the board picks up, by the nearest cell of the shape (T29)', () => {
+    const { drag, sample, boardCell, previews } = setup();
+    const client = (p: Point) => logicalToClient(p, BOXES[0]!, VIEWPORT);
+    const boardBottom = BOARD.y + BOARD.rows * BOARD.pitch;
+    const [, vy, vw, vh] = VIEWPORT;
+    const cases: [Point, number, Cell][] = [
+      [[vw - 1, vy + vh - 1], 2, [5, 5]], // canvas bottom-right corner, far from the single
+      [[1, vy + vh - 1], 0, [5, 5]], // canvas bottom-left corner, below corner_3_2: nearest cell is local [0, 2]
+      [[TRAY.slots[1]![0] + 1, boardBottom + 1], 1, [5, 5]], // gap under the board, above bar_5_h's left end
+    ];
+    for (const [point, slot, target] of cases) {
+      expect(drag.down(sample(client(point)))).toBe(true);
+      drag.move(sample(boardCell(target)));
+      const ghost = previews.at(-1)!;
+      expect(ghost).toMatchObject({ slot });
+      drag.cancel();
+    }
+    // Grabbed by the nearest cell: the single and bar_5_h's left end sit right under the pointer.
+    expect(previews.filter((p) => p !== null).map((p) => p.anchor)).toEqual([[5, 5], [5, 3], [5, 5]]);
+    // Just above the board's bottom edge is the board, never a pickup.
+    const shown = previews.length;
+    expect(drag.down(sample(client([TRAY.slots[1]![0] + 1, boardBottom - 1])))).toBe(true);
+    drag.move(sample(boardCell([5, 5])));
+    expect(previews).toHaveLength(shown);
+  });
+
   it('reports a press that stays under the threshold as a tap at the release point', () => {
     const taps: Point[] = [];
     const { session, sample, boardCell } = setup();
