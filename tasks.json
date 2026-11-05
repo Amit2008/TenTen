@@ -690,7 +690,7 @@
       "depends_on": [
         "T28"
       ],
-      "status": "not_started",
+      "status": "done",
       "allowed_scope": [
         "docs/browser_validation",
         "deployment verification",
@@ -703,7 +703,8 @@
         "Hosted root/base-path delivery and rollback are verified with the release artifact."
       ],
       "evidence": "Versions, device models, actual URLs, network traces, screenshots and retest results.",
-      "boundary": "Unprovided hosting access or devices leave affected checks NOT RUN; neither a local server nor automated WebKit substitutes for all targets."
+      "boundary": "Unprovided hosting access or devices leave affected checks NOT RUN; neither a local server nor automated WebKit substitutes for all targets.",
+      "handoff": "docs/handoffs/T29.md"
     },
     {
       "id": "T30",
