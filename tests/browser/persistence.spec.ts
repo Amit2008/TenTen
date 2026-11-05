@@ -97,6 +97,43 @@ test('restore after reload keeps board, tray, score and the future deals', async
   await context.close();
 });
 
+test('a lost WebGL context keeps board, score and tray, replays nothing, and waits for Resume', async ({ browser, baseURL }) => {
+  test.setTimeout(60_000); // includes the 10 s restoration window
+  const context = await browser.newContext({ viewport: { width: 800, height: 1000 }, baseURL: baseURL! });
+  const { page, box, errors } = await openPage(context);
+  for (let i = 0; i < 3; i++) await place(page, box, i);
+  await expect(saveStatus(page)).toHaveText('Saved');
+  const before = await readDb(page);
+  const shot = await page.locator('#game canvas').screenshot();
+
+  // The real extension, outside Pixi: nothing restores the context until the test does.
+  await page.evaluate(() => {
+    const ext = document.querySelector<HTMLCanvasElement>('#game canvas')!.getContext('webgl2')!.getExtension('WEBGL_lose_context')!;
+    (window as unknown as { loss: WEBGL_lose_context }).loss = ext;
+    ext.loseContext();
+  });
+  const notice = page.getByRole('alertdialog', { name: 'Graphics paused' });
+  await expect(notice).toBeVisible();
+  await expect(page.locator('#game canvas')).toHaveJSProperty('inert', true);
+  // No restoration within 10 s: Reload is offered with the save status.
+  await expect(notice).toContainText('Save status: Saved', { timeout: 12_000 });
+  await expect(page.getByRole('button', { name: 'Reload' })).toBeFocused();
+
+  await page.evaluate(() => (window as unknown as { loss: WEBGL_lose_context }).loss.restoreContext());
+  await expect(notice).toBeHidden();
+  const resume = page.getByRole('button', { name: 'Resume' });
+  await expect(resume).toBeFocused();
+  await resume.click();
+  await canvasBox(page);
+  expect((await page.locator('#game canvas').screenshot()).equals(shot), 'board and tray redrawn identically').toBe(true);
+  await expect(page.locator('#score')).toHaveText(String(scores[2]));
+  expect((await readDb(page)).current!.storageRevision, 'nothing replayed or re-saved').toBe(before.current!.storageRevision);
+  await place(page, box, 3);
+  await expect(page.locator('#score')).toHaveText(String(scores[3]));
+  expect(errors).toEqual([]);
+  await context.close();
+});
+
 test('a failed write (quota) keeps the run playable as session only, and Retry saves the latest state', async ({ browser, baseURL }, info) => {
   const context = await browser.newContext({ viewport: { width: 800, height: 1000 }, baseURL: baseURL! });
   await context.addInitScript(() => {
