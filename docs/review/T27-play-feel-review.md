@@ -1,6 +1,6 @@
 # T27 play-feel review
 
-- **Status:** ACCEPTED. Amit approved the round 1 changes on 5 Nov 2026.
+- **Status:** ACCEPTED. Amit approved round 1 on 5 Nov 2026. Rounds 2–4 (during T29, on the live build) ended with "approved" after the round 4 fix.
 - **Candidate:** `main` at `e66dcd9` (the T26 merge), production build with content 1.1.0 and ruleset `classic_proposed_v1`. It is served locally with `vite preview --host` at `http://localhost:4300/` and `http://10.30.40.235:4300/` (local network only, nothing is published).
 
 ## What is being reviewed, and the current values
@@ -87,4 +87,4 @@ Asked to choose between a 3×3-board-square pickup box, bigger tray pieces, or a
 **Change.** `#score-line` gets a 44px line height (`src/bootstrap/shell.css`), so the button sits inside the row and the score text centres on it. The canvas refits to the slightly taller row.
 - Measured in Playwright mobile emulation: at 384×832 the button ends at y = 178 and the canvas starts at 189; at 360×640 they are 95 and 106.
 
-**Retests:** `npx playwright test --workers=4`, 34 passed. Status: waiting for Amit's re-check on the live site.
+**Retests:** `npx playwright test --workers=4`, 34 passed. Deployed as `3a4453f` (run 42037920063). Amit replied "approved".

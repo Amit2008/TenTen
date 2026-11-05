@@ -714,7 +714,7 @@
         "T27",
         "T29"
       ],
-      "status": "not_started",
+      "status": "done",
       "allowed_scope": [
         "release",
         "docs/handoff",
@@ -727,7 +727,8 @@
         "A new agent can build, deploy and extend the game from the handoff."
       ],
       "evidence": "Final release manifest, deployment identity and handoff checklist.",
-      "boundary": "Do not claim offline installation, native executables, universal browser support or unsupplied music as delivered."
+      "boundary": "Do not claim offline installation, native executables, universal browser support or unsupplied music as delivered.",
+      "handoff": "docs/handoffs/T30.md"
     }
   ]
 }
