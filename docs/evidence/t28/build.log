@@ -1,0 +1,76 @@
+
+> line-garden@0.1.0 release
+> node tools/release/build-release.mjs
+
+vite v8.3.5 building client environment for production...
+transforming...
+✓ 754 modules transformed.
+rendering chunks...
+computing gzip size...
+release/nested/index.html                                                      9.77 kB │ gzip:  2.95 kB
+release/nested/assets/atkinson-hyperlegible-latin-400-normal-BrHNak5F.woff2   17.20 kB
+release/nested/assets/atkinson-hyperlegible-latin-700-normal-GZI4o3u0.woff2   17.52 kB
+release/nested/assets/index-SozCSUxh.css                                       4.80 kB │ gzip:  1.53 kB
+release/nested/assets/webworkerAll-BqvGnmbn.js                                 0.05 kB │ gzip:  0.06 kB
+release/nested/assets/getTextureBatchBindGroup-Bovnqqoa.js                     0.34 kB │ gzip:  0.27 kB
+release/nested/assets/canvasUtils-DQ7kH_ro.js                                  6.01 kB │ gzip:  2.05 kB
+release/nested/assets/getTexelRangeRects-BE1Lm1Q5.js                          11.31 kB │ gzip:  2.97 kB
+release/nested/assets/init-BRqp1iwG.js                                        15.18 kB │ gzip:  4.76 kB
+release/nested/assets/browserAll-oJ-ceCax.js                                  43.48 kB │ gzip: 11.28 kB
+release/nested/assets/RenderTargetSystem-BCojzyLM.js                          78.07 kB │ gzip: 22.11 kB
+release/nested/assets/CanvasPool-BTOKPhVB.js                                 112.97 kB │ gzip: 34.44 kB
+release/nested/assets/index-DVcORB1Z.js                                      301.10 kB │ gzip: 91.35 kB
+
+✓ built in 337ms
+vite v8.3.5 building client environment for production...
+transforming...
+✓ 754 modules transformed.
+rendering chunks...
+computing gzip size...
+release/root/index.html                                                      9.71 kB │ gzip:  2.94 kB
+release/root/assets/atkinson-hyperlegible-latin-400-normal-BrHNak5F.woff2   17.20 kB
+release/root/assets/atkinson-hyperlegible-latin-700-normal-GZI4o3u0.woff2   17.52 kB
+release/root/assets/index-Dt1cPqGK.css                                       4.78 kB │ gzip:  1.53 kB
+release/root/assets/webworkerAll-ZECeiSCT.js                                 0.05 kB │ gzip:  0.06 kB
+release/root/assets/getTextureBatchBindGroup-Bovnqqoa.js                     0.34 kB │ gzip:  0.27 kB
+release/root/assets/canvasUtils-DQ7kH_ro.js                                  6.01 kB │ gzip:  2.05 kB
+release/root/assets/getTexelRangeRects-BE1Lm1Q5.js                          11.31 kB │ gzip:  2.97 kB
+release/root/assets/init-BRqp1iwG.js                                        15.18 kB │ gzip:  4.76 kB
+release/root/assets/browserAll-BR_WUjxC.js                                  43.48 kB │ gzip: 11.28 kB
+release/root/assets/RenderTargetSystem-BCojzyLM.js                          78.07 kB │ gzip: 22.11 kB
+release/root/assets/CanvasPool-BTOKPhVB.js                                 112.97 kB │ gzip: 34.44 kB
+release/root/assets/index-C9JCHC_F.js                                      301.08 kB │ gzip: 91.34 kB
+
+✓ built in 323ms
+{
+  "name": "line-garden",
+  "commit": "02c7671875cdf0179726b2af4fcb8243d7dff028",
+  "builtAt": "2026-11-05T12:31:25.975Z",
+  "node": "v24.11.1",
+  "npm": "11.6.2",
+  "packageLockSha256": "979c95218a0dace57f02625db1f40c732f67b0c7c00602819f8d290f981ffb0b",
+  "targets": [
+    {
+      "name": "nested",
+      "base": "/TenTen/",
+      "dir": "release/nested",
+      "contentVersion": "1.1.0",
+      "manifest": "releases/1.1.0/manifest.json",
+      "files": 29,
+      "bytes": 824337
+    },
+    {
+      "name": "root",
+      "base": "/",
+      "dir": "release/root",
+      "contentVersion": "1.1.0",
+      "manifest": "releases/1.1.0/manifest.json",
+      "files": 29,
+      "bytes": 824246
+    }
+  ],
+  "source": {
+    "path": "release/line-garden-src-02c7671.zip",
+    "sha256": "e392a9e3789b94c9c77f7060e88a9f349980d9151c9b84f904cb11fac2b88295"
+  }
+}
