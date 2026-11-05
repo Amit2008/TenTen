@@ -58,19 +58,21 @@ const occupied = (state: SessionState): Cell[] =>
   state.board.cells.flatMap((t, i) => (t === null ? [] : [[i % 10, Math.floor(i / 10)] as Cell]));
 
 describe('picking', () => {
-  it('drags only from an occupied cell of a live tray piece; other presses are taps at most', () => {
+  it('drags from anywhere in a tray piece’s bounding box, empty L cells included; other presses are taps at most', () => {
     const { drag, sample, trayCell, boardCell, previews, commits } = setup();
-    // corner_3_2's empty origin, the empty middle of the L, and the board: claimed, but moving never drags.
-    for (const start of [trayCell(0, [0, 0]), trayCell(0, [1, 1]), boardCell([4, 4])]) {
-      expect(drag.down(sample(start))).toBe(true);
-      drag.move(sample(boardCell([5, 5])));
-      expect(drag.up(sample(boardCell([5, 5])))).toBe(false);
-    }
+    // The board: claimed, but moving never drags.
+    expect(drag.down(sample(boardCell([4, 4])))).toBe(true);
+    drag.move(sample(boardCell([5, 5])));
+    expect(drag.up(sample(boardCell([5, 5])))).toBe(false);
     expect(previews).toEqual([]);
     expect(commits).toEqual([]);
-    expect(drag.down(sample(trayCell(0, [2, 0])))).toBe(true);
-    drag.move(sample(boardCell([5, 5])));
-    expect(previews).toHaveLength(1);
+    // corner_3_2's empty origin and the empty middle of the L both pick the piece up (T27).
+    for (const start of [trayCell(0, [0, 0]), trayCell(0, [1, 1])]) {
+      expect(drag.down(sample(start))).toBe(true);
+      drag.move(sample(boardCell([5, 5])));
+      expect(previews.at(-1)).toMatchObject({ slot: 0 });
+      drag.cancel();
+    }
   });
 
   it('reports a press that stays under the threshold as a tap at the release point', () => {
@@ -126,6 +128,7 @@ describe('ghost and committed cells coincide', () => {
     // [name, slot, grabbed local cell, anchor]
     ['corner_3_2 top-left corner (empty origin)', 0, [2, 0], [0, 0]],
     ['corner_3_2 bottom-right corner', 0, [0, 2], [7, 7]],
+    ['corner_3_2 grabbed by its empty origin', 0, [0, 0], [3, 3]],
     ['bar_5_h top-right edge', 1, [4, 0], [5, 0]],
     ['bar_5_h bottom-left edge', 1, [0, 0], [0, 9]],
     ['single bottom-right corner', 2, [0, 0], [9, 9]],

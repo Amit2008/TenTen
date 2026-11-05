@@ -46,7 +46,8 @@
   },
   "feedback_ms": {
     "place": 120,
-    "clear": 280,
+    "clear": 200,
+    "clear_stagger": 25,
     "invalid_return": 160
   },
   "reduced_motion": false

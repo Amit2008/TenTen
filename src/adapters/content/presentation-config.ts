@@ -19,7 +19,7 @@ export interface ThemeConfig extends ThemePalette {
   readonly tileCornerRadius: number;
   /** Theme color key -> #RRGGBB. */
   readonly colors: Readonly<Record<string, string>>;
-  readonly feedbackMs: { readonly place: number; readonly clear: number; readonly invalidReturn: number };
+  readonly feedbackMs: { readonly place: number; readonly clear: number; readonly clearStagger: number; readonly invalidReturn: number };
   readonly reducedMotion: boolean;
 }
 
@@ -71,7 +71,7 @@ export function parseTheme(json: unknown, requiredColorKeys: Iterable<string>): 
   const colors: Record<string, string> = {};
   for (const [key, value] of Object.entries(v.record(t.colors, 'colors'))) colors[key] = color(v, value, `colors.${key}`);
   for (const key of requiredColorKeys) if (!(key in colors)) v.fail(`colors.${key}`, 'is missing for a catalog shape');
-  const feedback = v.object(t.feedback_ms, 'feedback_ms', ['place', 'clear', 'invalid_return']);
+  const feedback = v.object(t.feedback_ms, 'feedback_ms', ['place', 'clear', 'invalid_return'], ['clear_stagger']);
   const highContrast = v.object(t.high_contrast, 'high_contrast', [...PALETTE_KEYS, 'tile']);
   const palette = (p: Json, prefix: string): ThemePalette => ({
     background: color(v, p.background, `${prefix}background`),
@@ -94,6 +94,8 @@ export function parseTheme(json: unknown, requiredColorKeys: Iterable<string>): 
     feedbackMs: {
       place: v.int(feedback.place, 'feedback_ms.place', 0, 2000),
       clear: v.int(feedback.clear, 'feedback_ms.clear', 0, 2000),
+      // Delay between successive tiles of a cleared line; optional so earlier content versions stay valid.
+      clearStagger: feedback.clear_stagger === undefined ? 0 : v.int(feedback.clear_stagger, 'feedback_ms.clear_stagger', 0, 200),
       invalidReturn: v.int(feedback.invalid_return, 'feedback_ms.invalid_return', 0, 2000),
     },
     reducedMotion: v.boolean(t.reduced_motion, 'reduced_motion'),

@@ -4,7 +4,18 @@ import type { Point } from '../views/layout';
 
 export interface FeedbackTiming {
   readonly place: number;
+  /** Shrink-and-fade time of one cleared tile. */
   readonly clear: number;
+  /** Delay between successive tiles along a cleared line (0 with reduced motion). */
+  readonly clearStagger: number;
+}
+
+/** A cleared tile drawn over the already-cleared board: the tile it held, shrinking about its center and fading. */
+export interface ClearingTile {
+  readonly cell: Cell;
+  readonly key: TileKey;
+  readonly scale: number;
+  readonly alpha: number;
 }
 
 export interface FeedbackFrame {
@@ -14,18 +25,22 @@ export interface FeedbackFrame {
   readonly placedScale: number;
   /** Opacity cue on placed cells, used instead of the pulse with reduced motion. */
   readonly placedAlpha: number;
-  /** Cleared cells with the tile they held, fading out over the already-cleared board. */
-  readonly cleared: readonly (readonly [Cell, TileKey])[];
-  readonly clearedAlpha: number;
+  readonly cleared: readonly ClearingTile[];
 }
 
 const PULSE = 0.12;
 
-/** One accepted move's feedback: a placement pulse and a fade of the cleared tiles, both starting at once. */
+/**
+ * One accepted move's feedback: a placement pulse, and the cleared tiles shrinking and fading one after another
+ * along their lines (left to right, top to bottom; crossing lines sweep from their top-left). Reduced motion: every
+ * cleared tile fades together, without shrinking.
+ */
 export class MoveFeedback {
   #elapsedMs = 0;
   readonly #placed: readonly Cell[];
-  readonly #cleared: readonly (readonly [Cell, TileKey])[];
+  /** [cell, tile, position in the sweep]. */
+  readonly #cleared: readonly (readonly [Cell, TileKey, number])[];
+  readonly #stagger: number;
   readonly #durationMs: number;
 
   constructor(
@@ -37,8 +52,14 @@ export class MoveFeedback {
     const shapeId = before.tray.find((s) => s?.instanceId === result.consumedInstanceId)!.shapeId;
     this.#placed = result.placed;
     // A cleared cell held an old tile or, if it was empty before the move, a tile of the shape just placed.
-    this.#cleared = result.cleared.map((c) => [c, before.board.cells[c[1] * before.board.columns + c[0]] ?? shapeId] as const);
-    this.#durationMs = Math.max(timing.place, this.#cleared.length ? timing.clear : 0);
+    // x + y is the position along a row or a column, so each cleared line sweeps from its first cell.
+    const first = Math.min(...result.cleared.map(([x, y]) => x + y));
+    this.#cleared = result.cleared.map(
+      (c) => [c, before.board.cells[c[1] * before.board.columns + c[0]] ?? shapeId, c[0] + c[1] - first] as const,
+    );
+    this.#stagger = reducedMotion ? 0 : timing.clearStagger;
+    const last = Math.max(0, ...this.#cleared.map(([, , order]) => order));
+    this.#durationMs = Math.max(timing.place, this.#cleared.length ? timing.clear + this.#stagger * last : 0);
   }
 
   get done(): boolean {
@@ -51,14 +72,17 @@ export class MoveFeedback {
 
   frame(): FeedbackFrame {
     const place = this.timing.place > 0 ? Math.min(this.#elapsedMs / this.timing.place, 1) : 1;
-    const clear = this.timing.clear > 0 ? Math.min(this.#elapsedMs / this.timing.clear, 1) : 1;
+    const progress = (order: number) =>
+      this.timing.clear > 0 ? Math.min(Math.max((this.#elapsedMs - order * this.#stagger) / this.timing.clear, 0), 1) : 1;
     return {
       moveId: this.result.moveId,
       placed: this.#placed,
       placedScale: this.reducedMotion ? 1 : 1 + PULSE * (1 - place),
       placedAlpha: this.reducedMotion ? 0.5 + 0.5 * place : 1,
-      cleared: this.#cleared,
-      clearedAlpha: 1 - clear,
+      cleared: this.#cleared.map(([cell, key, order]) => {
+        const t = progress(order);
+        return { cell, key, scale: this.reducedMotion ? 1 : 1 - t, alpha: 1 - t };
+      }),
     };
   }
 }

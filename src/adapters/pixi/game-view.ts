@@ -17,9 +17,8 @@ export class GameView {
   readonly #slots: { key: string | null; graphics: Graphics }[];
   readonly #ghost = new Graphics();
   readonly #floating = new Graphics();
-  /** Cleared tiles fading out over the committed (already cleared) board. */
-  readonly #fading = new Graphics();
-  #fadingMove = -1;
+  /** One hidden tile per board cell, shown over the committed (already cleared) board while a cleared tile vanishes. */
+  readonly #clearing: Graphics[] = [];
   #pulsed: Graphics[] = [];
   #floatingShape: string | null = null;
   #ghostKey = '';
@@ -37,15 +36,18 @@ export class GameView {
     this.#palette = theme;
     // Each cell is drawn around its own center so the placement pulse scales in place.
     const unit = { x: -board.pitch / 2, y: -board.pitch / 2, pitch: board.pitch, columns: 1, rows: 1 };
-    for (let y = 0; y < board.rows; y++)
-      for (let x = 0; x < board.columns; x++) {
-        const cell = this.#tile(new Graphics(), unit, 0, 0);
-        const [left, top] = cellOrigin(board, [x, y]);
-        cell.position.set(left + board.pitch / 2, top + board.pitch / 2);
-        this.#cells.push(cell);
-        this.container.addChild(cell);
-      }
-    this.container.addChild(this.#fading);
+    const centered = (list: Graphics[], visible: boolean): void => {
+      for (let y = 0; y < board.rows; y++)
+        for (let x = 0; x < board.columns; x++) {
+          const cell = this.#tile(new Graphics(), unit, 0, 0);
+          const [left, top] = cellOrigin(board, [x, y]);
+          cell.position.set(left + board.pitch / 2, top + board.pitch / 2);
+          cell.visible = visible;
+          list.push(this.container.addChild(cell));
+        }
+    };
+    centered(this.#cells, true);
+    centered(this.#clearing, false);
     this.#slots = tray.slots.map(() => ({ key: null, graphics: this.container.addChild(new Graphics()) }));
     // Ghost above the floating piece: the same-color ghost leaves the piece unchanged, and the invalid cross and
     // line outlines stay visible even when the piece sits right over them.
@@ -118,10 +120,9 @@ export class GameView {
       cell.scale.set(1);
       cell.alpha = 1;
     }
+    for (const tile of this.#clearing) tile.visible = false;
     if (!frame) {
       this.#pulsed = [];
-      this.#fading.clear();
-      this.#fadingMove = -1;
       return;
     }
     this.#pulsed = frame.placed.map(([x, y]) => this.#cells[y * this.board.columns + x]!);
@@ -129,12 +130,13 @@ export class GameView {
       cell.scale.set(frame.placedScale);
       cell.alpha = frame.placedAlpha;
     }
-    if (this.#fadingMove !== frame.moveId) {
-      this.#fadingMove = frame.moveId;
-      this.#fading.clear();
-      for (const [[x, y], key] of frame.cleared) this.#tile(this.#fading, this.board, x, y, this.#color(key));
+    for (const { cell: [x, y], key, scale, alpha } of frame.cleared) {
+      const tile = this.#clearing[y * this.board.columns + x]!;
+      tile.visible = alpha > 0 && scale > 0;
+      tile.tint = this.#color(key);
+      tile.scale.set(scale);
+      tile.alpha = alpha;
     }
-    this.#fading.alpha = frame.clearedAlpha;
   }
 
   /** Theme switch: retints the board and tray now; outlines, markers and the floating piece use it from their next draw. */
