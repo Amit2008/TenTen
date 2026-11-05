@@ -1,0 +1,122 @@
+{
+  "samples": [
+    {
+      "restarts": 1,
+      "jsEventListeners": 71,
+      "domNodes": 426,
+      "heapMB": 4.96,
+      "gl": {
+        "Shader": 0,
+        "Texture": 2,
+        "Program": 2,
+        "VertexArray": 3,
+        "Buffer": 6
+      }
+    },
+    {
+      "restarts": 25,
+      "jsEventListeners": 71,
+      "domNodes": 426,
+      "heapMB": 5.35,
+      "gl": {
+        "Shader": 0,
+        "Texture": 2,
+        "Program": 2,
+        "VertexArray": 3,
+        "Buffer": 6
+      }
+    },
+    {
+      "restarts": 50,
+      "jsEventListeners": 71,
+      "domNodes": 426,
+      "heapMB": 5.63,
+      "gl": {
+        "Shader": 0,
+        "Texture": 2,
+        "Program": 2,
+        "VertexArray": 3,
+        "Buffer": 6
+      }
+    },
+    {
+      "restarts": 75,
+      "jsEventListeners": 71,
+      "domNodes": 426,
+      "heapMB": 5.71,
+      "gl": {
+        "Shader": 0,
+        "Texture": 2,
+        "Program": 2,
+        "VertexArray": 4,
+        "Buffer": 8
+      }
+    },
+    {
+      "restarts": 100,
+      "jsEventListeners": 71,
+      "domNodes": 426,
+      "heapMB": 5.77,
+      "gl": {
+        "Shader": 0,
+        "Texture": 2,
+        "Program": 2,
+        "VertexArray": 4,
+        "Buffer": 8
+      }
+    },
+    {
+      "restarts": 125,
+      "jsEventListeners": 71,
+      "domNodes": 426,
+      "heapMB": 5.81,
+      "gl": {
+        "Shader": 0,
+        "Texture": 2,
+        "Program": 2,
+        "VertexArray": 4,
+        "Buffer": 8
+      }
+    },
+    {
+      "restarts": 150,
+      "jsEventListeners": 71,
+      "domNodes": 426,
+      "heapMB": 5.83,
+      "gl": {
+        "Shader": 0,
+        "Texture": 2,
+        "Program": 2,
+        "VertexArray": 4,
+        "Buffer": 8
+      }
+    },
+    {
+      "restarts": 175,
+      "jsEventListeners": 71,
+      "domNodes": 426,
+      "heapMB": 5.88,
+      "gl": {
+        "Shader": 0,
+        "Texture": 2,
+        "Program": 2,
+        "VertexArray": 4,
+        "Buffer": 8
+      }
+    },
+    {
+      "restarts": 200,
+      "jsEventListeners": 71,
+      "domNodes": 426,
+      "heapMB": 5.88,
+      "gl": {
+        "Shader": 0,
+        "Texture": 2,
+        "Program": 2,
+        "VertexArray": 4,
+        "Buffer": 8
+      }
+    }
+  ],
+  "errors": []
+}

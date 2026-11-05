@@ -1,0 +1,109 @@
+{
+  "interactiveMs": [
+    1347,
+    1450,
+    1404
+  ],
+  "budgetMs": 3000,
+  "initialBytes": {
+    "served": 200396,
+    "gzipEstimate": 193306,
+    "budget": 2097152
+  },
+  "audioBytes": {
+    "served": 0,
+    "gzipEstimate": 0
+  },
+  "files": [
+    {
+      "path": "/index.html",
+      "served": 3214,
+      "gzip": 2934
+    },
+    {
+      "path": "/assets/getTextureBatchBindGroup-Bovnqqoa.js",
+      "served": 665,
+      "gzip": 270
+    },
+    {
+      "path": "/assets/canvasUtils-DQ7kH_ro.js",
+      "served": 2413,
+      "gzip": 2043
+    },
+    {
+      "path": "/assets/getTexelRangeRects-BE1Lm1Q5.js",
+      "served": 3354,
+      "gzip": 2983
+    },
+    {
+      "path": "/assets/RenderTargetSystem-BCojzyLM.js",
+      "served": 22319,
+      "gzip": 21939
+    },
+    {
+      "path": "/assets/CanvasPool-BTOKPhVB.js",
+      "served": 34576,
+      "gzip": 34180
+    },
+    {
+      "path": "/assets/index-Dt1cPqGK.css",
+      "served": 1891,
+      "gzip": 1528
+    },
+    {
+      "path": "/assets/index-BR_CSq1h.js",
+      "served": 90876,
+      "gzip": 90445
+    },
+    {
+      "path": "/assets/atkinson-hyperlegible-latin-400-normal-BrHNak5F.woff2",
+      "served": 17528,
+      "gzip": 17236
+    },
+    {
+      "path": "/assets/atkinson-hyperlegible-latin-700-normal-GZI4o3u0.woff2",
+      "served": 17844,
+      "gzip": 17552
+    },
+    {
+      "path": "/content/index.json",
+      "served": 372,
+      "gzip": 96
+    },
+    {
+      "path": "/icon.svg",
+      "served": 1031,
+      "gzip": 222
+    },
+    {
+      "path": "/content/releases/1.1.0/manifest.json",
+      "served": 525,
+      "gzip": 155
+    },
+    {
+      "path": "/content/releases/1.1.0/theme.json",
+      "served": 774,
+      "gzip": 455
+    },
+    {
+      "path": "/content/releases/1.1.0/audio.json",
+      "served": 666,
+      "gzip": 218
+    },
+    {
+      "path": "/content/releases/1.1.0/rules.json",
+      "served": 822,
+      "gzip": 310
+    },
+    {
+      "path": "/content/releases/1.1.0/runtime.json",
+      "served": 723,
+      "gzip": 256
+    },
+    {
+      "path": "/content/releases/1.1.0/pieces.json",
+      "served": 803,
+      "gzip": 484
+    }
+  ]
+}

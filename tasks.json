@@ -621,7 +621,7 @@
       "depends_on": [
         "T25"
       ],
-      "status": "not_started",
+      "status": "done",
       "allowed_scope": [
         "tests/regression",
         "tools/profiling",
@@ -634,7 +634,8 @@
         "Restart loops retain no stale listeners, sessions or GPU objects."
       ],
       "evidence": "Exact browser/device/build, profiler captures, transfer sizes and test output.",
-      "boundary": "Software-rendered CI is not evidence of real mobile GPU performance."
+      "boundary": "Software-rendered CI is not evidence of real mobile GPU performance.",
+      "handoff": "docs/handoffs/T26.md"
     },
     {
       "id": "T27",
