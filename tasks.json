@@ -666,7 +666,7 @@
       "depends_on": [
         "T26"
       ],
-      "status": "not_started",
+      "status": "done",
       "allowed_scope": [
         "build scripts",
         "deployment templates",
@@ -680,7 +680,8 @@
         "Release package includes complete static files and verified content-version pointers."
       ],
       "evidence": "Build log, dist manifest, artifact hashes and deployment runbook.",
-      "boundary": "Vite preview is not production hosting. T27 can be pending during preparation; publishing needs authorization."
+      "boundary": "Vite preview is not production hosting. T27 can be pending during preparation; publishing needs authorization.",
+      "handoff": "docs/handoffs/T28.md"
     },
     {
       "id": "T29",

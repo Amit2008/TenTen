@@ -1,0 +1,32 @@
+{
+  "name": "line-garden",
+  "commit": "02c7671875cdf0179726b2af4fcb8243d7dff028",
+  "builtAt": "2026-11-05T12:31:25.975Z",
+  "node": "v24.11.1",
+  "npm": "11.6.2",
+  "packageLockSha256": "979c95218a0dace57f02625db1f40c732f67b0c7c00602819f8d290f981ffb0b",
+  "targets": [
+    {
+      "name": "nested",
+      "base": "/TenTen/",
+      "dir": "release/nested",
+      "contentVersion": "1.1.0",
+      "manifest": "releases/1.1.0/manifest.json",
+      "files": 29,
+      "bytes": 824337
+    },
+    {
+      "name": "root",
+      "base": "/",
+      "dir": "release/root",
+      "contentVersion": "1.1.0",
+      "manifest": "releases/1.1.0/manifest.json",
+      "files": 29,
+      "bytes": 824246
+    }
+  ],
+  "source": {
+    "path": "release/line-garden-src-02c7671.zip",
+    "sha256": "e392a9e3789b94c9c77f7060e88a9f349980d9151c9b84f904cb11fac2b88295"
+  }
+}

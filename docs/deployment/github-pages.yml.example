@@ -1,0 +1,44 @@
+# Template, not active. Copy to .github/workflows/pages.yml only after Amit approves publishing (runbook step 3).
+# Runs only when started by hand on the approved commit; deploys release/nested (base /TenTen/) to GitHub Pages.
+name: Deploy to GitHub Pages
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24.11.1
+          cache: npm
+      - run: npm install -g npm@11.6.2
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run release
+      - run: cat release/release-manifest.json
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: release/nested
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
