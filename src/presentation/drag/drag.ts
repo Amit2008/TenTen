@@ -1,6 +1,6 @@
 // Direct drag of a tray piece onto the board (GDD 6.1). No DOM: the pointer adapter feeds it CSS client samples.
 import type { Cell, GameplayConfig, PlacePiece, SessionState, ShapeDefinition } from '../../domain/models/types';
-import { cellAt, clientToLogical, slotGrid, type ClientBox, type GridLayout, type Point, type Rect, type TrayLayout } from '../views/layout';
+import { clientToLogical, slotGrid, type ClientBox, type GridLayout, type Point, type Rect, type TrayLayout } from '../views/layout';
 import { placementPreview, type PlacementPreview } from '../views/preview';
 
 export interface PointerSample {
@@ -34,7 +34,7 @@ interface Pick {
 
 interface Active {
   readonly pointerId: number;
-  /** Null when the press did not land inside a tray piece's bounding box: it can still be a tap, never a drag. */
+  /** Null when the press did not land in a tray piece's pickup area: it can still be a tap, never a drag. */
   readonly pick: Pick | null;
   readonly start: Point;
   readonly touch: boolean;
@@ -43,7 +43,7 @@ interface Active {
 
 /**
  * One active pointer at a time. A press that moves less than the threshold is a tap, reported as a logical point.
- * A press inside a tray piece's bounding box that moves further is a drag; preview and release use the same offset, snapping
+ * A press in a tray piece's pickup area (see #pick) that moves further is a drag; preview and release use the same offset, snapping
  * and domain validator.
  */
 export class DragController {
@@ -114,14 +114,22 @@ export class DragController {
     if (wasDragging) this.onPreview(null);
   }
 
-  #pick(state: SessionState, point: Point): Pick | null {
+  /**
+   * Each slot's whole column below the board picks its piece up (T27 and T29, Amit): the slot's width (the outer slots
+   * reach the canvas edges) from the board's bottom edge to the canvas bottom. The grabbed cell is the shape's
+   * bounding-box cell nearest the press, possibly empty; the piece jumps so that cell sits under the pointer.
+   */
+  #pick(state: SessionState, [px, py]: Point): Pick | null {
+    const { config, tray, board, viewport: [vx, vy, vw, vh] } = this.settings;
+    if (py < board.y + board.rows * board.pitch || py >= vy + vh) return null;
+    const last = tray.slots.length - 1;
     for (const [slot, instance] of state.tray.entries()) {
-      if (!instance) continue;
-      const shape = this.settings.config.catalog.find((s) => s.id === instance.shapeId)!;
-      const local = cellAt(slotGrid(this.settings.tray, slot, shape), point);
-      // The whole bounding box grabs the piece, empty L corners included (T27, Amit), so small and sparse shapes are
-      // easy to pick up by touch. The grabbed local cell may be empty; it still stays under the pointer.
-      if (local) return { instanceId: instance.instanceId, shape, grabbed: local };
+      const [x, , w] = tray.slots[slot]!;
+      if (!instance || px < (slot === 0 ? vx : x) || px >= (slot === last ? vx + vw : x + w)) continue;
+      const shape = config.catalog.find((s) => s.id === instance.shapeId)!;
+      const grid = slotGrid(tray, slot, shape);
+      const nearest = (p: number, origin: number, size: number) => Math.min(Math.max(Math.floor((p - origin) / grid.pitch), 0), size - 1);
+      return { instanceId: instance.instanceId, shape, grabbed: [nearest(px, grid.x, shape.width), nearest(py, grid.y, shape.height)] };
     }
     return null;
   }
