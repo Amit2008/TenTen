@@ -37,6 +37,12 @@ const pausePanel = document.getElementById('paused')!;
 const resumeButton = document.getElementById('resume') as HTMLButtonElement;
 const pauseButton = document.getElementById('pause-button') as HTMLButtonElement;
 const soundButton = document.getElementById('sound-button') as HTMLButtonElement;
+const saveStatus = document.getElementById('save-status')!;
+const graphicsPanel = document.getElementById('graphics-lost')!;
+const graphicsText = document.getElementById('graphics-text')!;
+const graphicsReload = document.getElementById('graphics-reload') as HTMLButtonElement;
+/** GDD 8.2: a lost WebGL context not restored within this offers Reload instead. */
+const RESTORE_TIMEOUT_MS = 10_000;
 /** Explicit Play, Resume and Enable sound gestures: the only clicks that may start audio (GDD 9.3). */
 const SOUND_GESTURES = '#menu-continue, #menu-new, #confirm-yes, #results-again, #resume, #sound-button';
 
@@ -77,6 +83,8 @@ function teardown(): void {
   saves?.close();
   hudPanel.hidden = true;
   pausePanel.hidden = true;
+  graphicsPanel.hidden = true;
+  for (const overlay of host.querySelectorAll<HTMLElement>('.overlay')) overlay.inert = false;
   slotGroup.inert = pauseButton.inert = soundButton.inert = false;
   delete host.dataset.state;
   app = hud = audio = disposeFit = disposeInput = sessionListeners = saves = undefined;
@@ -177,6 +185,7 @@ async function start({ loadLatest = false } = {}): Promise<void> {
     });
     const systemReducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
     let resultsPending = false;
+    let graphicsLost = false;
     const states = new PresentationStates(runtime.animationDtCapSeconds, (frame) => {
       view.showFeedback(frame);
       if (frame) return;
@@ -189,14 +198,16 @@ async function start({ loadLatest = false } = {}): Promise<void> {
     });
     /** The board takes input only while a run is played: not paused, not behind a screen, not stale. */
     const sync = (): void => {
-      canvas.inert = slotGroup.inert = pauseButton.inert = soundButton.inert = conflicted || states.paused || !lifecycle.playing;
+      canvas.inert = slotGroup.inert = pauseButton.inert = soundButton.inert = graphicsLost || conflicted || states.paused || !lifecycle.playing;
+      // Without a context nothing may start or resume a run under the graphics notice.
+      for (const overlay of host.querySelectorAll<HTMLElement>('.overlay')) if (overlay !== graphicsPanel) overlay.inert = graphicsLost;
       host.dataset.state = lifecycle.playing ? states.label(drag.dragging, selection.selected) : lifecycle.screen;
     };
 
     // Every input mode submits the same PlacePiece command through here. The move is committed and shown first;
     // feedback only decorates it, and no command is accepted while it resolves, while paused or off the board.
     const commit = (command: PlacePiece): void => {
-      if (!session || !lifecycle.playing || !states.acceptsCommands) return;
+      if (!session || graphicsLost || !lifecycle.playing || !states.acceptsCommands) return;
       const before = session.state;
       const result = session.place(command);
       if (result.accepted) {
@@ -291,7 +302,7 @@ async function start({ loadLatest = false } = {}): Promise<void> {
       sync();
     };
     const resume = (): void => {
-      if (!states.paused || conflicted) return;
+      if (!states.paused || conflicted || graphicsLost) return;
       leavePause();
       canvas.focus();
     };
@@ -358,6 +369,47 @@ async function start({ loadLatest = false } = {}): Promise<void> {
       document.addEventListener('visibilitychange', () => document.hidden && pause(), { signal });
     }
 
+    // WebGL context loss (GDD 8.2): Pixi's own listener (added at init, so it runs first) keeps the context
+    // restorable and rebuilds its GPU resources on restore. Here: stop input and frames, keep the committed state,
+    // redraw it on restore and leave a run paused until Resume. No command is replayed.
+    let restoreTimer: ReturnType<typeof setTimeout> | undefined;
+    canvas.addEventListener(
+      'webglcontextlost',
+      () => {
+        pause();
+        drag.cancel();
+        setRendering(shownApp, false);
+        graphicsLost = true;
+        graphicsText.textContent = 'Your browser reset the game graphics. Restoring them…';
+        graphicsReload.hidden = true;
+        graphicsPanel.hidden = false;
+        sync();
+        graphicsPanel.focus();
+        clearTimeout(restoreTimer);
+        restoreTimer = setTimeout(() => {
+          const saved = saveStatus.textContent ? ` Save status: ${saveStatus.textContent}.` : '';
+          graphicsText.textContent = `The graphics could not be restored. Reload to continue from your last save.${saved}`;
+          graphicsReload.hidden = false;
+          graphicsReload.focus();
+        }, RESTORE_TIMEOUT_MS);
+      },
+      { signal },
+    );
+    canvas.addEventListener(
+      'webglcontextrestored',
+      () => {
+        clearTimeout(restoreTimer);
+        graphicsLost = false;
+        graphicsPanel.hidden = true;
+        shownApp.render(); // the committed state, drawn with the rebuilt resources
+        setRendering(shownApp, pausePanel.hidden === true); // paused stays still; menu, results and a conflict notice keep drawing
+        sync();
+        if (!pausePanel.hidden) resumeButton.focus();
+      },
+      { signal },
+    );
+    signal.addEventListener('abort', () => clearTimeout(restoreTimer));
+
     slotGroup.before(canvas);
     disposeFit = fitToHost(app, host, viewport, runtime.resolutionCap);
     const disposePointer = attachPointer(canvas, drag);
@@ -402,4 +454,5 @@ async function start({ loadLatest = false } = {}): Promise<void> {
 
 installDialogButtons();
 retry.addEventListener('click', () => void start());
+graphicsReload.addEventListener('click', () => location.reload());
 void start();

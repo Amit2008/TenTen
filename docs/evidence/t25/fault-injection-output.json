@@ -1,0 +1,155 @@
+[
+  {
+    "name": "missing file (theme.json 404)",
+    "failed": {
+      "status": "",
+      "error": "The game content could not be loaded. theme.json could not be downloaded (HTTP 404)",
+      "saveStatus": "",
+      "notice": null,
+      "state": null,
+      "canvasInert": null,
+      "continueShown": false
+    },
+    "afterRetry": {
+      "status": "Renderer ready (WebGL2). Content 1.1.0 loaded.",
+      "error": null,
+      "saveStatus": "Saved",
+      "notice": null,
+      "state": "menu",
+      "canvasInert": true,
+      "continueShown": true
+    },
+    "errors": []
+  },
+  {
+    "name": "failed fetch (rules.json aborted)",
+    "failed": {
+      "status": "",
+      "error": "The game content could not be loaded. rules.json could not be downloaded (network error)",
+      "saveStatus": "",
+      "notice": null,
+      "state": null,
+      "canvasInert": null,
+      "continueShown": false
+    },
+    "afterRetry": {
+      "status": "Renderer ready (WebGL2). Content 1.1.0 loaded.",
+      "error": null,
+      "saveStatus": "Saved",
+      "notice": null,
+      "state": "menu",
+      "canvasInert": true,
+      "continueShown": true
+    },
+    "errors": []
+  },
+  {
+    "name": "malformed JSON (pieces.json truncated)",
+    "failed": {
+      "status": "",
+      "error": "The game content could not be loaded. pieces.json is not valid JSON",
+      "saveStatus": "",
+      "notice": null,
+      "state": null,
+      "canvasInert": null,
+      "continueShown": false
+    },
+    "afterRetry": {
+      "status": "Renderer ready (WebGL2). Content 1.1.0 loaded.",
+      "error": null,
+      "saveStatus": "Saved",
+      "notice": null,
+      "state": "menu",
+      "canvasInert": true,
+      "continueShown": true
+    },
+    "errors": []
+  },
+  {
+    "name": "wrong MIME, HTML body (SPA fallback for rules.json)",
+    "failed": {
+      "status": "",
+      "error": "The game content could not be loaded. rules.json is not valid JSON",
+      "saveStatus": "",
+      "notice": null,
+      "state": null,
+      "canvasInert": null,
+      "continueShown": false
+    },
+    "afterRetry": {
+      "status": "Renderer ready (WebGL2). Content 1.1.0 loaded.",
+      "error": null,
+      "saveStatus": "Saved",
+      "notice": null,
+      "state": "menu",
+      "canvasInert": true,
+      "continueShown": true
+    },
+    "errors": []
+  },
+  {
+    "name": "wrong MIME, valid JSON body (index.json as text/html)",
+    "failed": {
+      "status": "Renderer ready (WebGL2). Content 1.1.0 loaded.",
+      "error": null,
+      "saveStatus": "Saved",
+      "notice": null,
+      "state": "loading",
+      "canvasInert": true,
+      "continueShown": false
+    },
+    "note": "fault did not surface"
+  },
+  {
+    "name": "audio rejection (AudioContext constructor throws)",
+    "result": {
+      "status": "Renderer ready (WebGL2). Content 1.1.0 loaded.",
+      "error": null,
+      "saveStatus": "Saved",
+      "notice": null,
+      "state": "idle",
+      "canvasInert": false,
+      "continueShown": false
+    },
+    "errors": []
+  },
+  {
+    "name": "storage denial (indexedDB.open throws SecurityError)",
+    "result": {
+      "status": "Renderer ready (WebGL2). Content 1.1.0 loaded.",
+      "error": null,
+      "saveStatus": "Not saved (this session only)",
+      "notice": null,
+      "state": "idle",
+      "canvasInert": false,
+      "continueShown": false
+    },
+    "errors": []
+  },
+  {
+    "name": "newer schema opened in another tab (real versionchange)",
+    "result": {
+      "status": "Renderer ready (WebGL2). Content 1.1.0 loaded.",
+      "error": null,
+      "saveStatus": "Not saved (this session only)",
+      "notice": "A newer version of Line Garden opened in another tab. Reload this tab to keep saving.",
+      "state": "idle",
+      "canvasInert": false,
+      "continueShown": false
+    },
+    "errors": []
+  },
+  {
+    "name": "blocked upgrade (SYNTHETIC: onblocked fired by a wrapper; unreachable at schema v1)",
+    "result": {
+      "status": "Renderer ready (WebGL2). Content 1.1.0 loaded.",
+      "error": null,
+      "saveStatus": "Saved",
+      "notice": null,
+      "state": "idle",
+      "canvasInert": false,
+      "continueShown": false
+    },
+    "errors": []
+  }
+]

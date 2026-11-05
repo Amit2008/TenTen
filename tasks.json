@@ -597,7 +597,7 @@
       "depends_on": [
         "T24"
       ],
-      "status": "not_started",
+      "status": "done",
       "allowed_scope": [
         "src/adapters/rendering",
         "tests/failures",
@@ -611,7 +611,8 @@
         "Failed content or save operations preserve valid state and expose clear errors."
       ],
       "evidence": "Context-loss recordings, network/storage fault matrix and recovery logs.",
-      "boundary": "If the test extension is unavailable, record the gap and use an actual supported device test; never invent a recovery pass."
+      "boundary": "If the test extension is unavailable, record the gap and use an actual supported device test; never invent a recovery pass.",
+      "handoff": "docs/handoffs/T25.md"
     },
     {
       "id": "T26",

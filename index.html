@@ -76,6 +76,12 @@
             <button id="results-again" type="button">Play again</button>
             <button id="results-menu" type="button">Main menu</button>
           </section>
+          <!-- Last, so it covers every other screen while the WebGL context is lost (GDD 8.2). -->
+          <section id="graphics-lost" class="overlay" role="alertdialog" tabindex="-1" aria-labelledby="graphics-title" aria-describedby="graphics-text" hidden>
+            <h2 id="graphics-title">Graphics paused</h2>
+            <p id="graphics-text" class="overlay-note"></p>
+            <button id="graphics-reload" type="button" hidden>Reload</button>
+          </section>
         </div>
       </section>
     </main>
