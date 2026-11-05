@@ -2,7 +2,11 @@
 
 - **Host:** GitHub Pages, published with Amit's approval on 5 Nov 2026. The repo was made public by Amit, who also turned on Pages and started the run.
 - **URL:** https://amit2008.github.io/TenTen/
-- **Deploy:** run [42030913940](https://github.com/Amit2008/TenTen/actions/runs/42030913940) (`workflow_dispatch`, success, 12:53 UTC) from commit `cf86a31` on `main`.
+- **Deploys** (all `workflow_dispatch` from `main`, all successful):
+  - [42030913940](https://github.com/Amit2008/TenTen/actions/runs/42030913940): `cf86a31`, first release
+  - [42033717753](https://github.com/Amit2008/TenTen/actions/runs/42033717753): `772424f`, review round 2
+  - [42036000377](https://github.com/Amit2008/TenTen/actions/runs/42036000377): `3c53522`, round 3
+  - [42037920063](https://github.com/Amit2008/TenTen/actions/runs/42037920063): **`3a4453f`, final** (round 4)
 
 ## Hosted delivery (checked from this PC, 5 Nov 2026)
 
@@ -25,8 +29,23 @@
 
 Raw output: `live-desktop.json`. Both browsers were driven by Playwright 1.64.1, headed. Keyboard and mouse play on the same builds is covered by the local suite (T26 and T28).
 
+## Final build `3a4453f` (rechecked after the last deploy)
+
+- **Files:** all 29 match a fresh `npm run release` of `3a4453f` (`final-hosted-hashes.txt`, `final-nested.sha256`).
+- **Live desktop:** Chrome 156.0.8078.80 loaded in 1.60 s and Edge 156.0.4314.58 in 1.28 s. In both, a move saved, refresh plus Continue kept the score, and context loss and restore kept the score. No errors and no failed requests (`final-live-desktop.json`).
+
+## Android: Samsung Galaxy S24, Chrome (Amit, manual, live site)
+
+Amit played the live site on a Galaxy S24, which led to review rounds 2 to 4 (`docs/review/T27-play-feel-review.md`):
+- **Touch pickup:** better after the larger pickup column and the bigger tray pieces. In round 4 Amit said "much better".
+- **Saves:** Amit's screenshot shows Score 5 and "Saved" on the device.
+- **Pause button:** sat too low; fixed in round 4, and Amit replied "approved".
+
+Not confirmed by Amit, so recorded as **NOT CONFIRMED**:
+- the Android and Chrome version numbers;
+- the separate results of the sound unlock, refresh plus Continue, switching apps and rotation steps.
+
 ## Not run (no device or access)
 
 - Firefox desktop, Safari on macOS and Safari on iPhone. Amit has no such device available for this task.
-- Android Chrome: pending Amit's manual run (guide in the conversation).
-- Rollback on the host: pending.
+- Rollback on the host. Amit has not yet chosen whether to run the proposed colours-only 1.1.1 test. The procedure is in the runbook and in `docs/configuration/content-updates.md`, and content rollback was proven against an emulated host in T24.
