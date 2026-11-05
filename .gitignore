@@ -3,4 +3,4 @@ dist/
 test-results/
 playwright-report/
 dist-nested/
-release/
+/release/
