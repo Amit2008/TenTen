@@ -7,7 +7,7 @@ import { MoveFeedback, ReturnGlide, type FeedbackFrame } from '../../src/present
 import { PresentationStates } from '../../src/presentation/states/states';
 import { CLASSIC } from '../domain/helpers';
 
-const TIMING = { place: 90, clear: 180 };
+const TIMING = { place: 90, clear: 180, clearStagger: 0 };
 
 /** Fills row 9 columns 0-4 with bar_5_h, then a second bar_5_h on columns 5-9 completes the row. */
 function clearingMove(): { before: SessionState; result: MoveResult } {
@@ -30,14 +30,14 @@ describe('MoveFeedback', () => {
     const fb = new MoveFeedback(before, result, TIMING, false);
     const start = fb.frame();
     expect(start.placedScale).toBeCloseTo(1.12);
-    expect(start.clearedAlpha).toBe(1);
+    expect(start.cleared[0]!.alpha).toBe(1);
     expect(start.cleared).toHaveLength(10);
-    expect(new Set(start.cleared.map(([, key]) => key))).toEqual(new Set(['bar_5_h']));
+    expect(new Set(start.cleared.map((t) => t.key))).toEqual(new Set(['bar_5_h']));
     fb.advance(0.09);
     expect(fb.frame().placedScale).toBe(1);
     expect(fb.done).toBe(false); // the clear fade is longer
     fb.advance(0.09);
-    expect(fb.frame().clearedAlpha).toBe(0);
+    expect(fb.frame().cleared[0]!.alpha).toBe(0);
     expect(fb.done).toBe(true);
   });
 
@@ -50,6 +50,28 @@ describe('MoveFeedback', () => {
     }
     expect(fb.frame().placedAlpha).toBe(1);
     expect(new MoveFeedback(before, result, TIMING, true).frame().placedAlpha).toBe(0.5);
+  });
+
+  it('cleared tiles shrink and fade one after another along the line; reduced motion fades them together', () => {
+    const { before, result } = clearingMove(); // row 9, cells x = 0..9
+    const timing = { place: 90, clear: 180, clearStagger: 20 };
+    const fb = new MoveFeedback(before, result, timing, false);
+    const tile = (x: number) => fb.frame().cleared.find((t) => t.cell[0] === x)!;
+    fb.advance(0.1);
+    expect(tile(0)).toMatchObject({ scale: expect.closeTo(1 - 100 / 180), alpha: expect.closeTo(1 - 100 / 180) });
+    expect(tile(4)).toMatchObject({ scale: expect.closeTo(1 - 20 / 180), alpha: expect.closeTo(1 - 20 / 180) });
+    expect(tile(9)).toMatchObject({ scale: 1, alpha: 1 }); // not started yet
+    fb.advance(0.259); // 359 ms: the last tile starts at 180 ms and needs 180 ms
+    expect(fb.done).toBe(false);
+    fb.advance(0.001);
+    expect(fb.done).toBe(true);
+    expect(fb.frame().cleared.every((t) => t.scale === 0 && t.alpha === 0)).toBe(true);
+
+    const reduced = new MoveFeedback(before, result, timing, true);
+    reduced.advance(0.1);
+    expect(new Set(reduced.frame().cleared.map((t) => `${t.scale}/${t.alpha.toFixed(4)}`))).toEqual(new Set([`1/${(1 - 100 / 180).toFixed(4)}`]));
+    reduced.advance(0.08);
+    expect(reduced.done).toBe(true);
   });
 
   it('a move without clears lasts only the placement time', () => {
@@ -89,22 +111,22 @@ describe('PresentationStates', () => {
     states.play(feedback());
     states.tick(5);
     expect(states.resolving).toBe(true);
-    expect(frames.at(-1)!.clearedAlpha).toBeCloseTo(1 - 100 / 180);
+    expect(frames.at(-1)!.cleared[0]!.alpha).toBeCloseTo(1 - 100 / 180);
   });
 
   it('pause freezes the animation; Resume continues the same event once with a reset clock', () => {
     const { frames, states, feedback } = run();
     states.play(feedback());
     states.tick(0.05);
-    const alpha = frames.at(-1)!.clearedAlpha;
+    const alpha = frames.at(-1)!.cleared[0]!.alpha;
     states.pause();
     expect(states.label(true, true)).toBe('paused');
     expect(states.acceptsCommands).toBe(false);
     for (let i = 0; i < 10; i++) states.tick(0.1); // a stray frame while paused does nothing
-    expect(frames.at(-1)!.clearedAlpha).toBe(alpha);
+    expect(frames.at(-1)!.cleared[0]!.alpha).toBe(alpha);
     states.resume();
     states.tick(30); // the first frame after a long hidden period counts as zero
-    expect(frames.at(-1)!.clearedAlpha).toBe(alpha);
+    expect(frames.at(-1)!.cleared[0]!.alpha).toBe(alpha);
     while (states.resolving) states.tick(1 / 60);
     expect(frames.filter((f) => f === null)).toHaveLength(1);
     expect(frames.filter((f) => f !== null && f.moveId !== frames[0]!.moveId)).toEqual([]);
@@ -114,7 +136,7 @@ describe('PresentationStates', () => {
     const { before, result } = clearingMove();
     const frames: (FeedbackFrame | null)[] = [];
     const states = new PresentationStates(0.1, (f) => frames.push(f));
-    states.play(new MoveFeedback(before, result, { place: 0, clear: 0 }, false));
+    states.play(new MoveFeedback(before, result, { place: 0, clear: 0, clearStagger: 0 }, false));
     expect(frames).toEqual([null]);
     expect(states.acceptsCommands).toBe(true);
   });

@@ -34,7 +34,7 @@ interface Pick {
 
 interface Active {
   readonly pointerId: number;
-  /** Null when the press did not land on an occupied tray cell: it can still be a tap, never a drag. */
+  /** Null when the press did not land inside a tray piece's bounding box: it can still be a tap, never a drag. */
   readonly pick: Pick | null;
   readonly start: Point;
   readonly touch: boolean;
@@ -43,7 +43,7 @@ interface Active {
 
 /**
  * One active pointer at a time. A press that moves less than the threshold is a tap, reported as a logical point.
- * A press on an occupied tray cell that moves further is a drag; preview and release use the same offset, snapping
+ * A press inside a tray piece's bounding box that moves further is a drag; preview and release use the same offset, snapping
  * and domain validator.
  */
 export class DragController {
@@ -119,9 +119,9 @@ export class DragController {
       if (!instance) continue;
       const shape = this.settings.config.catalog.find((s) => s.id === instance.shapeId)!;
       const local = cellAt(slotGrid(this.settings.tray, slot, shape), point);
-      // Empty padding inside an L's bounding box cannot begin a drag.
-      if (local && shape.cells.some(([x, y]) => x === local[0] && y === local[1]))
-        return { instanceId: instance.instanceId, shape, grabbed: local };
+      // The whole bounding box grabs the piece, empty L corners included (T27, Amit), so small and sparse shapes are
+      // easy to pick up by touch. The grabbed local cell may be empty; it still stays under the pointer.
+      if (local) return { instanceId: instance.instanceId, shape, grabbed: local };
     }
     return null;
   }

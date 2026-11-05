@@ -644,7 +644,7 @@
       "depends_on": [
         "T26"
       ],
-      "status": "not_started",
+      "status": "done",
       "allowed_scope": [
         "docs/review",
         "approved scoped tuning"
@@ -656,7 +656,8 @@
         "The final review is accepted or explicitly remains pending."
       ],
       "evidence": "Candidate build/URL, actual review decision and affected retest results.",
-      "boundary": "Never fabricate user approval; independent packaging work can continue while review is pending."
+      "boundary": "Never fabricate user approval; independent packaging work can continue while review is pending.",
+      "handoff": "docs/handoffs/T27.md"
     },
     {
       "id": "T28",
