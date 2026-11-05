@@ -1,0 +1,23 @@
+{
+  "activeFrameMs": {
+    "n": 109,
+    "median": 16.7,
+    "p95": 16.8,
+    "max": 16.9,
+    "budgetP95": 20
+  },
+  "idleFrameMs": {
+    "n": 143,
+    "median": 16.7,
+    "p95": 16.8,
+    "max": 16.9
+  },
+  "commandMs": {
+    "n": 1266,
+    "median": 0,
+    "p95": 0.1,
+    "max": 0.3,
+    "budgetP95": 8,
+    "timerResolutionMs": 0.1
+  }
+}

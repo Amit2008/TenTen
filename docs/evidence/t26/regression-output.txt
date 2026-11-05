@@ -1,0 +1,78 @@
+
+> line-garden@0.1.0 typecheck
+> tsc --noEmit
+
+
+> line-garden@0.1.0 test
+> vitest run
+
+
+ RUN  v5.0.5 C:/Amit/TenTen
+
+
+ Test Files  21 passed (21)
+      Tests  317 passed (317)
+   Start at  10:52:26
+   Duration  27.32s (tests 98%, import 1%, transform 1%)
+
+(node:33016) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 34 tests using 4 workers
+
+  ok  1 [root] › tests\browser\content.spec.ts:3:1 › a content failure shows an HTML error, not a spinner, and Retry recovers (1.5s)
+  ok  4 [root] › tests\browser\audio.spec.ts:97:1 › an autoplay refusal never blocks play, and Enable sound starts audio later (2.3s)
+  ok  3 [root] › tests\browser\content-deploy.spec.ts:84:1 › a gameplay update: old tab keeps its version, new loads get new rules and separate records, rollback restores (6.0s)
+[root] before reload: shown 16, status Saving… | after reload: Continue shows 11 (last completed save), stored 11 | replayed move 3: 16, Saved
+  ok  2 [root] › tests\browser\lifecycle.spec.ts:68:1 › refresh trace: Continue restores the last completed save, never a write that did not finish (7.8s)
+(node:28104) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+[chromium] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.8078.4 Safari/537.36
+  ok  8 [root] › tests\browser\replay.spec.ts:10:1 › golden vectors and bounded draws match Node in this engine (373ms)
+  ok  7 [root] › tests\browser\content-deploy.spec.ts:130:1 › a cosmetic update keeps the gameplay hash, so the saved run continues (4.3s)
+[chromium] recorded seed 2026: 20 moves, trace sha256 55f9ad8b515e571c7fb761ebef69511f6835e45d370ea12293d6c29edacd2968
+  ok  9 [root] › tests\browser\replay.spec.ts:49:3 › recorded session replay (T11) › the recorded sequence gives identical states in this engine and in Node (519ms)
+  ok  5 [root] › tests\browser\persistence.spec.ts:73:1 › restore after reload keeps board, tray, score and the future deals (10.1s)
+[root] http://localhost:4173/ {"isWebGL2":true,"gpu":"ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)","css":[527,608],"backing":[527,608],"dpr":1}
+  ok 10 [root] › tests\browser\shell.spec.ts:18:1 › starts an actual WebGL2 renderer and loads base-relative assets (1.2s)
+  ok 12 [root] › tests\browser\unsupported.spec.ts:6:1 › shows the HTML error and a working Retry when WebGL2 is unavailable (1.4s)
+  ok 13 [nested] › tests\browser\audio.spec.ts:97:1 › an autoplay refusal never blocks play, and Enable sound starts audio later (1.7s)
+  ok  6 [root] › tests\browser\pointer.spec.ts:108:3 › mouse at DPR 1: ghost and committed cells coincide at all four board corners (13.9s)
+  ok 14 [nested] › tests\browser\content.spec.ts:3:1 › a content failure shows an HTML error, not a spinner, and Retry recovers (660ms)
+[nested] before reload: shown 16, status Saving… | after reload: Continue shows 11 (last completed save), stored 11 | replayed move 3: 16, Saved
+  ok 16 [nested] › tests\browser\lifecycle.spec.ts:68:1 › refresh trace: Continue restores the last completed save, never a write that did not finish (4.8s)
+  ok 17 [nested] › tests\browser\content-deploy.spec.ts:84:1 › a gameplay update: old tab keeps its version, new loads get new rules and separate records, rollback restores (6.7s)
+  ok 11 [root] › tests\browser\persistence.spec.ts:100:1 › a lost WebGL context keeps board, score and tray, replays nothing, and waits for Resume (19.5s)
+  ok 19 [nested] › tests\browser\content-deploy.spec.ts:130:1 › a cosmetic update keeps the gameplay hash, so the saved run continues (11.9s)
+  ok 20 [root] › tests\browser\persistence.spec.ts:137:1 › a failed write (quota) keeps the run playable as session only, and Retry saves the latest state (5.3s)
+  ok 18 [nested] › tests\browser\persistence.spec.ts:73:1 › restore after reload keeps board, tray, score and the future deals (15.8s)
+  ok 23 [nested] › tests\browser\persistence.spec.ts:100:1 › a lost WebGL context keeps board, score and tray, replays nothing, and waits for Resume (22.8s)
+  ok 22 [root] › tests\browser\persistence.spec.ts:175:3 › two tabs › a stale tab never overwrites: it stops, and Load latest picks up the other tab’s run (30.6s)
+  ok 24 [nested] › tests\browser\persistence.spec.ts:137:1 › a failed write (quota) keeps the run playable as session only, and Retry saves the latest state (10.2s)
+  ok 21 [nested] › tests\browser\pointer.spec.ts:108:3 › mouse at DPR 1: ghost and committed cells coincide at all four board corners (34.2s)
+(node:39516) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+[chromium] Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.8078.4 Safari/537.36
+  ok 27 [nested] › tests\browser\replay.spec.ts:10:1 › golden vectors and bounded draws match Node in this engine (323ms)
+[chromium] recorded seed 2026: 20 moves, trace sha256 55f9ad8b515e571c7fb761ebef69511f6835e45d370ea12293d6c29edacd2968
+  ok 15 [root] › tests\browser\pointer.spec.ts:108:3 › touch at DPR 3: ghost and committed cells coincide at all four board corners (1.0m)
+  ok 28 [nested] › tests\browser\replay.spec.ts:49:3 › recorded session replay (T11) › the recorded sequence gives identical states in this engine and in Node (1.4s)
+[nested] http://localhost:4174/TenTen/ {"isWebGL2":true,"gpu":"ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)","css":[527,608],"backing":[527,608],"dpr":1}
+  ok 30 [nested] › tests\browser\unsupported.spec.ts:6:1 › shows the HTML error and a working Retry when WebGL2 is unavailable (1.4s)
+  ok 29 [nested] › tests\browser\shell.spec.ts:18:1 › starts an actual WebGL2 renderer and loads base-relative assets (1.8s)
+(node:38356) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:21560) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+[webkit] Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/27.2 Safari/605.1.15
+  ok 32 [webkit] › tests\browser\replay.spec.ts:10:1 › golden vectors and bounded draws match Node in this engine (818ms)
+[webkit] recorded seed 2026: 20 moves, trace sha256 55f9ad8b515e571c7fb761ebef69511f6835e45d370ea12293d6c29edacd2968
+  ok 33 [webkit] › tests\browser\replay.spec.ts:49:3 › recorded session replay (T11) › the recorded sequence gives identical states in this engine and in Node (1.2s)
+[firefox] Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:157.0) Gecko/20100101 Firefox/157.0
+  ok 31 [firefox] › tests\browser\replay.spec.ts:10:1 › golden vectors and bounded draws match Node in this engine (5.1s)
+  ok 25 [nested] › tests\browser\persistence.spec.ts:175:3 › two tabs › a stale tab never overwrites: it stops, and Load latest picks up the other tab’s run (21.2s)
+[firefox] recorded seed 2026: 20 moves, trace sha256 55f9ad8b515e571c7fb761ebef69511f6835e45d370ea12293d6c29edacd2968
+  ok 34 [firefox] › tests\browser\replay.spec.ts:49:3 › recorded session replay (T11) › the recorded sequence gives identical states in this engine and in Node (430ms)
+  ok 26 [nested] › tests\browser\pointer.spec.ts:108:3 › touch at DPR 3: ghost and committed cells coincide at all four board corners (27.2s)
+
+  34 passed (1.9m)
