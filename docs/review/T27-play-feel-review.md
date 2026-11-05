@@ -76,4 +76,15 @@ Asked to choose between a 3×3-board-square pickup box, bigger tray pieces, or a
 **Retests:**
 - Typecheck: clean. `npm test`: 326 passed, with updated tray layout tests, including that every piece up to 3×3 shares the tray pitch.
 - `npx playwright test --workers=4`: 34 passed.
-- Status: waiting for Amit's re-check on the live site.
+- Status: Amit found the pickup area "much better" on the S24 (round 4).
+
+## Round 4 (5 Nov 2026, Galaxy S24, live build)
+
+> the clicking area is much better but the pause button is too low
+
+**Cause.** The score row was shorter than the 44px pause button: about 29px of text plus 8px of padding. The button hung about 7px over the teal line at the top of the canvas.
+
+**Change.** `#score-line` gets a 44px line height (`src/bootstrap/shell.css`), so the button sits inside the row and the score text centres on it. The canvas refits to the slightly taller row.
+- Measured in Playwright mobile emulation: at 384×832 the button ends at y = 178 and the canvas starts at 189; at 360×640 they are 95 and 106.
+
+**Retests:** `npx playwright test --workers=4`, 34 passed. Status: waiting for Amit's re-check on the live site.

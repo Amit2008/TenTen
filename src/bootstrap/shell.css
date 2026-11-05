@@ -235,10 +235,12 @@ dialog input[type='radio'] {
   /* Side padding keeps the centered score clear of the pause button. */
   padding: 0 64px 8px;
   font-size: 1.5rem;
+  /* As tall as the 44px buttons, so they sit inside the row (not over the line below) and the score centers on them. */
+  line-height: 44px;
   text-align: center;
 }
 
-/* Out of the flow, so the score row height (and so the canvas size) does not change. */
+/* Out of the flow, so showing or hiding them never changes the row (and so the canvas) size. */
 #pause-button,
 #sound-button {
   position: absolute;
