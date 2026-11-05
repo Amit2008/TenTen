@@ -5,6 +5,7 @@ A browser block-placement puzzle inspired by 1010! classic endless mode: a 10x10
 ## Where things are
 
 - `AGENTS.md` is the working agreement. Read it before every task.
+- `docs/handoff/README.md` is the release handover: what is live, release hashes, build/deploy/extend steps, known issues. Start there.
 - `tasks.json` is the task ledger (T01–T30). Handoffs are in `docs/handoffs/`, decisions in `docs/decisions/` (ADR-001 pins the toolchain), and evidence in `docs/evidence/`.
 - `For Claude/01_GDD.md` defines behavior. If the code conflicts with it, report the conflict before implementing.
 - `For Claude/02_Agent_Roadmap.md` holds per-task scope and acceptance criteria.
