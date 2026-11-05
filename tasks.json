@@ -644,7 +644,7 @@
       "depends_on": [
         "T26"
       ],
-      "status": "not_started",
+      "status": "in_progress",
       "allowed_scope": [
         "docs/review",
         "approved scoped tuning"
