@@ -56,4 +56,24 @@ The rules and the gameplay hash are unchanged.
 **Retests:**
 - Typecheck: clean. `npm test`: 325 passed, including a new test for pickup from the canvas corners and the gap under the board, with exact ghost anchors.
 - `npx playwright test --workers=4`: 34 passed.
+- Status: superseded by round 3, after Amit found it still not good enough on a Galaxy S24.
+
+## Round 3 (5 Nov 2026, Galaxy S24, live build)
+
+> in my android samsung s24 the clicking area is still not so good
+> it should be in the size of 3X3 shape that we have
+> for all types of shapes
+> treat them like they all have 3X3 shape
+
+Asked to choose between a 3×3-board-square pickup box, bigger tray pieces, or a re-test, Amit chose **bigger tray pieces**.
+
+**Change.** The tray pitch is now sized for a 3×3 box: 120 / (3 + 1) = 30 logical px, up from 20 (`src/presentation/views/layout.ts`).
+- Every piece up to 3×3 is drawn at that size, so tray squares are 50% larger. On the S24 that is about 16 CSS px instead of 11.
+- Longer pieces shrink only as much as their slot needs: the vertical 4-bar to 24 px, the vertical 5-bar to 20 px. The horizontal bars keep 30 px.
+- The round 2 pickup column is unchanged. The rules and the gameplay hash are unchanged.
+- Screenshot: `docs/evidence/t29/tray-3x3-s24.png` (384×832 CSS px at DPR 3, Playwright mobile emulation, not the device).
+
+**Retests:**
+- Typecheck: clean. `npm test`: 326 passed, with updated tray layout tests, including that every piece up to 3×3 shares the tray pitch.
+- `npx playwright test --workers=4`: 34 passed.
 - Status: waiting for Amit's re-check on the live site.

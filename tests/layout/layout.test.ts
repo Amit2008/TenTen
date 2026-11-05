@@ -60,24 +60,33 @@ describe('tray layout', () => {
       [260, 810, 200, 120],
       [460, 810, 200, 120],
     ]);
-    expect(tray.pitch).toBe(20); // 120 / (5 + 1)
+    expect(tray.pitch).toBe(30); // 120 / (3 + 1): sized for a 3×3 box (T29)
   });
 
   it.each(config.catalog.map((s) => [s.id, s] as const))('%s fits centered in every slot', (_, shape) => {
     tray.slots.forEach(([x, y, w, h], i) => {
       const g = slotGrid(tray, i, shape);
-      expect(g.x).toBeGreaterThanOrEqual(x + tray.pitch / 2);
-      expect(g.y).toBeGreaterThanOrEqual(y + tray.pitch / 2);
-      expect(g.x + shape.width * g.pitch).toBeLessThanOrEqual(x + w - tray.pitch / 2);
-      expect(g.y + shape.height * g.pitch).toBeLessThanOrEqual(y + h - tray.pitch / 2);
+      expect(g.x).toBeGreaterThanOrEqual(x + g.pitch / 2 - 1e-9);
+      expect(g.y).toBeGreaterThanOrEqual(y + g.pitch / 2 - 1e-9);
+      expect(g.x + shape.width * g.pitch).toBeLessThanOrEqual(x + w - g.pitch / 2 + 1e-9);
+      expect(g.y + shape.height * g.pitch).toBeLessThanOrEqual(y + h - g.pitch / 2 + 1e-9);
       expect(g.x - x).toBeCloseTo(x + w - (g.x + shape.width * g.pitch));
+      // Up to 3×3 every piece has the same size; only longer pieces shrink.
+      if (shape.width <= 3 && shape.height <= 3) expect(g.pitch).toBe(tray.pitch);
+      else expect(g.pitch).toBeLessThanOrEqual(tray.pitch);
     });
+  });
+
+  it('a vertical 5-bar shrinks to fit the slot height; a horizontal one keeps the 3×3 pitch', () => {
+    const bar = (id: string) => slotGrid(tray, 0, config.catalog.find((s) => s.id === id)!);
+    expect(bar('bar_5_v').pitch).toBe(20); // 120 / (5 + 1)
+    expect(bar('bar_5_h').pitch).toBe(30); // 150 wide fits in 200
   });
 
   it('fits a 5-slot tray too', () => {
     const five = trayLayout(TRAY, 5, config.catalog);
     expect(five.slots).toHaveLength(5);
-    expect(five.pitch).toBe(20); // min(120 wide, 120 tall) / 6
+    expect(five.pitch).toBe(30); // min(120 wide, 120 tall) / 4
   });
 });
 

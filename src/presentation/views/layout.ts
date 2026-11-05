@@ -46,24 +46,27 @@ export function cellAt(grid: GridLayout, [px, py]: Point): Cell | null {
 
 export interface TrayLayout {
   readonly slots: readonly Rect[];
-  /** One pitch for every slot so the same shape always looks the same size. */
+  /** Pitch of every piece up to 3×3, so they all look the same size; longer pieces shrink to fit (see slotGrid). */
   readonly pitch: number;
 }
 
-/** Equal slots across tray_rect, sized so the catalog's largest extent fits with half a cell of padding per side. */
+/** Largest box the tray pitch is sized for (T29, Amit): pieces are drawn as if each fitted a 3×3 box. */
+const TRAY_BOX = 3;
+
+/** Equal slots across tray_rect; the pitch fits a 3×3 box (or the catalog's largest, if smaller) plus half a cell per side. */
 export function trayLayout([x, y, w, h]: Rect, traySize: number, catalog: readonly ShapeDefinition[]): TrayLayout {
   const slotWidth = w / traySize;
-  const extent = Math.max(...catalog.map((s) => Math.max(s.width, s.height)));
+  const extent = Math.min(TRAY_BOX, Math.max(...catalog.map((s) => Math.max(s.width, s.height))));
   return {
     slots: Array.from({ length: traySize }, (_, i): Rect => [x + i * slotWidth, y, slotWidth, h]),
     pitch: Math.min(slotWidth, h) / (extent + 1),
   };
 }
 
-/** Grid for one tray slot: the shape's bounding box centered in the slot. */
+/** Grid for one tray slot: the shape's bounding box centered, at the tray pitch or smaller if that would not fit. */
 export function slotGrid(tray: TrayLayout, slot: number, shape: ShapeDefinition): GridLayout {
   const [x, y, w, h] = tray.slots[slot]!;
-  const { pitch } = tray;
+  const pitch = Math.min(tray.pitch, w / (shape.width + 1), h / (shape.height + 1));
   return { x: x + (w - shape.width * pitch) / 2, y: y + (h - shape.height * pitch) / 2, pitch, columns: shape.width, rows: shape.height };
 }
 
